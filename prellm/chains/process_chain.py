@@ -3,8 +3,7 @@
 Defines workflows as YAML, validates each step through preLLM, supports
 manual/auto approval, rollback, per-step decomposition strategy, and full audit logging.
 
-v0.2: Supports both old `prellm` (v0.1) and new `PreLLM` (v0.2) engines.
-v0.3: Supports two-agent architecture via preprocess_and_execute_v3 when pipeline is specified.
+v0.3: Supports two-agent architecture via preprocess_and_execute when pipeline is specified.
 """
 
 from __future__ import annotations
@@ -38,19 +37,11 @@ ApprovalCallback = Callable[[str, str], Awaitable[tuple[bool, str]]]
 class ProcessChain:
     """Execute multi-step DevOps workflows with preLLM validation at each step.
 
-    Supports both v0.1 (prellm) and v0.2 (PreLLM) engines.
-    v0.2 adds per-step decomposition strategy.
-
     Usage:
-        # v0.2 (recommended)
         from prellm.core import PreLLM
         engine = PreLLM("prellm_config.yaml")
         chain = ProcessChain("deploy.yaml", engine=engine)
         result = await chain.execute(env="production")
-
-        # v0.1 (backward compat)
-        chain = ProcessChain("deploy.yaml", guard=prellm("rules.yaml"))
-        result = await chain.execute(dry_run=True)
     """
 
     def __init__(

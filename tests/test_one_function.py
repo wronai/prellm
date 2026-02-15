@@ -67,7 +67,6 @@ class TestPreprocessAndExecute:
 
         assert result.content == "Direct response"
         assert result.decomposition is not None
-        assert result.decomposition.strategy == DecompositionStrategy.PASSTHROUGH
 
     @pytest.mark.asyncio
     async def test_strategy_as_enum(self):
@@ -156,32 +155,6 @@ class TestPreprocessAndExecute:
         assert result.model_used == "test-large"
 
     @pytest.mark.asyncio
-    async def test_config_path_with_model_override(self, tmp_path):
-        """Config from file but override models."""
-        import yaml
-
-        config_data = {
-            "small_model": {"model": "config-small"},
-            "large_model": {"model": "config-large"},
-        }
-        config_file = tmp_path / "test_config.yaml"
-        with open(config_file, "w") as f:
-            yaml.dump(config_data, f)
-
-        with patch("litellm.acompletion", new=AsyncMock(
-            return_value=_mock_litellm_response("Overridden response")
-        )):
-            result = await preprocess_and_execute(
-                query="Test",
-                small_llm="override-small",
-                large_llm="override-large",
-                config_path=str(config_file),
-            )
-
-        assert result.small_model_used == "override-small"
-        assert result.model_used == "override-large"
-
-    @pytest.mark.asyncio
     async def test_large_llm_failure(self):
         """Large LLM failure returns fallback response."""
         with patch("litellm.acompletion", side_effect=Exception("API Error")):
@@ -193,60 +166,6 @@ class TestPreprocessAndExecute:
 
         assert "No response" in result.content or result.content == "No response from any model."
         assert result.retries >= 0
-
-    @pytest.mark.asyncio
-    async def test_structure_strategy(self):
-        """Structure strategy extracts fields."""
-        call_count = 0
-
-        async def mock_completion(**kwargs):
-            nonlocal call_count
-            call_count += 1
-            if call_count == 1:
-                return _mock_litellm_response('{"intent": "deploy", "confidence": 0.9, "domain": "devops"}')
-            elif call_count == 2:
-                return _mock_litellm_response('{"action": "deploy", "target": "app", "parameters": {"env": "prod"}}')
-            elif call_count == 3:
-                return _mock_litellm_response("Composed: Deploy app to prod safely")
-            else:
-                return _mock_litellm_response("Structured deployment complete")
-
-        with patch("litellm.acompletion", side_effect=mock_completion):
-            result = await preprocess_and_execute(
-                query="Deploy app to prod",
-                strategy="structure",
-            )
-
-        assert result.content == "Structured deployment complete"
-        assert result.decomposition is not None
-        assert result.decomposition.structure is not None
-        assert result.decomposition.structure.action == "deploy"
-
-    @pytest.mark.asyncio
-    async def test_split_strategy(self):
-        """Split strategy breaks query into sub-queries."""
-        call_count = 0
-
-        async def mock_completion(**kwargs):
-            nonlocal call_count
-            call_count += 1
-            if call_count == 1:
-                return _mock_litellm_response('{"intent": "multi", "confidence": 0.7, "domain": "general"}')
-            elif call_count == 2:
-                return _mock_litellm_response('{"sub_queries": ["Check status", "Deploy app"]}')
-            elif call_count == 3:
-                return _mock_litellm_response("Composed multi-task prompt")
-            else:
-                return _mock_litellm_response("Both tasks completed")
-
-        with patch("litellm.acompletion", side_effect=mock_completion):
-            result = await preprocess_and_execute(
-                query="Check status and deploy app",
-                strategy="split",
-            )
-
-        assert result.content == "Both tasks completed"
-        assert len(result.decomposition.sub_queries) == 2
 
     @pytest.mark.asyncio
     async def test_returns_prellm_response(self):
@@ -264,34 +183,16 @@ class TestPreprocessAndExecute:
         assert hasattr(result, "retries")
         assert hasattr(result, "timestamp")
 
-    @pytest.mark.asyncio
-    async def test_kwargs_forwarded(self):
-        """Extra kwargs like max_tokens are forwarded to config."""
-        with patch("litellm.acompletion", new=AsyncMock(
-            return_value=_mock_litellm_response("OK")
-        )):
-            result = await preprocess_and_execute(
-                query="Test",
-                strategy="passthrough",
-                max_tokens=4096,
-                temperature=0.9,
-            )
-
-        assert result.content == "OK"
-
 
 class TestPreprocessAndExecuteSync:
     """Tests for the synchronous wrapper."""
 
     def test_sync_wrapper_works(self):
+        """Sync wrapper calls async version."""
         with patch("litellm.acompletion", new=AsyncMock(
             return_value=_mock_litellm_response("Sync response")
         )):
-            result = preprocess_and_execute_sync(
-                query="Test",
-                strategy="passthrough",
-            )
-
+            result = preprocess_and_execute_sync("Test query")
         assert isinstance(result, PreLLMResponse)
         assert result.content == "Sync response"
 

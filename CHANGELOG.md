@@ -1,3 +1,34 @@
+## [0.3.10] - 2026-02-15
+
+### Summary
+
+refactor(examples): configuration management system
+
+### Docs
+
+- docs: update README
+- docs: update README
+- docs: update README
+
+### Test
+
+- update tests/test_one_function.py
+- update tests/test_preprocessor_memory.py
+
+### Other
+
+- update examples/embedded/__init__.py
+- update examples/embedded/main.py
+- update examples/embedded/test_embedded.py
+- update examples/k8s/__init__.py
+- update examples/k8s/main.py
+- update examples/k8s/test_k8s.py
+- update examples/leasing/__init__.py
+- update examples/leasing/main.py
+- update examples/leasing/test_leasing.py
+- update prellm/chains/process_chain.py
+
+
 ## [0.3.9] - 2026-02-15
 
 ### Summary
