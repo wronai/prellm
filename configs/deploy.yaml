@@ -1,5 +1,5 @@
-# PromptGuard — Process Chain: Production Deployment
-# Execute with: promptguard process deploy.yaml --env production
+# Prellm — Process Chain: Production Deployment
+# Execute with: prellm process deploy.yaml --env production
 
 process: deploy-production
 description: "Full production deployment pipeline with validation at each step"

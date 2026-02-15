@@ -1,4 +1,4 @@
-"""Tests for PromptGuard core, bias detection, and process chains."""
+"""Tests for Prellm core, bias detection, and process chains."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 from pathlib import Path
 
-from promptguard.models import (
+from prellm.models import (
     AnalysisResult,
     BiasPattern,
     GuardConfig,
@@ -18,9 +18,9 @@ from promptguard.models import (
     StepStatus,
     ApprovalMode,
 )
-from promptguard.analyzers.bias_detector import BiasDetector
-from promptguard.analyzers.context_engine import ContextEngine
-from promptguard.core import PromptGuard
+from prellm.analyzers.bias_detector import BiasDetector
+from prellm.analyzers.context_engine import ContextEngine
+from prellm.core import PromptGuard
 
 
 # === BiasDetector Tests ===

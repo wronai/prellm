@@ -1,0 +1,885 @@
+<div class="left-layout">
+      <div class="left-layout__sidebar">
+        <div class="author-profile">
+          <img src="https://pypi-camo.freetls.fastly.net/5111335313e01c9203a5e5928463c69bc38c0534/68747470733a2f2f7365637572652e67726176617461722e636f6d2f6176617461722f38393064663665383366623039326266653262323230333464666536323430303f73697a653d323235" alt="Avatar for Sapletta from gravatar.com" title="Avatar for Sapletta from gravatar.com">
+          <div class="author-profile__info">
+<h1 class="author-profile__name">Sapletta</h1>            <div class="author-profile__meta">
+              <div class="author-profile__metadiv">
+                <i class="fa fa-user-circle" aria-hidden="true"></i>
+                <span class="sr-only">Username</span>
+                &nbsp;&nbsp;
+                <span class="break">tom-sapletta-com</span>
+              </div>
+              <div class="author-profile__metadiv">
+                <i class="fa fa-calendar-alt" aria-hidden="true"></i>
+                <span class="sr-only">Date joined</span>
+                &nbsp;&nbsp;Joined <time datetime="2023-12-10T14:59:28+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2023-12-10 15:59:28 (+01:00)" aria-label="2023-12-10 15:59:28 (+01:00)">Dec 10, 2023</time>              </div>
+          </div>
+<div data-html-include="/_includes/authed/profile-actions/tom-sapletta-com"></div>      </div>
+    </div>
+  </div>
+<div data-html-include="/_includes/authed/administer-user-include/tom-sapletta-com"></div><div class="left-layout__main">
+  <h2>
+143 projects</h2>
+<div class="package-list">
+      <a class="package-snippet" href="/project/softreck-promptguard/">
+        <h3 class="package-snippet__title">softreck-promptguard</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2026-02-15T16:19:13+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2026-02-15 17:19:13 (+01:00)" aria-label="2026-02-15 17:19:13 (+01:00)">about 1 hour ago</time>        </p>
+        <p class="package-snippet__description">Lightweight LLM prompt middleware — bias detection, standardization, and DevOps process chains via YAML config</p>
+      </a>
+      <a class="package-snippet" href="/project/goal/">
+        <h3 class="package-snippet__title">goal</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2026-02-15T11:18:49+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2026-02-15 12:18:49 (+01:00)" aria-label="2026-02-15 12:18:49 (+01:00)">about 6 hours ago</time>        </p>
+        <p class="package-snippet__description">Automated git push with smart commit messages, changelog updates, and version tagging</p>
+      </a>
+      <a class="package-snippet" href="/project/nfo/">
+        <h3 class="package-snippet__title">nfo</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2026-02-15T10:01:06+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2026-02-15 11:01:06 (+01:00)" aria-label="2026-02-15 11:01:06 (+01:00)">about 7 hours ago</time>        </p>
+        <p class="package-snippet__description">Automatic function logging with decorators — output to SQLite, CSV, Markdown + LLM-powered log analysis</p>
+      </a>
+      <a class="package-snippet" href="/project/docid/">
+        <h3 class="package-snippet__title">docid</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2026-02-13T14:25:27+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2026-02-13 15:25:27 (+01:00)" aria-label="2026-02-13 15:25:27 (+01:00)">Feb 13, 2026</time>        </p>
+        <p class="package-snippet__description">Deterministyczny generator identyfikatorów dokumentów z OCR</p>
+      </a>
+      <a class="package-snippet" href="/project/pactown/">
+        <h3 class="package-snippet__title">pactown</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2026-02-12T09:02:26+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2026-02-12 10:02:26 (+01:00)" aria-label="2026-02-12 10:02:26 (+01:00)">Feb 12, 2026</time>        </p>
+        <p class="package-snippet__description">Decentralized Service Ecosystem Orchestrator - Build interconnected microservices from Markdown using markpact</p>
+      </a>
+      <a class="package-snippet" href="/project/pactfix/">
+        <h3 class="package-snippet__title">pactfix</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2026-02-10T19:23:09+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2026-02-10 20:23:09 (+01:00)" aria-label="2026-02-10 20:23:09 (+01:00)">Feb 10, 2026</time>        </p>
+        <p class="package-snippet__description">🔧 Multi-language code analyzer and auto-fixer with Docker sandbox support</p>
+      </a>
+      <a class="package-snippet" href="/project/pactown-guard/">
+        <h3 class="package-snippet__title">pactown-guard</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2026-02-10T12:22:57+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2026-02-10 13:22:57 (+01:00)" aria-label="2026-02-10 13:22:57 (+01:00)">Feb 10, 2026</time>        </p>
+        <p class="package-snippet__description">Interactive diagnostics/triage guard for Pactown on VPS</p>
+      </a>
+      <a class="package-snippet" href="/project/clonebox/">
+        <h3 class="package-snippet__title">clonebox</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2026-02-06T14:59:53+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2026-02-06 15:59:53 (+01:00)" aria-label="2026-02-06 15:59:53 (+01:00)">Feb 6, 2026</time>        </p>
+        <p class="package-snippet__description">Clone your workstation environment to an isolated VM with selective apps, paths and services</p>
+      </a>
+      <a class="package-snippet" href="/project/reclapp/">
+        <h3 class="package-snippet__title">reclapp</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2026-02-01T19:57:34+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2026-02-01 20:57:34 (+01:00)" aria-label="2026-02-01 20:57:34 (+01:00)">Feb 1, 2026</time>        </p>
+        <p class="package-snippet__description">AI-Native Declarative Platform for B2B Applications</p>
+      </a>
+      <a class="package-snippet" href="/project/biznes/">
+        <h3 class="package-snippet__title">biznes</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2026-01-30T17:13:08+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2026-01-30 18:13:08 (+01:00)" aria-label="2026-01-30 18:13:08 (+01:00)">Jan 30, 2026</time>        </p>
+        <p class="package-snippet__description">Interaktywny symulator startupu - edukacyjna gra o zakładaniu firmy w Polsce</p>
+      </a>
+      <a class="package-snippet" href="/project/domd/">
+        <h3 class="package-snippet__title">domd</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2026-01-29T06:49:35+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2026-01-29 07:49:35 (+01:00)" aria-label="2026-01-29 07:49:35 (+01:00)">Jan 29, 2026</time>        </p>
+        <p class="package-snippet__description">✓ DoMD - Do Markdown Docs - automatically detect, run and show working commands in DONE.md and errors in TODO.md markdown files</p>
+      </a>
+      <a class="package-snippet" href="/project/stts/">
+        <h3 class="package-snippet__title">stts</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2026-01-28T11:25:31+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2026-01-28 12:25:31 (+01:00)" aria-label="2026-01-28 12:25:31 (+01:00)">Jan 28, 2026</time>        </p>
+        <p class="package-snippet__description">Universal STT/TTS Shell Wrapper</p>
+      </a>
+      <a class="package-snippet" href="/project/nlp2cmd/">
+        <h3 class="package-snippet__title">nlp2cmd</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2026-01-27T12:48:05+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2026-01-27 13:48:05 (+01:00)" aria-label="2026-01-27 13:48:05 (+01:00)">Jan 27, 2026</time>        </p>
+        <p class="package-snippet__description">Natural Language to Domain-Specific Commands with Thermodynamic Optimization - Transform natural language into SQL, Shell, Docker, Kubernetes and solve optimization problems using Langevin dynamics</p>
+      </a>
+      <a class="package-snippet" href="/project/code2logic/">
+        <h3 class="package-snippet__title">code2logic</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2026-01-27T10:53:30+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2026-01-27 11:53:30 (+01:00)" aria-label="2026-01-27 11:53:30 (+01:00)">Jan 27, 2026</time>        </p>
+        <p class="package-snippet__description">Convert source code to logical representation for LLM analysis</p>
+      </a>
+      <a class="package-snippet" href="/project/projektor/">
+        <h3 class="package-snippet__title">projektor</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2026-01-26T19:35:29+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2026-01-26 20:35:29 (+01:00)" aria-label="2026-01-26 20:35:29 (+01:00)">Jan 26, 2026</time>        </p>
+        <p class="package-snippet__description">LLM-orchestrated project management with DevOps automation for iterative development</p>
+      </a>
+      <a class="package-snippet" href="/project/nlp3/">
+        <h3 class="package-snippet__title">nlp3</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2026-01-25T20:34:37+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2026-01-25 21:34:37 (+01:00)" aria-label="2026-01-25 21:34:37 (+01:00)">Jan 25, 2026</time>        </p>
+        <p class="package-snippet__description">Universal Context Navigator - Navigate any data structure using natural language</p>
+      </a>
+      <a class="package-snippet" href="/project/logic2code/">
+        <h3 class="package-snippet__title">logic2code</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2026-01-18T17:43:53+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2026-01-18 18:43:53 (+01:00)" aria-label="2026-01-18 18:43:53 (+01:00)">Jan 18, 2026</time>        </p>
+        <p class="package-snippet__description">Generate source code from Code2Logic output files</p>
+      </a>
+      <a class="package-snippet" href="/project/logic2test/">
+        <h3 class="package-snippet__title">logic2test</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2026-01-18T17:43:45+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2026-01-18 18:43:45 (+01:00)" aria-label="2026-01-18 18:43:45 (+01:00)">Jan 18, 2026</time>        </p>
+        <p class="package-snippet__description">Generate test scaffolds from Code2Logic output files</p>
+      </a>
+      <a class="package-snippet" href="/project/lolm/">
+        <h3 class="package-snippet__title">lolm</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2026-01-18T17:43:38+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2026-01-18 18:43:38 (+01:00)" aria-label="2026-01-18 18:43:38 (+01:00)">Jan 18, 2026</time>        </p>
+        <p class="package-snippet__description">Lightweight Orchestrated LLM Manager - Multi-provider LLM configuration and management</p>
+      </a>
+      <a class="package-snippet" href="/project/markpact/">
+        <h3 class="package-snippet__title">markpact</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2026-01-15T19:21:40+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2026-01-15 20:21:40 (+01:00)" aria-label="2026-01-15 20:21:40 (+01:00)">Jan 15, 2026</time>        </p>
+        <p class="package-snippet__description">Executable Markdown Runtime – run projects from README.md</p>
+      </a>
+      <a class="package-snippet" href="/project/markpact-example-pypi/">
+        <h3 class="package-snippet__title">markpact-example-pypi</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2026-01-15T09:24:37+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2026-01-15 10:24:37 (+01:00)" aria-label="2026-01-15 10:24:37 (+01:00)">Jan 15, 2026</time>        </p>
+        <p class="package-snippet__description">Example package published with markpact</p>
+      </a>
+      <a class="package-snippet" href="/project/clickmd/">
+        <h3 class="package-snippet__title">clickmd</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2026-01-07T18:26:17+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2026-01-07 19:26:17 (+01:00)" aria-label="2026-01-07 19:26:17 (+01:00)">Jan 7, 2026</time>        </p>
+        <p class="package-snippet__description">Markdown rendering for CLI applications with syntax highlighting</p>
+      </a>
+      <a class="package-snippet" href="/project/curllm/">
+        <h3 class="package-snippet__title">curllm</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-12-13T17:28:30+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-12-13 18:28:30 (+01:00)" aria-label="2025-12-13 18:28:30 (+01:00)">Dec 13, 2025</time>        </p>
+        <p class="package-snippet__description">Browser Automation with Local LLM (8GB GPU compatible)</p>
+      </a>
+      <a class="package-snippet" href="/project/streamware/">
+        <h3 class="package-snippet__title">streamware</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-12-11T23:50:49+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-12-12 00:50:49 (+01:00)" aria-label="2025-12-12 00:50:49 (+01:00)">Dec 12, 2025</time>        </p>
+        <p class="package-snippet__description">Modern Python stream processing framework inspired by Apache Camel</p>
+      </a>
+      <a class="package-snippet" href="/project/bielik-mvp-api/">
+        <h3 class="package-snippet__title">bielik-mvp-api</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-12-01T12:18:04+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-12-01 13:18:04 (+01:00)" aria-label="2025-12-01 13:18:04 (+01:00)">Dec 1, 2025</time>        </p>
+        <p class="package-snippet__description">Bielik MVP API - FastAPI backend (RAG) for Polish entrepreneurs</p>
+      </a>
+      <a class="package-snippet" href="/project/recator/">
+        <h3 class="package-snippet__title">recator</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-11-02T15:30:35+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-11-02 16:30:35 (+01:00)" aria-label="2025-11-02 16:30:35 (+01:00)">Nov 2, 2025</time>        </p>
+        <p class="package-snippet__description">Automated code duplicate detection and refactoring library</p>
+      </a>
+      <a class="package-snippet" href="/project/llmass/">
+        <h3 class="package-snippet__title">llmass</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-10-05T13:13:40+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-10-05 15:13:40 (+02:00)" aria-label="2025-10-05 15:13:40 (+02:00)">Oct 5, 2025</time>        </p>
+        <p class="package-snippet__description">AI-powered email management and automation system: auto-categorize, detect spam, and generate responses with LLM</p>
+      </a>
+      <a class="package-snippet" href="/project/bielik/">
+        <h3 class="package-snippet__title">bielik</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-10-01T15:00:02+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-10-01 17:00:02 (+02:00)" aria-label="2025-10-01 17:00:02 (+02:00)">Oct 1, 2025</time>        </p>
+        <p class="package-snippet__description">Bielik — Local-first AI assistant with HuggingFace and SpeakLeash models</p>
+      </a>
+      <a class="package-snippet" href="/project/coval/">
+        <h3 class="package-snippet__title">coval</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-09-30T23:03:23+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-10-01 01:03:23 (+02:00)" aria-label="2025-10-01 01:03:23 (+02:00)">Oct 1, 2025</time>        </p>
+        <p class="package-snippet__description">Intelligent code generation, execution, and repair system with iterative Docker deployments</p>
+      </a>
+      <a class="package-snippet" href="/project/whyml/">
+        <h3 class="package-snippet__title">whyml</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-09-22T21:34:45+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-09-22 23:34:45 (+02:00)" aria-label="2025-09-22 23:34:45 (+02:00)">Sep 22, 2025</time>        </p>
+        <p class="package-snippet__description">Advanced YAML-based webpage generator with modular architecture</p>
+      </a>
+      <a class="package-snippet" href="/project/proserve/">
+        <h3 class="package-snippet__title">proserve</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-09-21T11:03:43+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-09-21 13:03:43 (+02:00)" aria-label="2025-09-21 13:03:43 (+02:00)">Sep 21, 2025</time>        </p>
+        <p class="package-snippet__description">Modern Microservices Framework</p>
+      </a>
+      <a class="package-snippet" href="/project/mova/">
+        <h3 class="package-snippet__title">mova</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-09-20T16:12:28+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-09-20 18:12:28 (+02:00)" aria-label="2025-09-20 18:12:28 (+02:00)">Sep 20, 2025</time>        </p>
+        <p class="package-snippet__description">Lekka warstwa komunikacji między frontendem, backendem, IoT i LLM</p>
+      </a>
+      <a class="package-snippet" href="/project/pasvg/">
+        <h3 class="package-snippet__title">pasvg</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-09-20T14:33:26+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-09-20 16:33:26 (+02:00)" aria-label="2025-09-20 16:33:26 (+02:00)">Sep 20, 2025</time>        </p>
+        <p class="package-snippet__description">Project Artifact SVG - Revolutionary single-file project distribution system</p>
+      </a>
+      <a class="package-snippet" href="/project/wmlog/">
+        <h3 class="package-snippet__title">wmlog</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-09-18T13:42:28+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-09-18 15:42:28 (+02:00)" aria-label="2025-09-18 15:42:28 (+02:00)">Sep 18, 2025</time>        </p>
+        <p class="package-snippet__description">Centralized Structured Logging for Microservices</p>
+      </a>
+      <a class="package-snippet" href="/project/servos/">
+        <h3 class="package-snippet__title">servos</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-09-18T09:12:10+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-09-18 11:12:10 (+02:00)" aria-label="2025-09-18 11:12:10 (+02:00)">Sep 18, 2025</time>        </p>
+        <p class="package-snippet__description">Environment Isolation and Orchestration for Microservices</p>
+      </a>
+      <a class="package-snippet" href="/project/sellm/">
+        <h3 class="package-snippet__title">sellm</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-09-18T09:07:27+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-09-18 11:07:27 (+02:00)" aria-label="2025-09-18 11:07:27 (+02:00)">Sep 18, 2025</time>        </p>
+        <p class="package-snippet__description">LLM-powered ProServe manifest generator</p>
+      </a>
+      <a class="package-snippet" href="/project/edpmt/">
+        <h3 class="package-snippet__title">edpmt</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-09-16T11:32:16+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-09-16 13:32:16 (+02:00)" aria-label="2025-09-16 13:32:16 (+02:00)">Sep 16, 2025</time>        </p>
+        <p class="package-snippet__description">EDPM Transparent - Simple, Secure, Universal Hardware Communication</p>
+      </a>
+      <a class="package-snippet" href="/project/portkeeper/">
+        <h3 class="package-snippet__title">portkeeper</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-09-16T07:21:14+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-09-16 09:21:14 (+02:00)" aria-label="2025-09-16 09:21:14 (+02:00)">Sep 16, 2025</time>        </p>
+        <p class="package-snippet__description">A tool to manage and reserve free ports for your applications</p>
+      </a>
+      <a class="package-snippet" href="/project/devix/">
+        <h3 class="package-snippet__title">devix</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-09-12T17:40:34+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-09-12 19:40:34 (+02:00)" aria-label="2025-09-12 19:40:34 (+02:00)">Sep 12, 2025</time>        </p>
+        <p class="package-snippet__description">Automated development and code repair system with enhanced analysis capabilities</p>
+      </a>
+      <a class="package-snippet" href="/project/dockvirt/">
+        <h3 class="package-snippet__title">dockvirt</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-09-12T12:16:34+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-09-12 14:16:34 (+02:00)" aria-label="2025-09-12 14:16:34 (+02:00)">Sep 12, 2025</time>        </p>
+        <p class="package-snippet__description">Run dynadock + Caddy environments in isolated VMs created by libvirt/KVM.</p>
+      </a>
+      <a class="package-snippet" href="/project/dynadock/">
+        <h3 class="package-snippet__title">dynadock</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-09-10T14:36:10+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-09-10 16:36:10 (+02:00)" aria-label="2025-09-10 16:36:10 (+02:00)">Sep 10, 2025</time>        </p>
+        <p class="package-snippet__description">Dynamic Docker Compose orchestrator with automatic port allocation and TLS</p>
+      </a>
+      <a class="package-snippet" href="/project/arpx/">
+        <h3 class="package-snippet__title">arpx</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-09-08T17:53:55+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-09-08 19:53:55 (+02:00)" aria-label="2025-09-08 19:53:55 (+02:00)">Sep 8, 2025</time>        </p>
+        <p class="package-snippet__description">Dynamic multi-IP LAN HTTP/HTTPS server manager with ARP visibility</p>
+      </a>
+      <a class="package-snippet" href="/project/dockvirt-libvirt/">
+        <h3 class="package-snippet__title">dockvirt-libvirt</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-09-05T18:08:41+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-09-05 20:08:41 (+02:00)" aria-label="2025-09-05 20:08:41 (+02:00)">Sep 5, 2025</time>        </p>
+        <p class="package-snippet__description">Uruchamianie środowisk dynadock + Caddy w izolowanych VM tworzonych przez libvirt/KVM.</p>
+      </a>
+      <a class="package-snippet" href="/project/mp4svg/">
+        <h3 class="package-snippet__title">mp4svg</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-08-08T13:33:20+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-08-08 15:33:20 (+02:00)" aria-label="2025-08-08 15:33:20 (+02:00)">Aug 8, 2025</time>        </p>
+        <p class="package-snippet__description">Convert MP4 videos to SVG containers using multiple encoding methods</p>
+      </a>
+      <a class="package-snippet" href="/project/modapi/">
+        <h3 class="package-snippet__title">modapi</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-08-01T21:33:10+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-08-01 23:33:10 (+02:00)" aria-label="2025-08-01 23:33:10 (+02:00)">Aug 1, 2025</time>        </p>
+        <p class="package-snippet__description">Unified API for Modbus communication with support for RTU, TCP, and REST APIs</p>
+      </a>
+      <a class="package-snippet" href="/project/devint/">
+        <h3 class="package-snippet__title">devint</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-08-01T18:58:34+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-08-01 20:58:34 (+02:00)" aria-label="2025-08-01 20:58:34 (+02:00)">Aug 1, 2025</time>        </p>
+        <p class="package-snippet__description">Unified Device Interface - A Python library for interacting with various hardware devices and protocols</p>
+      </a>
+      <a class="package-snippet" href="/project/modbusim/">
+        <h3 class="package-snippet__title">modbusim</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-08-01T08:58:16+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-08-01 10:58:16 (+02:00)" aria-label="2025-08-01 10:58:16 (+02:00)">Aug 1, 2025</time>        </p>
+        <p class="package-snippet__description">A Modbus RTU/ASCII/TCP device simulator for testing and development</p>
+      </a>
+      <a class="package-snippet" href="/project/pdf-ocr-processor/">
+        <h3 class="package-snippet__title">pdf-ocr-processor</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-07-11T21:11:22+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-07-11 23:11:22 (+02:00)" aria-label="2025-07-11 23:11:22 (+02:00)">Jul 11, 2025</time>        </p>
+        <p class="package-snippet__description">Advanced PDF OCR processing with AI-powered text extraction and selectable text overlays</p>
+      </a>
+      <a class="package-snippet" href="/project/svg2unicode/">
+        <h3 class="package-snippet__title">svg2unicode</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-07-03T15:58:43+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-07-03 17:58:43 (+02:00)" aria-label="2025-07-03 17:58:43 (+02:00)">Jul 3, 2025</time>        </p>
+        <p class="package-snippet__description">Convert SVG files to Unicode block characters for terminal display</p>
+      </a>
+      <a class="package-snippet" href="/project/wrd/">
+        <h3 class="package-snippet__title">wrd</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-29T11:09:00+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-29 13:09:00 (+02:00)" aria-label="2025-06-29 13:09:00 (+02:00)">Jun 29, 2025</time>        </p>
+        <p class="package-snippet__description">WRD (WRonai Development) - A powerful workflow automation tool for developers</p>
+      </a>
+      <a class="package-snippet" href="/project/xqr/">
+        <h3 class="package-snippet__title">xqr</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-29T09:42:55+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-29 11:42:55 (+02:00)" aria-label="2025-06-29 11:42:55 (+02:00)">Jun 29, 2025</time>        </p>
+        <p class="package-snippet__description">Universal CLI tool for editing SVG, HTML, and XML files using XPath and CSS selectors</p>
+      </a>
+      <a class="package-snippet" href="/project/text2api/">
+        <h3 class="package-snippet__title">text2api</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-28T15:52:23+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-28 17:52:23 (+02:00)" aria-label="2025-06-28 17:52:23 (+02:00)">Jun 28, 2025</time>        </p>
+        <p class="package-snippet__description">Automatyczne generowanie API na podstawie opisu tekstowego z wykorzystaniem NLP i Ollama</p>
+      </a>
+      <a class="package-snippet" href="/project/svgg/">
+        <h3 class="package-snippet__title">svgg</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-28T12:33:33+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-28 14:33:33 (+02:00)" aria-label="2025-06-28 14:33:33 (+02:00)">Jun 28, 2025</time>        </p>
+        <p class="package-snippet__description">SVG Generator - Universal tool for creating enhanced SVG files with embedded content, Procesor metadanych - tworzenie i rozszerzanie metadanych w oparciu o pliki źródłowe poprzez usługi i bibliotekii</p>
+      </a>
+      <a class="package-snippet" href="/project/xsl/">
+        <h3 class="package-snippet__title">xsl</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-28T11:59:54+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-28 13:59:54 (+02:00)" aria-label="2025-06-28 13:59:54 (+02:00)">Jun 28, 2025</time>        </p>
+        <p class="package-snippet__description">Universal File Editor for XML/SVG/HTML with XPath and CSS selector support</p>
+      </a>
+      <a class="package-snippet" href="/project/enclose/">
+        <h3 class="package-snippet__title">enclose</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-27T06:57:59+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-27 08:57:59 (+02:00)" aria-label="2025-06-27 08:57:59 (+02:00)">Jun 27, 2025</time>        </p>
+        <p class="package-snippet__description">A modular document processing pipeline for Markdown to PDF/SVG/PNG conversion with OCR</p>
+      </a>
+      <a class="package-snippet" href="/project/text2file/">
+        <h3 class="package-snippet__title">text2file</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-26T13:21:40+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-26 15:21:40 (+02:00)" aria-label="2025-06-26 15:21:40 (+02:00)">Jun 26, 2025</time>        </p>
+        <p class="package-snippet__description">A utility to generate test files in various formats from text content</p>
+      </a>
+      <a class="package-snippet" href="/project/sva/">
+        <h3 class="package-snippet__title">sva</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-26T12:35:52+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-26 14:35:52 (+02:00)" aria-label="2025-06-26 14:35:52 (+02:00)">Jun 26, 2025</time>        </p>
+        <p class="package-snippet__description">A modular document processing pipeline for Markdown to PDF/SVG/PNG conversion with OCR</p>
+      </a>
+      <a class="package-snippet" href="/project/veridock/">
+        <h3 class="package-snippet__title">veridock</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-24T20:16:17+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-24 22:16:17 (+02:00)" aria-label="2025-06-24 22:16:17 (+02:00)">Jun 24, 2025</time>        </p>
+        <p class="package-snippet__description">Veridock - gRPC-powered server management tool</p>
+      </a>
+      <a class="package-snippet" href="/project/digy/">
+        <h3 class="package-snippet__title">digy</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-23T12:22:09+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-23 14:22:09 (+02:00)" aria-label="2025-06-23 14:22:09 (+02:00)">Jun 23, 2025</time>        </p>
+        <p class="package-snippet__description">Do Interactive Git deploY - Deploy Python applications from Git repositories in isolated environments with interactive menu</p>
+      </a>
+      <a class="package-snippet" href="/project/zoomcam/">
+        <h3 class="package-snippet__title">zoomcam</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-23T07:08:24+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-23 09:08:24 (+02:00)" aria-label="2025-06-23 09:08:24 (+02:00)">Jun 23, 2025</time>        </p>
+        <p class="package-snippet__description">Intelligent adaptive camera monitoring system for Raspberry Pi</p>
+      </a>
+      <a class="package-snippet" href="/project/dun/">
+        <h3 class="package-snippet__title">dun</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-22T19:39:26+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-22 21:39:26 (+02:00)" aria-label="2025-06-22 21:39:26 (+02:00)">Jun 22, 2025</time>        </p>
+        <p class="package-snippet__description">Dynamiczny procesor danych z automatycznym wykrywaniem bibliotek</p>
+      </a>
+      <a class="package-snippet" href="/project/load/">
+        <h3 class="package-snippet__title">load</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-22T10:31:16+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-22 12:31:16 (+02:00)" aria-label="2025-06-22 12:31:16 (+02:00)">Jun 22, 2025</time>        </p>
+        <p class="package-snippet__description">Modern alternative to Python import - inspired by Go and Groovy. Compatible with Python 2.7 and 3.5+.</p>
+      </a>
+      <a class="package-snippet" href="/project/pocro/">
+        <h3 class="package-snippet__title">pocro</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-22T09:04:31+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-22 11:04:31 (+02:00)" aria-label="2025-06-22 11:04:31 (+02:00)">Jun 22, 2025</time>        </p>
+        <p class="package-snippet__description">European Invoice OCR and Data Extraction Tool</p>
+      </a>
+      <a class="package-snippet" href="/project/find/">
+        <h3 class="package-snippet__title">find</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-21T16:53:17+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-21 18:53:17 (+02:00)" aria-label="2025-06-21 18:53:17 (+02:00)">Jun 21, 2025</time>        </p>
+        <p class="package-snippet__description">Dynamiczny procesor danych z automatycznym wykrywaniem bibliotek</p>
+      </a>
+      <a class="package-snippet" href="/project/qry/">
+        <h3 class="package-snippet__title">qry</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-21T08:20:25+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-21 10:20:25 (+02:00)" aria-label="2025-06-21 10:20:25 (+02:00)">Jun 21, 2025</time>        </p>
+        <p class="package-snippet__description">Ultra-fast file search and processing tool</p>
+      </a>
+      <a class="package-snippet" href="/project/waproprint/">
+        <h3 class="package-snippet__title">waproprint</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-20T19:33:08+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-20 21:33:08 (+02:00)" aria-label="2025-06-20 21:33:08 (+02:00)">Jun 20, 2025</time>        </p>
+        <p class="package-snippet__description">A tool for generating and printing documents from database queries</p>
+      </a>
+      <a class="package-snippet" href="/project/emllm/">
+        <h3 class="package-snippet__title">emllm</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-20T06:19:44+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-20 08:19:44 (+02:00)" aria-label="2025-06-20 08:19:44 (+02:00)">Jun 20, 2025</time>        </p>
+        <p class="package-snippet__description">Large Language Model Email Message registry and interpreter</p>
+      </a>
+      <a class="package-snippet" href="/project/qra/">
+        <h3 class="package-snippet__title">qra</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-19T11:55:23+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-19 13:55:23 (+02:00)" aria-label="2025-06-19 13:55:23 (+02:00)">Jun 19, 2025</time>        </p>
+        <p class="package-snippet__description">MHTML editor and processor with live preview</p>
+      </a>
+      <a class="package-snippet" href="/project/vhtml/">
+        <h3 class="package-snippet__title">vhtml</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-18T21:00:17+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-18 23:00:17 (+02:00)" aria-label="2025-06-18 23:00:17 (+02:00)">Jun 18, 2025</time>        </p>
+        <p class="package-snippet__description">vhtml (ang. Visual HyperText Markup Language) - Optical character recognition and HTML layout analysis library</p>
+      </a>
+      <a class="package-snippet" href="/project/valider/">
+        <h3 class="package-snippet__title">valider</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-18T20:30:32+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-18 22:30:32 (+02:00)" aria-label="2025-06-18 22:30:32 (+02:00)">Jun 18, 2025</time>        </p>
+        <p class="package-snippet__description">Validation framework for financial document processing</p>
+      </a>
+      <a class="package-snippet" href="/project/dextra/">
+        <h3 class="package-snippet__title">dextra</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-18T20:26:29+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-18 22:26:29 (+02:00)" aria-label="2025-06-18 22:26:29 (+02:00)">Jun 18, 2025</time>        </p>
+        <p class="package-snippet__description">Data extraction framework for financial documents</p>
+      </a>
+      <a class="package-snippet" href="/project/dotect/">
+        <h3 class="package-snippet__title">dotect</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-18T20:09:36+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-18 22:09:36 (+02:00)" aria-label="2025-06-18 22:09:36 (+02:00)">Jun 18, 2025</time>        </p>
+        <p class="package-snippet__description">Document detection and classification for financial documents</p>
+      </a>
+      <a class="package-snippet" href="/project/invutil/">
+        <h3 class="package-snippet__title">invutil</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-18T20:05:10+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-18 22:05:10 (+02:00)" aria-label="2025-06-18 22:05:10 (+02:00)">Jun 18, 2025</time>        </p>
+        <p class="package-snippet__description">Utility functions for financial document processing</p>
+      </a>
+      <a class="package-snippet" href="/project/invocr/">
+        <h3 class="package-snippet__title">invocr</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-18T10:26:07+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-18 12:26:07 (+02:00)" aria-label="2025-06-18 12:26:07 (+02:00)">Jun 18, 2025</time>        </p>
+        <p class="package-snippet__description">Invoice OCR System - Convert invoices between PDF, JSON, XML, HTML formats using OCR</p>
+      </a>
+      <a class="package-snippet" href="/project/wronai-edge/">
+        <h3 class="package-snippet__title">wronai-edge</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-18T10:10:14+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-18 12:10:14 (+02:00)" aria-label="2025-06-18 12:10:14 (+02:00)">Jun 18, 2025</time>        </p>
+        <p class="package-snippet__description">Edge AI deployment and management tools</p>
+      </a>
+      <a class="package-snippet" href="/project/webload/">
+        <h3 class="package-snippet__title">webload</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-17T14:15:17+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-17 16:15:17 (+02:00)" aria-label="2025-06-17 16:15:17 (+02:00)">Jun 17, 2025</time>        </p>
+        <p class="package-snippet__description">Automatyczne pobieranie faktur i wyciągów z różnych serwisów</p>
+      </a>
+      <a class="package-snippet" href="/project/allama/">
+        <h3 class="package-snippet__title">allama</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-11T13:59:07+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-11 15:59:07 (+02:00)" aria-label="2025-06-11 15:59:07 (+02:00)">Jun 11, 2025</time>        </p>
+        <p class="package-snippet__description">A Python package for interacting with AI models</p>
+      </a>
+      <a class="package-snippet" href="/project/formap/">
+        <h3 class="package-snippet__title">formap</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-10T12:09:40+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-10 14:09:40 (+02:00)" aria-label="2025-06-10 14:09:40 (+02:00)">Jun 10, 2025</time>        </p>
+        <p class="package-snippet__description">Automated form filling and mapping tool with LLM integration</p>
+      </a>
+      <a class="package-snippet" href="/project/mdiss/">
+        <h3 class="package-snippet__title">mdiss</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-09T16:06:14+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-09 18:06:14 (+02:00)" aria-label="2025-06-09 18:06:14 (+02:00)">Jun 9, 2025</time>        </p>
+        <p class="package-snippet__description">Automatyczne generowanie ticketów GitHub na podstawie plików markdown z błędami poleceń</p>
+      </a>
+      <a class="package-snippet" href="/project/sifu/">
+        <h3 class="package-snippet__title">sifu</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-08T20:53:44+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-08 22:53:44 (+02:00)" aria-label="2025-06-08 22:53:44 (+02:00)">Jun 8, 2025</time>        </p>
+        <p class="package-snippet__description">Enhanced Knowledge System for ELLMa</p>
+      </a>
+      <a class="package-snippet" href="/project/shapi/">
+        <h3 class="package-snippet__title">shapi</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-08T19:27:20+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-08 21:27:20 (+02:00)" aria-label="2025-06-08 21:27:20 (+02:00)">Jun 8, 2025</time>        </p>
+        <p class="package-snippet__description">Transform shell scripts into production-ready APIs with REST, WebRTC, and gRPC support</p>
+      </a>
+      <a class="package-snippet" href="/project/ellma/">
+        <h3 class="package-snippet__title">ellma</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-08T18:22:56+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-08 20:22:56 (+02:00)" aria-label="2025-06-08 20:22:56 (+02:00)">Jun 8, 2025</time>        </p>
+        <p class="package-snippet__description">Evolutionary Local LLM Agent - Self-improving AI assistant</p>
+      </a>
+      <a class="package-snippet" href="/project/redoc/">
+        <h3 class="package-snippet__title">redoc</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-08T15:10:10+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-08 17:10:10 (+02:00)" aria-label="2025-06-08 17:10:10 (+02:00)">Jun 8, 2025</time>        </p>
+        <p class="package-snippet__description">Universal document converter with template support, OCR, and AI-powered processing. Convert between PDF, DOCX, HTML, XML, JSON, EPUB and more with a simple CLI or Python API.</p>
+      </a>
+      <a class="package-snippet" href="/project/apipack/">
+        <h3 class="package-snippet__title">apipack</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-08T13:02:05+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-08 15:02:05 (+02:00)" aria-label="2025-06-08 15:02:05 (+02:00)">Jun 8, 2025</time>        </p>
+        <p class="package-snippet__description">Automated API package generator with LLM integration</p>
+      </a>
+      <a class="package-snippet" href="/project/inceptor/">
+        <h3 class="package-snippet__title">inceptor</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-08T10:19:27+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-08 12:19:27 (+02:00)" aria-label="2025-06-08 12:19:27 (+02:00)">Jun 8, 2025</time>        </p>
+        <p class="package-snippet__description">Multi-Level Solution Architecture Generator powered by Ollama Mistral:7b</p>
+      </a>
+      <a class="package-snippet" href="/project/toprint/">
+        <h3 class="package-snippet__title">toprint</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-08T09:48:27+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-08 11:48:27 (+02:00)" aria-label="2025-06-08 11:48:27 (+02:00)">Jun 8, 2025</time>        </p>
+        <p class="package-snippet__description">2print/toprint: Python library for printing and converting between HTML, PDF, ZPL, and image formats with printer support. Also known as 2print or to-print.</p>
+      </a>
+      <a class="package-snippet" href="/project/taskprovision/">
+        <h3 class="package-snippet__title">taskprovision</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-07T21:17:33+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-07 23:17:33 (+02:00)" aria-label="2025-06-07 23:17:33 (+02:00)">Jun 7, 2025</time>        </p>
+        <p class="package-snippet__description">AI-Powered Development Automation Platform</p>
+      </a>
+      <a class="package-snippet" href="/project/weekly/">
+        <h3 class="package-snippet__title">weekly</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-07T14:41:17+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-07 16:41:17 (+02:00)" aria-label="2025-06-07 16:41:17 (+02:00)">Jun 7, 2025</time>        </p>
+        <p class="package-snippet__description">A comprehensive Python project quality analyzer that provides actionable next steps for improving your project</p>
+      </a>
+      <a class="package-snippet" href="/project/git2wp/">
+        <h3 class="package-snippet__title">git2wp</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-06T17:56:30+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-06 19:56:30 (+02:00)" aria-label="2025-06-06 19:56:30 (+02:00)">Jun 6, 2025</time>        </p>
+        <p class="package-snippet__description">A command-line tool for publishing Git repository changes to WordPress.</p>
+      </a>
+      <a class="package-snippet" href="/project/taskguard/">
+        <h3 class="package-snippet__title">taskguard</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-05T18:25:35+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-05 20:25:35 (+02:00)" aria-label="2025-06-05 20:25:35 (+02:00)">Jun 5, 2025</time>        </p>
+        <p class="package-snippet__description">LLM Task Controller - Intelligent project management with local AI</p>
+      </a>
+      <a class="package-snippet" href="/project/wronai/">
+        <h3 class="package-snippet__title">wronai</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-04T21:24:14+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-04 23:24:14 (+02:00)" aria-label="2025-06-04 23:24:14 (+02:00)">Jun 4, 2025</time>        </p>
+        <p class="package-snippet__description">End-to-end LLM model building, fine-tuning, and deployment toolkit</p>
+      </a>
+      <a class="package-snippet" href="/project/dialogchain/">
+        <h3 class="package-snippet__title">dialogchain</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-04T21:13:01+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-04 23:13:01 (+02:00)" aria-label="2025-06-04 23:13:01 (+02:00)">Jun 4, 2025</time>        </p>
+        <p class="package-snippet__description">DialogChain - A flexible and extensible dialog processing framework</p>
+      </a>
+      <a class="package-snippet" href="/project/airun/">
+        <h3 class="package-snippet__title">airun</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-04T20:36:38+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-04 22:36:38 (+02:00)" aria-label="2025-06-04 22:36:38 (+02:00)">Jun 4, 2025</time>        </p>
+        <p class="package-snippet__description">AI-Enhanced Universal Script Runner with automatic error fixing</p>
+      </a>
+      <a class="package-snippet" href="/project/gollm/">
+        <h3 class="package-snippet__title">gollm</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-03T20:50:15+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-03 22:50:15 (+02:00)" aria-label="2025-06-03 22:50:15 (+02:00)">Jun 3, 2025</time>        </p>
+        <p class="package-snippet__description">Go Learn, Lead, Master! - Inteligentny system kontroli jakości kodu z integracją LLM</p>
+      </a>
+      <a class="package-snippet" href="/project/email-invoice-processor/">
+        <h3 class="package-snippet__title">email-invoice-processor</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-02T11:15:51+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-02 13:15:51 (+02:00)" aria-label="2025-06-02 13:15:51 (+02:00)">Jun 2, 2025</time>        </p>
+        <p class="package-snippet__description">Email invoice processor with OCR capabilities</p>
+      </a>
+      <a class="package-snippet" href="/project/spylog/">
+        <h3 class="package-snippet__title">spylog</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-01T13:15:12+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-01 15:15:12 (+02:00)" aria-label="2025-06-01 15:15:12 (+02:00)">Jun 1, 2025</time>        </p>
+        <p class="package-snippet__description">Python Validator Proxy - waliduje pliki Python przed uruchomieniem</p>
+      </a>
+      <a class="package-snippet" href="/project/spyq/">
+        <h3 class="package-snippet__title">spyq</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-06-01T13:00:40+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-06-01 15:00:40 (+02:00)" aria-label="2025-06-01 15:00:40 (+02:00)">Jun 1, 2025</time>        </p>
+        <p class="package-snippet__description">SPYQ - Shell Python Quality Guard</p>
+      </a>
+      <a class="package-snippet" href="/project/getllm/">
+        <h3 class="package-snippet__title">getllm</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-05-31T21:23:07+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-05-31 23:23:07 (+02:00)" aria-label="2025-05-31 23:23:07 (+02:00)">May 31, 2025</time>        </p>
+        <p class="package-snippet__description">Python LLM operations service for the DevLama ecosystem</p>
+      </a>
+      <a class="package-snippet" href="/project/bexy/">
+        <h3 class="package-snippet__title">bexy</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-05-31T11:47:09+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-05-31 13:47:09 (+02:00)" aria-label="2025-05-31 13:47:09 (+02:00)">May 31, 2025</time>        </p>
+        <p class="package-snippet__description">A sandbox for safely running Python code</p>
+      </a>
+      <a class="package-snippet" href="/project/llm-list/">
+        <h3 class="package-snippet__title">llm-list</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-05-29T12:30:06+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-05-29 14:30:06 (+02:00)" aria-label="2025-05-29 14:30:06 (+02:00)">May 29, 2025</time>        </p>
+        <p class="package-snippet__description">A Python package to list and monitor available LLM models from various providers</p>
+      </a>
+      <a class="package-snippet" href="/project/git2blog/">
+        <h3 class="package-snippet__title">git2blog</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-05-28T14:43:44+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-05-28 16:43:44 (+02:00)" aria-label="2025-05-28 16:43:44 (+02:00)">May 28, 2025</time>        </p>
+        <p class="package-snippet__description">Generator bloga z historii Git używający Ollama LLM</p>
+      </a>
+      <a class="package-snippet" href="/project/shellama/">
+        <h3 class="package-snippet__title">shellama</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-05-28T10:41:05+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-05-28 12:41:05 (+02:00)" aria-label="2025-05-28 12:41:05 (+02:00)">May 28, 2025</time>        </p>
+        <p class="package-snippet__description">Shell and filesystem operations REST API service for the PyLama ecosystem</p>
+      </a>
+      <a class="package-snippet" href="/project/loglama/">
+        <h3 class="package-snippet__title">loglama</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-05-28T10:40:30+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-05-28 12:40:30 (+02:00)" aria-label="2025-05-28 12:40:30 (+02:00)">May 28, 2025</time>        </p>
+        <p class="package-snippet__description">Powerful logging and debugging utility for PyLama ecosystem</p>
+      </a>
+      <a class="package-snippet" href="/project/devlama/">
+        <h3 class="package-snippet__title">devlama</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-05-28T10:40:18+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-05-28 12:40:18 (+02:00)" aria-label="2025-05-28 12:40:18 (+02:00)">May 28, 2025</time>        </p>
+        <p class="package-snippet__description">Python code generation and execution using Ollama language models</p>
+      </a>
+      <a class="package-snippet" href="/project/apilama/">
+        <h3 class="package-snippet__title">apilama</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-05-28T10:40:08+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-05-28 12:40:08 (+02:00)" aria-label="2025-05-28 12:40:08 (+02:00)">May 28, 2025</time>        </p>
+        <p class="package-snippet__description">Backend API service for the PyLama ecosystem</p>
+      </a>
+      <a class="package-snippet" href="/project/mediainspect-rtsp/">
+        <h3 class="package-snippet__title">mediainspect-rtsp</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-05-26T20:48:45+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-05-26 22:48:45 (+02:00)" aria-label="2025-05-26 22:48:45 (+02:00)">May 26, 2025</time>        </p>
+        <p class="package-snippet__description">Real-time RTSP video stream processor with motion detection, object recognition, and analysis capabilities. Built with Python and OpenCV.</p>
+      </a>
+      <a class="package-snippet" href="/project/taskinity/">
+        <h3 class="package-snippet__title">taskinity</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-05-24T15:44:55+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-05-24 17:44:55 (+02:00)" aria-label="2025-05-24 17:44:55 (+02:00)">May 24, 2025</time>        </p>
+        <p class="package-snippet__description">Inteligentny Framework do Orkiestracji Zadań</p>
+      </a>
+      <a class="package-snippet" href="/project/webtask/">
+        <h3 class="package-snippet__title">webtask</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-05-22T21:53:48+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-05-22 23:53:48 (+02:00)" aria-label="2025-05-22 23:53:48 (+02:00)">May 22, 2025</time>        </p>
+        <p class="package-snippet__description">A modern, web-based system monitor inspired by htop with file browser and process transparency</p>
+      </a>
+      <a class="package-snippet" href="/project/rpi-stt-tts-shell/">
+        <h3 class="package-snippet__title">rpi_stt_tts_shell</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-05-15T17:36:32+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-05-15 19:36:32 (+02:00)" aria-label="2025-05-15 19:36:32 (+02:00)">May 15, 2025</time>        </p>
+        <p class="package-snippet__description">Biblioteka STT i TTS dla Raspberry Pi</p>
+      </a>
+      <a class="package-snippet" href="/project/coboarding/">
+        <h3 class="package-snippet__title">coboarding</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-05-13T13:10:08+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-05-13 15:10:08 (+02:00)" aria-label="2025-05-13 15:10:08 (+02:00)">May 13, 2025</time>        </p>
+        <p class="package-snippet__description">Automated Development Environment</p>
+      </a>
+      <a class="package-snippet" href="/project/safetytwin-share/">
+        <h3 class="package-snippet__title">safetytwin-share</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-05-11T21:29:27+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-05-11 23:29:27 (+02:00)" aria-label="2025-05-11 23:29:27 (+02:00)">May 11, 2025</time>        </p>
+        <p class="package-snippet__description">Safety Twin Share</p>
+      </a>
+      <a class="package-snippet" href="/project/twinshare/">
+        <h3 class="package-snippet__title">twinshare</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-05-11T21:07:06+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-05-11 23:07:06 (+02:00)" aria-label="2025-05-11 23:07:06 (+02:00)">May 11, 2025</time>        </p>
+        <p class="package-snippet__description">Twin Share - Environment Manager - narzędzie do dzielenia się środowiskami Embedded/AI/VM</p>
+      </a>
+      <a class="package-snippet" href="/project/spectomate/">
+        <h3 class="package-snippet__title">spectomate</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-05-11T18:01:14+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-05-11 20:01:14 (+02:00)" aria-label="2025-05-11 20:01:14 (+02:00)">May 11, 2025</time>        </p>
+        <p class="package-snippet__description">Modularny konwerter formatów pakietów Python</p>
+      </a>
+      <a class="package-snippet" href="/project/evodev/">
+        <h3 class="package-snippet__title">evodev</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-05-06T19:47:41+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-05-06 21:47:41 (+02:00)" aria-label="2025-05-06 21:47:41 (+02:00)">May 6, 2025</time>        </p>
+        <p class="package-snippet__description">Automated Development Environment</p>
+      </a>
+      <a class="package-snippet" href="/project/twinizer/">
+        <h3 class="package-snippet__title">twinizer</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-05-05T14:32:53+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-05-05 16:32:53 (+02:00)" aria-label="2025-05-05 16:32:53 (+02:00)">May 5, 2025</time>        </p>
+        <p class="package-snippet__description">A comprehensive environment for hardware and firmware reverse engineering, analysis and management</p>
+      </a>
+      <a class="package-snippet" href="/project/mdirtree/">
+        <h3 class="package-snippet__title">mdirtree</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-05-04T19:24:59+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-05-04 21:24:59 (+02:00)" aria-label="2025-05-04 21:24:59 (+02:00)">May 4, 2025</time>        </p>
+        <p class="package-snippet__description">Generate directory structures from ASCII art or Markdown files</p>
+      </a>
+      <a class="package-snippet" href="/project/inspectomat/">
+        <h3 class="package-snippet__title">inspectomat</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-05-04T07:58:18+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-05-04 09:58:18 (+02:00)" aria-label="2025-05-04 09:58:18 (+02:00)">May 4, 2025</time>        </p>
+        <p class="package-snippet__description">System cleanup and file management toolbox</p>
+      </a>
+      <a class="package-snippet" href="/project/infrash/">
+        <h3 class="package-snippet__title">infrash</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-05-03T21:33:34+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-05-03 23:33:34 (+02:00)" aria-label="2025-05-03 23:33:34 (+02:00)">May 3, 2025</time>        </p>
+        <p class="package-snippet__description">Inteligentny runner do rozwiązywania problemów infrastrukturalnych</p>
+      </a>
+      <a class="package-snippet" href="/project/unitmcp/">
+        <h3 class="package-snippet__title">unitmcp</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-05-03T19:51:18+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-05-03 21:51:18 (+02:00)" aria-label="2025-05-03 21:51:18 (+02:00)">May 3, 2025</time>        </p>
+        <p class="package-snippet__description">UnitMCP package for MCP hardware integration with Ollama LLM and Raspberry Pi hardware control.</p>
+      </a>
+      <a class="package-snippet" href="/project/unitapi/">
+        <h3 class="package-snippet__title">unitapi</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-05-01T14:05:57+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-05-01 16:05:57 (+02:00)" aria-label="2025-05-01 16:05:57 (+02:00)">May 1, 2025</time>        </p>
+        <p class="package-snippet__description">Real-Time Annotation and Stream Processing Interface</p>
+      </a>
+      <a class="package-snippet" href="/project/rtaspi/">
+        <h3 class="package-snippet__title">rtaspi</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-04-30T10:05:32+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-04-30 12:05:32 (+02:00)" aria-label="2025-04-30 12:05:32 (+02:00)">Apr 30, 2025</time>        </p>
+        <p class="package-snippet__description">Real-Time Annotation and Stream Processing Interface</p>
+      </a>
+      <a class="package-snippet" href="/project/pifunc/">
+        <h3 class="package-snippet__title">pifunc</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-04-29T05:05:16+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-04-29 07:05:16 (+02:00)" aria-label="2025-04-29 07:05:16 (+02:00)">Apr 29, 2025</time>        </p>
+        <p class="package-snippet__description">Protocol Interface Functions</p>
+      </a>
+      <a class="package-snippet" href="/project/rtasp/">
+        <h3 class="package-snippet__title">rtasp</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-04-28T16:12:11+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-04-28 18:12:11 (+02:00)" aria-label="2025-04-28 18:12:11 (+02:00)">Apr 28, 2025</time>        </p>
+        <p class="package-snippet__description">libs to run RTASP  - Real-Time Annotation and Stream Processing </p>
+      </a>
+      <a class="package-snippet" href="/project/markdown2app/">
+        <h3 class="package-snippet__title">markdown2app</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-04-28T15:24:19+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-04-28 17:24:19 (+02:00)" aria-label="2025-04-28 17:24:19 (+02:00)">Apr 28, 2025</time>        </p>
+        <p class="package-snippet__description">libs to run markdown as an app in a python3 environment</p>
+      </a>
+      <a class="package-snippet" href="/project/pyfunc2/">
+        <h3 class="package-snippet__title">pyfunc2</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-04-16T15:29:51+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-04-16 17:29:51 (+02:00)" aria-label="2025-04-16 17:29:51 (+02:00)">Apr 16, 2025</time>        </p>
+        <p class="package-snippet__description">libs for cameramonit, ocr, fin-officer, cfo, and other projects</p>
+      </a>
+      <a class="package-snippet" href="/project/movatalk/">
+        <h3 class="package-snippet__title">movatalk</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-04-16T12:55:59+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-04-16 14:55:59 (+02:00)" aria-label="2025-04-16 14:55:59 (+02:00)">Apr 16, 2025</time>        </p>
+        <p class="package-snippet__description">libs for cameramonit, ocr, fin-officer, cfo, and other projects</p>
+      </a>
+      <a class="package-snippet" href="/project/automatyzer-desktop/">
+        <h3 class="package-snippet__title">automatyzer-desktop</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-04-15T17:01:16+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-04-15 19:01:16 (+02:00)" aria-label="2025-04-15 19:01:16 (+02:00)">Apr 15, 2025</time>        </p>
+        <p class="package-snippet__description">Bot do automatyzacji zadań poprzez Remote Desktop</p>
+      </a>
+      <a class="package-snippet" href="/project/infrash-embedded/">
+        <h3 class="package-snippet__title">infrash-embedded</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-04-06T12:36:03+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-04-06 14:36:03 (+02:00)" aria-label="2025-04-06 14:36:03 (+02:00)">Apr 6, 2025</time>        </p>
+        <p class="package-snippet__description">Print from html to pdf, zpl, image, printer: html to print, htmlinfrash_embedded, html to pdf,html2pdf, pdf to print, pdfinfrash_embedded, zpl to print,zplinfrash_embedded, image to print,  imageinfrash_embedded, </p>
+      </a>
+      <a class="package-snippet" href="/project/text2doc/">
+        <h3 class="package-snippet__title">text2doc</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-04-01T12:46:36+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-04-01 14:46:36 (+02:00)" aria-label="2025-04-01 14:46:36 (+02:00)">Apr 1, 2025</time>        </p>
+        <p class="package-snippet__description">Convert text to formatted documents</p>
+      </a>
+      <a class="package-snippet" href="/project/memfs/">
+        <h3 class="package-snippet__title">memfs</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-03-29T12:43:12+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-03-29 13:43:12 (+01:00)" aria-label="2025-03-29 13:43:12 (+01:00)">Mar 29, 2025</time>        </p>
+        <p class="package-snippet__description">Generate grpc API Service based on function</p>
+      </a>
+      <a class="package-snippet" href="/project/apifunc/">
+        <h3 class="package-snippet__title">apifunc</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2025-03-28T17:18:45+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2025-03-28 18:18:45 (+01:00)" aria-label="2025-03-28 18:18:45 (+01:00)">Mar 28, 2025</time>        </p>
+        <p class="package-snippet__description">Protocol Interface Functions</p>
+      </a>
+      <a class="package-snippet" href="/project/markdown2code/">
+        <h3 class="package-snippet__title">markdown2code</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2024-11-20T23:34:57+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2024-11-21 00:34:57 (+01:00)" aria-label="2024-11-21 00:34:57 (+01:00)">Nov 21, 2024</time>        </p>
+        <p class="package-snippet__description">Convert markdown files into organized project structures with code files</p>
+      </a>
+      <a class="package-snippet" href="/project/dynapsys/">
+        <h3 class="package-snippet__title">dynapsys</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2024-11-19T23:43:30+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2024-11-20 00:43:30 (+01:00)" aria-label="2024-11-20 00:43:30 (+01:00)">Nov 20, 2024</time>        </p>
+        <p class="package-snippet__description">Dynamic Python System Deployment Tools</p>
+      </a>
+      <a class="package-snippet" href="/project/uripoint/">
+        <h3 class="package-snippet__title">uripoint</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2024-11-12T10:28:35+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2024-11-12 11:28:35 (+01:00)" aria-label="2024-11-12 11:28:35 (+01:00)">Nov 12, 2024</time>        </p>
+        <p class="package-snippet__description">A flexible Python library for endpoint management and URI processing</p>
+      </a>
+      <a class="package-snippet" href="/project/dialogstream/">
+        <h3 class="package-snippet__title">dialogstream</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2024-11-02T17:26:22+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2024-11-02 18:26:22 (+01:00)" aria-label="2024-11-02 18:26:22 (+01:00)">Nov 2, 2024</time>        </p>
+        <p class="package-snippet__description">A flexible stream routing and filtering system with support for scheduled tasks and event reactions</p>
+      </a>
+      <a class="package-snippet" href="/project/biocomp/">
+        <h3 class="package-snippet__title">biocomp</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2024-10-18T19:17:25+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2024-10-18 21:17:25 (+02:00)" aria-label="2024-10-18 21:17:25 (+02:00)">Oct 18, 2024</time>        </p>
+        <p class="package-snippet__description">BioComp  'Coded Life' to propozycja języka domenowo-specyficznego (DSL) do edukacji i wdrażania biocomputingu</p>
+      </a>
+      <a class="package-snippet" href="/project/browseek/">
+        <h3 class="package-snippet__title">browseek</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2024-10-17T12:55:53+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2024-10-17 14:55:53 (+02:00)" aria-label="2024-10-17 14:55:53 (+02:00)">Oct 17, 2024</time>        </p>
+        <p class="package-snippet__description">Advanced multi-browser automation library</p>
+      </a>
+      <a class="package-snippet" href="/project/vocochat/">
+        <h3 class="package-snippet__title">vocochat</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2024-10-15T16:17:00+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2024-10-15 18:17:00 (+02:00)" aria-label="2024-10-15 18:17:00 (+02:00)">Oct 15, 2024</time>        </p>
+        <p class="package-snippet__description">None</p>
+      </a>
+      <a class="package-snippet" href="/project/salomos/">
+        <h3 class="package-snippet__title">salomos</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2024-10-15T14:30:33+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2024-10-15 16:30:33 (+02:00)" aria-label="2024-10-15 16:30:33 (+02:00)">Oct 15, 2024</time>        </p>
+        <p class="package-snippet__description">Salomos is a Python package that provides a domain-specific language (DSL) processor for executing commands based on sentences stored in a SQLite database.</p>
+      </a>
+      <a class="package-snippet" href="/project/dobyemail/">
+        <h3 class="package-snippet__title">dobyemail</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2024-10-15T12:56:39+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2024-10-15 14:56:39 (+02:00)" aria-label="2024-10-15 14:56:39 (+02:00)">Oct 15, 2024</time>        </p>
+        <p class="package-snippet__description">Do By Email is a comprehensive Python package for handling various email operations.</p>
+      </a>
+      <a class="package-snippet" href="/project/codialog/">
+        <h3 class="package-snippet__title">codialog</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2024-08-01T19:05:23+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2024-08-01 21:05:23 (+02:00)" aria-label="2024-08-01 21:05:23 (+02:00)">Aug 1, 2024</time>        </p>
+        <p class="package-snippet__description">None</p>
+      </a>
+      <a class="package-snippet" href="/project/pyfunc-config/">
+        <h3 class="package-snippet__title">pyfunc-config</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2024-07-15T08:50:09+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2024-07-15 10:50:09 (+02:00)" aria-label="2024-07-15 10:50:09 (+02:00)">Jul 15, 2024</time>        </p>
+        <p class="package-snippet__description">libs for cameramonit, ocr, fin-officer, cfo, and other projects</p>
+      </a>
+      <a class="package-snippet" href="/project/dialoget/">
+        <h3 class="package-snippet__title">dialoget</h3>
+        <p class="package-snippet__meta">
+Last released <time datetime="2023-12-10T21:45:56+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2023-12-10 22:45:56 (+01:00)" aria-label="2023-12-10 22:45:56 (+01:00)">Dec 10, 2023</time>        </p>
+        <p class="package-snippet__description">A Sentence Python decorator for displaying dynamic log messages.</p>
+      </a>
+</div>
+</div>
+</div>

@@ -1,4 +1,4 @@
-# PromptGuard — Rules Configuration
+# Prellm — Rules Configuration
 # Policy: strict | lenient | devops
 
 bias_patterns:

@@ -1,4 +1,4 @@
-"""Core PromptGuard — the main entry point for prompt analysis, enrichment, and LLM calls."""
+"""Core Prellm — the main entry point for prompt analysis, enrichment, and LLM calls."""
 
 from __future__ import annotations
 
@@ -9,9 +9,9 @@ from typing import Any
 
 import yaml
 
-from promptguard.analyzers.bias_detector import BiasDetector
-from promptguard.analyzers.context_engine import ContextEngine
-from promptguard.models import (
+from prellm.analyzers.bias_detector import BiasDetector
+from prellm.analyzers.context_engine import ContextEngine
+from prellm.models import (
     AuditEntry,
     BiasPattern,
     GuardConfig,
@@ -20,11 +20,11 @@ from promptguard.models import (
     Policy,
 )
 
-logger = logging.getLogger("promptguard")
+logger = logging.getLogger("prellm")
 
 
 class PromptGuard:
-    """Main PromptGuard middleware — analyze, enrich, and proxy LLM calls.
+    """Main Prellm middleware — analyze, enrich, and proxy LLM calls.
 
     Usage:
         guard = PromptGuard("rules.yaml")

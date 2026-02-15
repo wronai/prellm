@@ -1,4 +1,4 @@
-"""Data models for PromptGuard — all inputs/outputs are Pydantic v2 validated."""
+"""Data models for Prellm — all inputs/outputs are Pydantic v2 validated."""
 
 from __future__ import annotations
 
@@ -89,7 +89,7 @@ class AnalysisResult(BaseModel):
 
 
 class GuardResponse(BaseModel):
-    """Response from PromptGuard — the final output after analysis and LLM call."""
+    """Response from Prellm — the final output after analysis and LLM call."""
     content: str
     clarified: bool = False
     needs_more_context: bool = False

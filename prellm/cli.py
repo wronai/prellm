@@ -1,4 +1,4 @@
-"""PromptGuard CLI — run prompts, execute process chains, and manage configs."""
+"""Prellm CLI — run prompts, execute process chains, and manage configs."""
 
 from __future__ import annotations
 
@@ -11,8 +11,8 @@ from typing import Optional
 import typer
 
 app = typer.Typer(
-    name="promptguard",
-    help="PromptGuard — LLM prompt middleware for bias detection, standardization, and DevOps process chains.",
+    name="prellm",
+    help="Prellm — LLM prompt middleware for bias detection, standardization, and DevOps process chains.",
     no_args_is_help=True,
 )
 
@@ -25,8 +25,8 @@ def run(
     dry_run: bool = typer.Option(False, "--dry-run", "-d", help="Analyze only, don't call LLM"),
     json_output: bool = typer.Option(False, "--json", "-j", help="Output as JSON"),
 ):
-    """Run a single query through PromptGuard."""
-    from promptguard.core import PromptGuard
+    """Run a single query through Prellm."""
+    from prellm.core import PromptGuard
 
     guard = PromptGuard(config_path=config)
 
@@ -49,7 +49,7 @@ def run(
     else:
         status = "✅ clarified" if result.clarified else "📝 direct"
         typer.echo(f"\n{'='*60}")
-        typer.echo(f"🛡️  PromptGuard [{status}] via {result.model_used}")
+        typer.echo(f"🛡️  Prellm [{status}] via {result.model_used}")
         typer.echo(f"{'='*60}")
         typer.echo(f"\n{result.content}")
         if result.analysis and result.analysis.detected_patterns:
@@ -66,7 +66,7 @@ def process(
     env: Optional[str] = typer.Option(None, "--env", "-e", help="Environment override (e.g., production)"),
 ):
     """Execute a DevOps process chain."""
-    from promptguard.chains.process_chain import ProcessChain
+    from prellm.chains.process_chain import ProcessChain
 
     chain = ProcessChain(config_path=config, guard_config_path=guard_config)
 
@@ -103,7 +103,7 @@ def analyze(
     config: Path = typer.Option("rules.yaml", "--config", "-c", help="Path to YAML config"),
 ):
     """Analyze a query without calling any LLM (bias detection + ambiguity check)."""
-    from promptguard.core import PromptGuard
+    from prellm.core import PromptGuard
 
     guard = PromptGuard(config_path=config)
     result = guard.analyze_only(query)

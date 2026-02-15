@@ -10,9 +10,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 import yaml
 
-from promptguard.chains.process_chain import ProcessChain
-from promptguard.core import PromptGuard
-from promptguard.models import (
+from prellm.chains.process_chain import ProcessChain
+from prellm.core import PromptGuard
+from prellm.models import (
     ApprovalMode,
     GuardConfig,
     Policy,

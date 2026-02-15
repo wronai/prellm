@@ -1,20 +1,20 @@
 [tool.poetry]
-name = "promptguard"
-version = "0.1.5"
-description = "Lightweight LLM prompt middleware — bias detection, standardization, and DevOps process chains via YAML config"
+name = "prellm"
+version = "0.1.13"
+description = "Prellm - Lightweight LLM prompt middleware for bias detection, standardization, and DevOps process chains via YAML config, supporting context injection and multi-provider orchestration."
 authors = [
-    "Softreck <info@softreck.com>",
+    "Softreck <tom@sapletta.com>",
     "Tom Sapletta <tom@sapletta.com>",
 ]
 license = "Apache-2.0"
 readme = "README.md"
-repository = "https://github.com/softreck/gllm"
+repository = "https://github.com/wronai/prellm"
 keywords = ["llm", "prompt-engineering", "bias-detection", "devops", "litellm"]
+packages = [{include = "prellm"}]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "License :: OSI Approved :: Apache Software License",
 ]
 
 [tool.poetry.dependencies]
@@ -33,7 +33,7 @@ pytest-mock = "^3.12"
 ruff = "^0.4"
 
 [tool.poetry.scripts]
-promptguard = "promptguard.cli:app"
+prellm = "prellm.cli:app"
 
 [build-system]
 requires = ["poetry-core"]

@@ -1,13 +1,13 @@
 [bumpver]
-current_version = "0.1.4"
-version_file = "promptguard/__init__.py"
+current_version = "0.1.12"
+version_file = "prellm/__init__.py"
 version_pattern = "{semver}"
 commit = false
 tag = false
 push = false
 
 [bumpver.file_patterns]
-"promptguard/__init__.py" = [
+"prellm/__init__.py" = [
     '__version__ = "{version}"'
 ]
 "pyproject.toml" = [

@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from promptguard.analyzers.bias_detector import BiasDetector, DEFAULT_PATTERNS
-from promptguard.models import BiasPattern
+from prellm.analyzers.bias_detector import BiasDetector, DEFAULT_PATTERNS
+from prellm.models import BiasPattern
 
 
 class TestPolishPatterns:

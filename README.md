@@ -1,8 +1,8 @@
-# 🛡️ PromptGuard
+# 🛡️ Prellm
 
 **Lightweight LLM prompt middleware — bias detection, standardization, and DevOps process chains via YAML config.**
 
-PromptGuard sits between your application and LLM providers, automatically detecting bias, ambiguity, and dangerous patterns in prompts. It enriches queries with context, validates outputs, and supports multi-step DevOps workflows with approval gates.
+Prellm sits between your application and LLM providers, automatically detecting bias, ambiguity, and dangerous patterns in prompts. It enriches queries with context, validates outputs, and supports multi-step DevOps workflows with approval gates.
 
 ## Features
 
@@ -18,25 +18,25 @@ PromptGuard sits between your application and LLM providers, automatically detec
 
 ```bash
 # Install
-pip install promptguard
+pip install prellm
 
 # Generate config
-promptguard init --devops -o rules.yaml
+prellm init --devops -o rules.yaml
 
 # Analyze a query (no LLM call)
-promptguard analyze "Deploy to production" --config rules.yaml
+prellm analyze "Deploy to production" --config rules.yaml
 
 # Run with LLM
-promptguard run "Zdeployuj na staging" --config rules.yaml --model gpt-4o-mini
+prellm run "Zdeployuj na staging" --config rules.yaml --model gpt-4o-mini
 
 # Execute a process chain
-promptguard process deploy.yaml --guard-config rules.yaml --env production
+prellm process deploy.yaml --guard-config rules.yaml --env production
 ```
 
 ## Python API
 
 ```python
-from promptguard import PromptGuard, ProcessChain
+from prellm import PromptGuard, ProcessChain
 
 # Simple query
 guard = PromptGuard("rules.yaml")

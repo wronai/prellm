@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from promptguard.models import AnalysisResult, BiasPattern
+from prellm.models import AnalysisResult, BiasPattern
 
 
 # Default bias/ambiguity patterns for Polish & English DevOps context

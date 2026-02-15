@@ -10,7 +10,7 @@ from typing import Any
 class ContextEngine:
     """Collects context from environment, git, and system for prompt enrichment.
 
-    Used by both core PromptGuard (auto-inject context) and ProcessChain (step-level context).
+    Used by both core Prellm (auto-inject context) and ProcessChain (step-level context).
     """
 
     def __init__(self, context_sources: list[dict[str, Any]] | None = None):

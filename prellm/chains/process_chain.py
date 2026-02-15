@@ -1,6 +1,6 @@
 """ProcessChain — Multi-step DevOps workflow engine with approval gates and audit trail.
 
-Defines workflows as YAML, validates each step through PromptGuard, supports
+Defines workflows as YAML, validates each step through Prellm, supports
 manual/auto approval, rollback, and full audit logging.
 """
 
@@ -14,9 +14,9 @@ from typing import Any, Awaitable, Callable
 
 import yaml
 
-from promptguard.analyzers.context_engine import ContextEngine
-from promptguard.core import PromptGuard
-from promptguard.models import (
+from prellm.analyzers.context_engine import ContextEngine
+from prellm.core import PromptGuard
+from prellm.models import (
     ApprovalMode,
     AuditEntry,
     GuardConfig,
@@ -27,14 +27,14 @@ from promptguard.models import (
     StepStatus,
 )
 
-logger = logging.getLogger("promptguard.chains")
+logger = logging.getLogger("prellm.chains")
 
 # Type for approval callback: receives step info, returns (approved: bool, approved_by: str)
 ApprovalCallback = Callable[[str, str], Awaitable[tuple[bool, str]]]
 
 
 class ProcessChain:
-    """Execute multi-step DevOps workflows with PromptGuard validation at each step.
+    """Execute multi-step DevOps workflows with Prellm validation at each step.
 
     Usage:
         chain = ProcessChain("deploy.yaml")
@@ -43,7 +43,7 @@ class ProcessChain:
             approval_callback=my_slack_approval_fn,
         )
 
-    Each step's prompt goes through PromptGuard's full pipeline (bias detection,
+    Each step's prompt goes through Prellm's full pipeline (bias detection,
     enrichment, LLM call, validation) before execution.
     """
 

@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends git && \
 
 # Install Python deps
 COPY pyproject.toml README.md ./
-COPY promptguard/ promptguard/
+COPY prellm/ prellm/
 RUN pip install --no-cache-dir poetry && \
     poetry config virtualenvs.create false && \
     poetry install --only main --no-interaction && \
@@ -17,5 +17,5 @@ RUN pip install --no-cache-dir poetry && \
 
 COPY configs/ configs/
 
-ENTRYPOINT ["promptguard"]
+ENTRYPOINT ["prellm"]
 CMD ["--help"]

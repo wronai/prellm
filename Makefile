@@ -1,4 +1,4 @@
-# PromptGuard Makefile
+# Prellm Makefile
 .PHONY: help install install-dev test lint format clean build publish run demo init bump-patch check-bumpver check-build check-twine
 
 # Check for Poetry availability
@@ -22,7 +22,7 @@ NC := \033[0m # No Color
 
 # Default target
 help:
-	@echo "PromptGuard - LLM prompt middleware"
+	@echo "Prellm - LLM prompt middleware"
 	@echo "=================================="
 	@echo ""
 	@echo "Available commands:"
@@ -59,7 +59,7 @@ test:
 	$(RUN) pytest tests/ -v
 
 test-cov:
-	$(RUN) pytest tests/ -v --cov=promptguard --cov-report=html --cov-report=term
+	$(RUN) pytest tests/ -v --cov=prellm --cov-report=html --cov-report=term
 
 lint:
 	$(RUN) ruff check .
@@ -85,14 +85,14 @@ publish: bump-patch build check-twine ## Publish to PyPI (production)
 	@echo "$(YELLOW)Publishing to PyPI...$(NC)"
 	$(PYTHON) -m twine upload dist/*
 	@echo "$(GREEN)Published to PyPI!$(NC)"
-	@echo "Install with: pip install promptguard"
+	@echo "Install with: pip install prellm"
 
 publish-test: build ## Publish to Test PyPI
 	@echo "$(YELLOW)Publishing to Test PyPI...$(NC)"
 	$(PYTHON) -m twine upload --repository testpypi dist/*
 	@echo "$(GREEN)Published to Test PyPI!$(NC)"
 
-bump-patch: check-bumpver ## Bump patch version (updates pyproject.toml and promptguard/__init__.py)
+bump-patch: check-bumpver ## Bump patch version (updates pyproject.toml and prellm/__init__.py)
 	$(PYTHON) -m bumpver update --patch
 
 check-twine: ## Ensure twine is installed
@@ -122,20 +122,20 @@ check-bumpver: ## Ensure bumpver is installed
 
 # Demo and examples
 run:
-	$(RUN) promptguard run "deploy to production" --dry-run
+	$(RUN) prellm run "deploy to production" --dry-run
 
 demo:
 	@echo "Generating demo config..."
-	$(RUN) promptguard init --devops
+	$(RUN) prellm init --devops
 	@echo ""
 	@echo "Running demo analysis..."
-	$(RUN) promptguard analyze "zawsze restartuj serwer" --config rules.yaml
+	$(RUN) prellm analyze "zawsze restartuj serwer" --config rules.yaml
 	@echo ""
 	@echo "Running demo process chain..."
-	$(RUN) promptguard process configs/deploy.yaml --dry-run --guard-config rules.yaml || echo "Process chain config not found, skipping..."
+	$(RUN) prellm process configs/deploy.yaml --dry-run --guard-config rules.yaml || echo "Process chain config not found, skipping..."
 
 init:
-	$(RUN) promptguard init --devops
+	$(RUN) prellm init --devops
 
 # Development helpers
 dev-setup: install-dev
@@ -148,17 +148,17 @@ dev-setup: install-dev
 
 docs:
 	@echo "Generating documentation..."
-	@echo "# PromptGuard Documentation" > DOCS.md
+	@echo "# Prellm Documentation" > DOCS.md
 	@echo "" >> DOCS.md
 	@echo "## Installation" >> DOCS.md
 	@echo '```bash' >> DOCS.md
-	@echo "pip install promptguard" >> DOCS.md
+	@echo "pip install prellm" >> DOCS.md
 	@echo '```' >> DOCS.md
 	@echo "" >> DOCS.md
 	@echo "## Quick Start" >> DOCS.md
 	@echo '```bash' >> DOCS.md
-	@echo "promptguard init --devops" >> DOCS.md
-	@echo "promptguard run \"deploy to production\" --dry-run" >> DOCS.md
+	@echo "prellm init --devops" >> DOCS.md
+	@echo "prellm run \"deploy to production\" --dry-run" >> DOCS.md
 	@echo '```' >> DOCS.md
 	@echo "Documentation generated in DOCS.md"
 
@@ -177,10 +177,10 @@ version-major:
 
 # Docker (if Dockerfile exists)
 docker-build:
-	docker build -t promptguard:latest .
+	docker build -t prellm:latest .
 
 docker-run:
-	docker run --rm -it promptguard:latest
+	docker run --rm -it prellm:latest
 
 # CI/CD helpers
 ci-test:
