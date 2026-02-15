@@ -30,6 +30,8 @@ def query(
     strategy: str = typer.Option("classify", "--strategy", "-S", help="Strategy: classify|structure|split|enrich|passthrough"),
     context: Optional[str] = typer.Option(None, "--context", "-C", help="User context tag (e.g. 'gdansk_embedded_python')"),
     config: Optional[Path] = typer.Option(None, "--config", "-c", help="Optional YAML config file"),
+    memory: Optional[Path] = typer.Option(None, "--memory", "-m", help="Path to UserMemory database"),
+    codebase: Optional[Path] = typer.Option(None, "--codebase", help="Path to codebase root for context indexing"),
     json_output: bool = typer.Option(False, "--json", "-j", help="Output as JSON"),
 ):
     """Preprocess a query with small LLM, then execute with large LLM."""
@@ -42,6 +44,8 @@ def query(
         strategy=strategy,
         user_context=context,
         config_path=str(config) if config else None,
+        memory_path=str(memory) if memory else None,
+        codebase_path=str(codebase) if codebase else None,
     ))
 
     if json_output:

@@ -1,3 +1,18 @@
+## [0.3.9] - 2026-02-15
+
+### Summary
+
+feat(goal): CLI interface improvements
+
+### Test
+
+- update tests/test_server.py
+
+### Other
+
+- update prellm/cli.py
+
+
 ## [0.3.7] - 2026-02-15
 
 ### Summary
