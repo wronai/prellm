@@ -1,0 +1,132 @@
+project: prellm
+generated: "2026-02-15T19:19:49.336018"
+modules[14]{path,lang,items}:
+  prellm/cli.py,python,5
+  prellm/__init__.py,python,0
+  prellm/models.py,python,0
+  prellm/core.py,python,6
+  tests/test_edge_cases.py,python,17
+  tests/test_promptguard.py,python,25
+  tests/__init__.py,python,0
+  tests/test_integration.py,python,22
+  htmlcov/coverage_html_cb_dd2e7eb5.js,javascript,6
+  prellm/chains/__init__.py,python,0
+  prellm/chains/process_chain.py,python,6
+  prellm/analyzers/bias_detector.py,python,2
+  prellm/analyzers/__init__.py,python,0
+  prellm/analyzers/context_engine.py,python,6
+
+function_details:
+  prellm/cli.py:
+    functions[5]{name,kind,sig,loc,async,lines,cc,does}:
+      run,function,"(query:str=typer.Argument(..., help='The prompt/query to process'), config:Path=typer.Option('rules.yaml', '--config', '-c', help='Path to YAML config'), model:str=typer.Option('gpt-4o-mini', '--model', '-m', help='LLM model to use'), dry_run:bool=typer.Option(False, '--dry-run', '-d', help=\"Analyze only, don't call LLM\"), json_output:bool=typer.Option(False, '--json', '-j', help='Output as JSON'))",21-57,false,37,7,Run a single query through Prellm.
+      process,function,"(config:Path=typer.Argument(..., help='Path to process chain YAML'), guard_config:Path=typer.Option('rules.yaml', '--guard-config', '-g', help='Path to guard YAML config'), dry_run:bool=typer.Option(False, '--dry-run', '-d', help='Analyze steps without calling LLM'), json_output:bool=typer.Option(False, '--json', '-j', help='Output as JSON'), env:Optional[str]=typer.Option(None, '--env', '-e', help='Environment override (e.g., production)'))",61-97,false,37,6,Execute a DevOps process chain.
+      analyze,function,"(query:str=typer.Argument(..., help='Query to analyze for bias/ambiguity'), config:Path=typer.Option('rules.yaml', '--config', '-c', help='Path to YAML config'))",101-119,false,19,5,Analyze a query without calling any LLM (bias detection + ambiguity check).
+      init,function,"(output:Path=typer.Option('rules.yaml', '--output', '-o', help='Output path for config'), devops:bool=typer.Option(False, '--devops', help='Include DevOps-specific patterns'))",123-167,false,45,2,Generate a starter rules.yaml config file.
+      _run_guard,function,"(guard, query:str, model:str)",170-171,true,2,1,starts guard
+  prellm/core.py:
+    functions[6]{name,kind,sig,loc,async,lines,cc,does}:
+      prellm.__init__,method,"(config_path:Any=None, config:Any=None)",38-52,false,15,4,creates
+      prellm.__call__,method,"(query:str, model:Any=None, extra_context:Any=None) -> GuardResponse",54-120,true,67,11,"Analyze query, enrich if needed, call LLM, validate response."
+      prellm.analyze_only,method,"(query:str) -> dict[str, Any]",122-133,false,12,2,Run analysis without calling LLM — useful for dry-run / testing.
+      prellm.get_audit_log,method,"() -> list[dict[str, Any]]",135-137,false,3,2,Return audit log as list of dicts.
+      prellm._audit,method,"(action:str, query:str, response:GuardResponse, model:str) -> None",139-147,false,9,2,audit
+      prellm._load_config,method,"(path:Path) -> GuardConfig",150-171,false,22,5,Load config from YAML file.
+  tests/test_edge_cases.py:
+    functions[17]{name,kind,sig,loc,async,lines,cc,does}:
+      TestPolishPatterns.test_polish_deploy_production,method,(),12-16,false,5,1,checks polish deploy production
+      TestPolishPatterns.test_polish_delete_database,method,(),18-22,false,5,2,checks polish delete database
+      TestPolishPatterns.test_polish_always_bias,method,(),24-27,false,4,1,checks polish always bias
+      TestPolishPatterns.test_polish_only_bias,method,(),29-32,false,4,1,checks polish only bias
+      TestPolishPatterns.test_polish_safe_long_query,method,(),34-37,false,4,1,checks polish safe long query
+      TestMixedLanguage.test_polish_english_mix,method,(),41-44,false,4,1,checks polish english mix
+      TestMixedLanguage.test_english_with_polish_verbs,method,(),46-50,false,5,1,checks english with polish verbs
+      TestMixedLanguage.test_polish_verb_no_target,method,(),52-55,false,4,1,checks polish verb no target
+      TestBoundaryConditions.test_empty_query,method,(),59-62,false,4,1,checks empty query
+      TestBoundaryConditions.test_single_word,method,(),64-67,false,4,1,checks single word
+      TestBoundaryConditions.test_very_long_safe_query,method,(),69-73,false,5,1,checks very long safe query
+      TestBoundaryConditions.test_case_insensitive_patterns,method,(),75-78,false,4,1,checks case insensitive patterns
+      TestBoundaryConditions.test_no_false_positive_on_partial_match,method,(),80-84,false,5,1,checks no false positive on partial match
+      TestBoundaryConditions.test_multiple_patterns_detected,method,(),86-90,false,5,1,checks multiple patterns detected
+      TestBoundaryConditions.test_custom_empty_patterns,method,(),92-95,false,4,1,checks custom empty patterns
+      TestBoundaryConditions.test_default_patterns_count,method,(),97-98,false,2,1,checks default patterns count
+      TestBoundaryConditions.test_severity_levels,method,(),100-104,false,5,3,checks severity levels
+  tests/test_promptguard.py:
+    functions[25]{name,kind,sig,loc,async,lines,cc,does}:
+      TestBiasDetector.test_detects_absolute_quantifier_pl,method,(),29-33,false,5,2,checks detects absolute quantifier pl
+      TestBiasDetector.test_detects_absolute_quantifier_en,method,(),35-38,false,4,1,checks detects absolute quantifier en
+      TestBiasDetector.test_detects_production_deploy,method,(),40-44,false,5,2,checks detects production deploy
+      TestBiasDetector.test_detects_destructive_db_operation,method,(),46-50,false,5,2,checks detects destructive db operation
+      TestBiasDetector.test_detects_short_query,method,(),52-56,false,5,1,checks detects short query
+      TestBiasDetector.test_detects_devops_without_target,method,(),58-62,false,5,2,checks detects devops without target
+      TestBiasDetector.test_clean_query_passes,method,(),64-67,false,4,1,checks clean query passes
+      TestBiasDetector.test_custom_patterns,method,(),69-73,false,5,1,checks custom patterns
+      TestBiasDetector.test_no_patterns_match,method,(),75-78,false,4,1,checks no patterns match
+      TestContextEngine.test_env_context,method,(monkeypatch),84-90,false,7,1,checks env context
+      TestContextEngine.test_enrich_prompt,method,(monkeypatch),92-96,false,5,1,checks enrich prompt
+      TestContextEngine.test_extra_context_override,method,(monkeypatch),98-102,false,5,1,checks extra context override
+      TestContextEngine.test_missing_env_graceful,method,(),104-107,false,4,1,checks missing env graceful
+      TestContextEngine.test_system_context,method,(),109-114,false,6,1,checks system context
+      TestprellmCore.test_load_inline_config,method,(),120-124,false,5,1,checks load inline config
+      TestprellmCore.test_analyze_only,method,(),126-129,false,4,1,checks analyze only
+      TestprellmCore.test_analyze_only_clean,method,(),131-134,false,4,1,checks analyze only clean
+      TestprellmCore.test_call_with_mock_litellm,method,(),137-148,true,12,1,checks call with mock litellm
+      TestprellmCore.test_call_with_clarification,method,(),151-162,true,12,1,checks call with clarification
+      TestprellmCore.test_audit_log,method,(),164-166,false,3,1,checks audit log
+      TestProcessChainConfig.test_process_config_model,method,(),172-181,false,10,1,checks process config model
+      TestProcessChainConfig.test_step_dependencies,method,(),183-185,false,3,1,checks step dependencies
+      TestModels.test_guard_response_defaults,method,(),191-195,false,5,1,checks guard response defaults
+      TestModels.test_analysis_result,method,(),197-203,false,7,1,checks analysis result
+      TestModels.test_config_defaults,method,(),205-208,false,4,1,checks config defaults
+  tests/test_integration.py:
+    functions[22]{name,kind,sig,loc,async,lines,cc,does}:
+      TestYAMLConfigLoading._write_yaml,method,"(data:dict) -> str",28-32,false,5,1,logs yaml
+      TestYAMLConfigLoading.test_load_minimal_config,method,(),34-39,false,6,1,checks load minimal config
+      TestYAMLConfigLoading.test_load_full_config,method,(),41-57,false,17,1,checks load full config
+      TestYAMLConfigLoading.test_load_empty_config,method,(),59-63,false,5,1,checks load empty config
+      TestYAMLConfigLoading.test_configs_rules_yaml,method,(),65-71,false,7,2,Test that the shipped configs/rules.yaml loads correctly.
+      TestAnalyzeOnly.test_production_deploy_detected,method,(),77-80,false,4,1,checks production deploy detected
+      TestAnalyzeOnly.test_db_delete_detected,method,(),82-85,false,4,1,checks db delete detected
+      TestAnalyzeOnly.test_safe_query_passes,method,(),87-92,false,6,1,checks safe query passes
+      TestAnalyzeOnly.test_short_devops_query_flagged,method,(),94-97,false,4,1,checks short devops query flagged
+      TestAnalyzeOnly.test_scale_operation_detected,method,(),99-102,false,4,1,checks scale operation detected
+      TestAnalyzeOnly.test_config_change_detected,method,(),104-107,false,4,1,checks config change detected
+      TestAnalyzeOnly.test_polish_migration_detected,method,(),109-112,false,4,1,checks polish migration detected
+      TestProcessChainDryRun._make_chain,method,"(steps:list[ProcessStep]) -> ProcessChain",118-121,false,4,1,creates chain
+      TestProcessChainDryRun.test_simple_chain_dry_run,method,(),124-132,true,9,2,checks simple chain dry run
+      TestProcessChainDryRun.test_chain_with_manual_approval_pauses,method,(),135-145,true,11,1,checks chain with manual approval pauses
+      TestProcessChainDryRun.test_chain_with_approval_callback,method,(),148-165,true,18,1,checks chain with approval callback
+      TestProcessChainDryRun.test_chain_dependency_failure,method,(),168-174,true,7,1,checks chain dependency failure
+      TestProcessChainDryRun.test_chain_context_injection,method,(monkeypatch),177-187,true,11,1,checks chain context injection
+      TestProcessChainDryRun.test_chain_extra_context,method,(),190-195,true,6,1,checks chain extra context
+      TestProcessChainDryRun.test_chain_timing,method,(),198-205,true,8,1,checks chain timing
+      TestProcessChainDryRun.test_chain_audit_trail,method,(),208-222,true,15,1,checks chain audit trail
+      TestDeployConfig.test_deploy_yaml_loads,method,(),228-239,false,12,2,checks deploy yaml loads
+  htmlcov/coverage_html_cb_dd2e7eb5.js:
+    functions[6]{name,kind,sig,loc,async,lines,cc,does}:
+      debounce,function,"(callback, wait)",11-19,false,9,1,debounce
+      checkVisible,function,(element),21-26,false,6,1,checks visible
+      on_click,function,"(sel, fn)",28-33,false,6,1,handles click
+      getCellValue,function,(row),36-48,false,13,1,retrieves cell value
+      rowComparator,function,"(rowA, rowB)",50-57,false,8,1,row comparator
+      sortColumn,function,(th),59-110,false,52,1,sorts column
+  prellm/chains/process_chain.py:
+    functions[6]{name,kind,sig,loc,async,lines,cc,does}:
+      ProcessChain.__init__,method,"(config_path:Any=None, config:Any=None, guard_config_path:Any=None, guard:Any=None)",50-67,false,18,4,creates
+      ProcessChain.execute,method,"(extra_context:Any=None, approval_callback:Any=None, dry_run:bool=False) -> ProcessResult",69-123,true,55,6,Execute the full process chain.
+      ProcessChain._execute_step,method,"(step:ProcessStep, ctx:dict[str,str], approval_callback:Any, dry_run:bool) -> StepResult",125-197,true,73,11,Execute a single step in the chain.
+      ProcessChain.get_audit_log,method,"() -> list[dict[str, Any]]",199-200,false,2,2,retrieves audit log
+      ProcessChain._audit_step,method,"(step_name:str, prompt:str, response:str) -> None",202-210,false,9,2,audit step
+      ProcessChain._load_process_config,method,"(path:Path) -> ProcessConfig",213-226,false,14,3,retrieves process config
+  prellm/analyzers/bias_detector.py:
+    functions[2]{name,kind,sig,loc,async,lines,cc,does}:
+      BiasDetector.__init__,method,"(patterns:Any=None)",38-49,false,12,4,creates
+      BiasDetector.analyze,method,"(query:str) -> AnalysisResult",51-96,false,46,11,Analyze a query for bias patterns and ambiguity.
+  prellm/analyzers/context_engine.py:
+    functions[6]{name,kind,sig,loc,async,lines,cc,does}:
+      ContextEngine.__init__,method,"(context_sources:Any=None)",16-17,false,2,2,creates
+      ContextEngine.gather,method,"() -> dict[str, str]",19-31,false,13,5,Gather all configured context into a flat dict.
+      ContextEngine.enrich_prompt,method,"(prompt:str, extra:Any=None) -> str",33-43,false,11,3,"Substitute {VARIABLE} placeholders in a prompt with gathered context."
+      ContextEngine._gather_env,method,"(keys:list[str]) -> dict[str, str]",46-52,false,7,3,gather env
+      ContextEngine._gather_git,method,"(fields:list[str]) -> dict[str, str]",55-74,false,20,5,gather git
+      ContextEngine._gather_system,method,"(fields:list[str]) -> dict[str, str]",77-90,false,14,3,gather system

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "prellm"
-version = "0.1.14"
+version = "0.1.15"
 description = "Prellm - Lightweight LLM prompt middleware for bias detection, standardization, and DevOps process chains via YAML config, supporting context injection and multi-provider orchestration."
 authors = [
     "Softreck <tom@sapletta.com>",

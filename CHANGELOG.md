@@ -1,3 +1,16 @@
+## [0.1.15] - 2026-02-15
+
+### Summary
+
+feat(None): configuration management system
+
+### Other
+
+- update project.functions.toon
+- scripts: update project.sh
+- update project.toon-schema.json
+
+
 ## [0.1.14] - 2026-02-15
 
 ### Summary
