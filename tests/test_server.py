@@ -8,7 +8,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 from fastapi.testclient import TestClient
 
-from prellm.server import app, create_app, _parse_model_pair
+from prellm.server import app, create_app, _parse_model_pair, SMALL_MODEL, LARGE_MODEL
 
 
 def _mock_litellm_response(content: str) -> MagicMock:
@@ -35,8 +35,8 @@ def _mock_completion_side_effect():
 class TestParseModelPair:
     def test_default(self):
         small, large = _parse_model_pair("prellm:default")
-        assert small == "ollama/qwen2.5:3b"
-        assert large == "gpt-4o-mini"
+        assert small == SMALL_MODEL
+        assert large == LARGE_MODEL
 
     def test_arrow_unicode(self):
         small, large = _parse_model_pair("prellm:qwen→claude")
@@ -54,7 +54,7 @@ class TestParseModelPair:
 
     def test_no_prefix(self):
         small, large = _parse_model_pair("gpt-4o-mini")
-        assert small == "ollama/qwen2.5:3b"
+        assert small == SMALL_MODEL
         assert large == "gpt-4o-mini"
 
 
@@ -65,7 +65,7 @@ class TestHealthEndpoint:
         assert resp.status_code == 200
         data = resp.json()
         assert data["status"] == "ok"
-        assert data["version"] == "0.3.4"
+        assert data["version"] == "0.3.8"
 
     def test_models(self):
         client = TestClient(app)
