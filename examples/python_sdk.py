@@ -1,4 +1,4 @@
-"""preLLM Python SDK Examples — all 3 interfaces: 1-function API, class-based, OpenAI SDK.
+"""preLLM Python SDK Examples (v0.3.8) — 1-function API, pipelines, memory, codebase context.
 
 Usage:
     python examples/python_sdk.py
@@ -7,6 +7,8 @@ Usage:
 from __future__ import annotations
 
 import asyncio
+import tempfile
+from pathlib import Path
 
 
 # ═══════════════════════════════════════════════
@@ -92,7 +94,71 @@ def example_sync():
 
 
 # ═══════════════════════════════════════════════
-# Example 4: Class-Based API (v0.2)
+# Example 4: Named Pipeline (dual_agent_full)
+# ═══════════════════════════════════════════════
+
+async def example_pipeline():
+    """Use a named YAML-defined pipeline for maximum preprocessing quality."""
+    from prellm import preprocess_and_execute
+
+    result = await preprocess_and_execute(
+        query="Design microservices architecture for e-commerce",
+        small_llm="ollama/qwen2.5:3b",
+        large_llm="gpt-4o-mini",
+        pipeline="dual_agent_full",
+        user_context={"team": "backend", "stack": "Python/FastAPI/K8s"},
+    )
+    print(f"[4] Content: {result.content[:100]}...")
+    print(f"    Pipeline: dual_agent_full (4-step preprocessing)")
+    print()
+
+
+# ═══════════════════════════════════════════════
+# Example 5: With UserMemory Context
+# ═══════════════════════════════════════════════
+
+async def example_user_memory():
+    """Enrich queries with interaction history from UserMemory."""
+    from prellm import preprocess_and_execute, UserMemory
+
+    # Create a temp memory DB and seed it
+    with tempfile.TemporaryDirectory() as tmpdir:
+        db_path = Path(tmpdir) / "memory.db"
+        memory = UserMemory(path=db_path)
+        await memory.add_interaction("Deploy v1 to staging", "Deployed successfully, 3 pods", {"env": "staging"})
+        await memory.add_interaction("Debug OOM on backend", "Increased memory limits to 512Mi", {"ns": "backend"})
+        memory.close()
+
+        # Query with memory context — preLLM injects recent history into pipeline
+        result = await preprocess_and_execute(
+            query="Deploy v2 to staging",
+            memory_path=str(db_path),
+        )
+        print(f"[5] Content: {result.content[:100]}...")
+        print(f"    (UserMemory provided 2 recent interactions as context)")
+    print()
+
+
+# ═══════════════════════════════════════════════
+# Example 6: With CodebaseIndexer Context
+# ═══════════════════════════════════════════════
+
+async def example_codebase_context():
+    """Enrich queries with codebase symbols from CodebaseIndexer."""
+    from prellm import preprocess_and_execute
+
+    # Index the prellm codebase itself for context
+    result = await preprocess_and_execute(
+        query="Refactor the preprocess_and_execute function",
+        codebase_path="prellm/",  # index the source directory
+    )
+    print(f"[6] Content: {result.content[:100]}...")
+    print(f"    (CodebaseIndexer found relevant symbols in prellm/ source)")
+    print()
+
+
+# ═══════════════════════════════════════════════
+# Example 7: Class-Based API (PreLLM)
 # ═══════════════════════════════════════════════
 
 async def example_class_based():
@@ -106,25 +172,49 @@ async def example_class_based():
         "Zdeployuj apkę na staging",
         strategy=DecompositionStrategy.STRUCTURE,
     )
-    print(f"[4a] Content: {result.content[:100]}...")
-    print()
+    print(f"[7a] Content: {result.content[:100]}...")
 
     # Decompose only (no large LLM call)
     decomposition = await engine.decompose_only(
         "Deploy app to production",
         strategy=DecompositionStrategy.CLASSIFY,
     )
-    print(f"[4b] Decomposition: {decomposition}")
-    print()
+    print(f"[7b] Decomposition: {decomposition}")
 
     # Audit log
     log = engine.get_audit_log()
-    print(f"[4c] Audit entries: {len(log)}")
+    print(f"[7c] Audit entries: {len(log)}")
     print()
 
 
 # ═══════════════════════════════════════════════
-# Example 5: OpenAI SDK Compatibility
+# Example 8: Custom Pipeline (component-level)
+# ═══════════════════════════════════════════════
+
+async def example_custom_pipeline():
+    """Build a pipeline from components for maximum flexibility."""
+    from prellm import PromptRegistry, PromptPipeline, PreprocessorAgent, ExecutorAgent
+    from prellm import LLMProvider, LLMProviderConfig
+
+    registry = PromptRegistry()
+    small = LLMProvider(LLMProviderConfig(model="ollama/qwen2.5:3b", max_tokens=512))
+    large = LLMProvider(LLMProviderConfig(model="gpt-4o-mini", max_tokens=2048))
+
+    pipeline = PromptPipeline.from_yaml(pipeline_name="structure", registry=registry, small_llm=small)
+    preprocessor = PreprocessorAgent(small_llm=small, registry=registry, pipeline=pipeline)
+    executor = ExecutorAgent(large_llm=large)
+
+    prep = await preprocessor.preprocess("Deploy app to production")
+    result = await executor.execute(prep.executor_input)
+
+    print(f"[8] Content: {result.content[:100]}...")
+    print(f"    Steps executed: {len(prep.decomposition.steps_executed)}")
+    print(f"    Confidence: {prep.confidence}")
+    print()
+
+
+# ═══════════════════════════════════════════════
+# Example 9: OpenAI SDK Compatibility
 # ═══════════════════════════════════════════════
 
 async def example_openai_sdk():
@@ -135,63 +225,27 @@ async def example_openai_sdk():
     try:
         from openai import OpenAI
 
-        client = OpenAI(
-            base_url="http://localhost:8080",
-            api_key="prellm",  # any string works
-        )
-
+        client = OpenAI(base_url="http://localhost:8080/v1", api_key="prellm")
         response = client.chat.completions.create(
             model="prellm:qwen→claude",
-            messages=[
-                {"role": "user", "content": "Explain microservices in 2 sentences"},
-            ],
-            extra_body={
-                "prellm": {
-                    "user_context": "gdansk embedded python",
-                    "strategy": "classify",
-                },
-            },
+            messages=[{"role": "user", "content": "Explain microservices in 2 sentences"}],
+            extra_body={"prellm": {"strategy": "classify"}},
         )
-        print(f"[5] OpenAI SDK: {response.choices[0].message.content[:100]}...")
+        print(f"[9] OpenAI SDK: {response.choices[0].message.content[:100]}...")
     except Exception as e:
-        print(f"[5] OpenAI SDK: (server not running) {e}")
+        print(f"[9] OpenAI SDK: (server not running or openai not installed) {type(e).__name__}")
     print()
 
 
 # ═══════════════════════════════════════════════
-# Example 6: Batch Processing via API
-# ═══════════════════════════════════════════════
-
-async def example_batch():
-    """Batch multiple queries via the API."""
-    try:
-        import httpx
-
-        async with httpx.AsyncClient(base_url="http://localhost:8080") as client:
-            resp = await client.post("/v1/batch", json=[
-                {"query": "Refaktoryzuj hardcode", "context": "python", "strategy": "structure"},
-                {"query": "K8s pod diagnostics", "context": "rpi cluster", "strategy": "enrich"},
-                {"query": "Leasing calculation", "context": "PL automotive", "strategy": "classify"},
-            ])
-            data = resp.json()
-            for r in data.get("results", []):
-                print(f"[6] {r['query']}: {r['content'][:60]}...")
-    except Exception as e:
-        print(f"[6] Batch: (server not running) {e}")
-    print()
-
-
-# ═══════════════════════════════════════════════
-# Example 7: All 5 Strategies
+# Example 10: All 5 Strategies
 # ═══════════════════════════════════════════════
 
 async def example_strategies():
     """Demonstrate all 5 decomposition strategies."""
     from prellm import preprocess_and_execute
 
-    strategies = ["classify", "structure", "split", "enrich", "passthrough"]
-
-    for strat in strategies:
+    for strat in ["classify", "structure", "split", "enrich", "passthrough"]:
         result = await preprocess_and_execute(
             query="Deploy app to production with rollback",
             strategy=strat,
@@ -207,7 +261,7 @@ async def example_strategies():
                 info += f"sub_queries={len(decomp.sub_queries)} "
             if decomp.missing_fields:
                 info += f"missing={decomp.missing_fields} "
-        print(f"[7] {strat:12s} → {info or 'passthrough'}")
+        print(f"[10] {strat:12s} → {info or 'passthrough'}")
     print()
 
 
@@ -217,17 +271,32 @@ async def example_strategies():
 
 async def main():
     print("=" * 60)
-    print("🧠 preLLM Python SDK Examples")
+    print("  preLLM Python SDK Examples (v0.3.8)")
     print("=" * 60)
     print()
 
-    await example_one_function()
-    await example_domain_rules()
-    example_sync()
-    await example_class_based()
-    await example_openai_sdk()
-    await example_batch()
-    await example_strategies()
+    examples = [
+        ("1-Function API", example_one_function),
+        ("Domain Rules", example_domain_rules),
+        ("Sync Version", None),  # sync handled separately
+        ("Named Pipeline", example_pipeline),
+        ("UserMemory Context", example_user_memory),
+        ("Codebase Context", example_codebase_context),
+        ("Class-Based (PreLLM)", example_class_based),
+        ("Custom Pipeline", example_custom_pipeline),
+        ("OpenAI SDK", example_openai_sdk),
+        ("All 5 Strategies", example_strategies),
+    ]
+
+    for name, fn in examples:
+        print(f"\n--- {name} ---")
+        try:
+            if fn is None:
+                example_sync()
+            else:
+                await fn()
+        except Exception as e:
+            print(f"  (skipped: {type(e).__name__}: {e})")
 
     print("=" * 60)
     print("Done!")

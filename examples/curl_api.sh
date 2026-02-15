@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# preLLM API Examples — curl commands for the OpenAI-compatible server
+# preLLM API Examples (v0.3.8) — curl commands for the OpenAI-compatible server
 #
 # Start server first:
 #   prellm serve --small ollama/qwen2.5:3b --large gpt-4o-mini --port 8080
@@ -164,6 +164,38 @@ curl -s -X POST "$BASE_URL/v1/chat/completions" \
     ],
     "max_tokens": 4096,
     "temperature": 0.3
+  }' | jq .
+echo ""
+
+# ─────────────────────────────────────────────
+# 11. Named pipeline (dual_agent_full)
+# ─────────────────────────────────────────────
+echo "--- Named Pipeline (dual_agent_full) ---"
+curl -s -X POST "$BASE_URL/v1/chat/completions" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "prellm:default",
+    "messages": [
+      {"role": "user", "content": "Design microservices architecture for e-commerce"}
+    ],
+    "prellm": {
+      "pipeline": "dual_agent_full",
+      "user_context": {"team": "backend", "stack": "Python/FastAPI"}
+    }
+  }' | jq .
+echo ""
+
+# ─────────────────────────────────────────────
+# 12. OpenRouter model (Kimi K2.5)
+# ─────────────────────────────────────────────
+echo "--- OpenRouter (Kimi K2.5) ---"
+curl -s -X POST "$BASE_URL/v1/chat/completions" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "prellm:qwen->openrouter/moonshotai/kimi-k2.5",
+    "messages": [
+      {"role": "user", "content": "Explain event-driven architecture"}
+    ]
   }' | jq .
 echo ""
 

@@ -1,3 +1,30 @@
+## [0.3.12] - 2026-02-15
+
+### Summary
+
+refactor(examples): deep code analysis engine with 3 supporting modules
+
+### Docs
+
+- docs: update README
+- docs: update README
+- docs: update README
+
+### Other
+
+- scripts: update curl_api.sh
+- update examples/embedded/__init__.py
+- update examples/embedded/main.py
+- update examples/embedded/test_embedded.py
+- update examples/k8s/__init__.py
+- update examples/k8s/main.py
+- update examples/k8s/test_k8s.py
+- update examples/leasing/__init__.py
+- update examples/leasing/main.py
+- update examples/leasing/test_leasing.py
+- ... and 3 more
+
+
 ## [0.3.11] - 2026-02-15
 
 ### Summary

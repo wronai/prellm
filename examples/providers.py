@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""preLLM Provider Examples — every supported LLM provider with working code.
+"""preLLM Provider Examples (v0.3.8) — every supported LLM provider with working code.
 
 Shows how to use preLLM with different LLM providers via LiteLLM.
 Each example is self-contained and can be run independently.
@@ -160,12 +160,22 @@ async def deepseek():
     )
 
 
+async def openrouter_kimi():
+    """OpenRouter — access many providers through one API. Kimi K2.5 for strong reasoning."""
+    # Requires: OPENROUTER_API_KEY
+    await run_example(
+        "OpenRouter (Kimi K2.5)",
+        small_llm="ollama/qwen2.5:3b",
+        large_llm="openrouter/moonshotai/kimi-k2.5",
+    )
+
+
 async def mixed_providers_pipeline():
-    """v0.3 pipeline with mixed providers."""
+    """Pipeline with mixed providers."""
     from prellm import preprocess_and_execute
 
     print(f"\n{'='*60}")
-    print("  Mixed Providers + Pipeline (v0.3)")
+    print("  Mixed Providers + Pipeline")
     print(f"{'='*60}")
 
     try:
@@ -228,6 +238,9 @@ export TOGETHER_API_KEY=...
 # DeepSeek
 export DEEPSEEK_API_KEY=...
 
+# OpenRouter (access many providers)
+export OPENROUTER_API_KEY=sk-or-v1-...
+
 # LiteLLM Proxy (if running your own)
 export OPENAI_API_BASE=http://localhost:4000
 """)
@@ -249,6 +262,7 @@ async def main():
         google_gemini,
         together_ai,
         deepseek,
+        openrouter_kimi,
         mixed_providers_pipeline,
     ]
 
