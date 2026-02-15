@@ -1,3 +1,24 @@
+## [0.1.5] - 2026-02-15
+
+### Summary
+
+feat(build): code relationship mapping with 4 supporting modules
+
+### Build
+
+- update pyproject.toml
+
+### Config
+
+- config: update goal.yaml
+
+### Other
+
+- build: update Makefile
+- update bumpver.toml
+- update promptguard/__init__.py
+
+
 ## [0.1.1] - 2026-02-15
 
 ### Summary

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "promptguard"
-version = "0.1.1"
+version = "0.1.5"
 description = "Lightweight LLM prompt middleware — bias detection, standardization, and DevOps process chains via YAML config"
 authors = [
     "Softreck <info@softreck.com>",

@@ -1,5 +1,24 @@
 # PromptGuard Makefile
-.PHONY: help install install-dev test lint format clean build publish run demo init
+.PHONY: help install install-dev test lint format clean build publish run demo init bump-patch check-bumpver check-build check-twine
+
+# Check for Poetry availability
+POETRY := $(shell command -v poetry 2>/dev/null)
+ifeq ($(POETRY),)
+RUN :=
+PYTHON := python3
+PIP := pip
+else
+RUN := poetry run
+PYTHON := $(RUN) python
+PIP :=
+endif
+
+# Colors for terminal output
+BLUE := \033[34m
+GREEN := \033[32m
+YELLOW := \033[33m
+RED := \033[31m
+NC := \033[0m # No Color
 
 # Default target
 help:
@@ -22,23 +41,31 @@ help:
 
 # Installation
 install:
-	poetry install --only main
+	ifeq ($(POETRY),)
+		$(PIP) install -e .
+	else
+		poetry install --only main
+	endif
 
 install-dev:
-	poetry install
+	ifeq ($(POETRY),)
+		$(PIP) install -e ".[dev]"
+	else
+		poetry install
+	endif
 
 # Quality checks
 test:
-	poetry run pytest tests/ -v
+	$(RUN) pytest tests/ -v
 
 test-cov:
-	poetry run pytest tests/ -v --cov=promptguard --cov-report=html --cov-report=term
+	$(RUN) pytest tests/ -v --cov=promptguard --cov-report=html --cov-report=term
 
 lint:
-	poetry run ruff check .
+	$(RUN) ruff check .
 
 format:
-	poetry run ruff format .
+	$(RUN) ruff format .
 
 # Cleanup
 clean:
@@ -51,38 +78,71 @@ clean:
 	find . -type f -name "*.pyc" -delete
 
 # Build and publish
-build: clean
-	poetry build
+build: clean check-build ## Build package
+	$(PYTHON) -m build
 
-publish: build
-	poetry publish
+publish: bump-patch build check-twine ## Publish to PyPI (production)
+	@echo "$(YELLOW)Publishing to PyPI...$(NC)"
+	$(PYTHON) -m twine upload dist/*
+	@echo "$(GREEN)Published to PyPI!$(NC)"
+	@echo "Install with: pip install promptguard"
 
-publish-test: build
-	poetry publish --repository testpypi
+publish-test: build ## Publish to Test PyPI
+	@echo "$(YELLOW)Publishing to Test PyPI...$(NC)"
+	$(PYTHON) -m twine upload --repository testpypi dist/*
+	@echo "$(GREEN)Published to Test PyPI!$(NC)"
+
+bump-patch: check-bumpver ## Bump patch version (updates pyproject.toml and promptguard/__init__.py)
+	$(PYTHON) -m bumpver update --patch
+
+check-twine: ## Ensure twine is installed
+	@$(PYTHON) -c "import twine" >/dev/null 2>&1 || ( \
+	   echo "Missing twine. Installing twine..."; \
+	   $(PYTHON) -m pip install "twine>=4.0.0" >/dev/null; \
+	   $(PYTHON) -c "import twine" >/dev/null 2>&1 || (echo "Failed to install twine."; exit 1); \
+	)
+
+check-build: ## Ensure build is installed
+	@$(PYTHON) -c "import build" >/dev/null 2>&1 || ( \
+	   echo "Missing build. Installing build..."; \
+	   $(PYTHON) -m pip install "build>=0.8.0" >/dev/null; \
+	   $(PYTHON) -c "import build" >/dev/null 2>&1 || (echo "Failed to install build."; exit 1); \
+	)
+
+check-bumpver: ## Ensure bumpver is installed
+	@$(PYTHON) -c "import bumpver" >/dev/null 2>&1 || ( \
+	   echo "Missing bumpver. Installing bumpver..."; \
+	   $(PYTHON) -m pip install "bumpver>=2023.1129" >/dev/null; \
+	   $(PYTHON) -c "import bumpver" >/dev/null 2>&1 || ( \
+		  echo "bumpver still missing. Installing project dev dependencies..."; \
+		  $(PIP) install -e \".[dev]\"; \
+		  $(PYTHON) -c "import bumpver" >/dev/null 2>&1 || (echo "Failed to install bumpver."; exit 1); \
+	   ); \
+	)
 
 # Demo and examples
 run:
-	poetry run promptguard run "deploy to production" --dry-run
+	$(RUN) promptguard run "deploy to production" --dry-run
 
 demo:
 	@echo "Generating demo config..."
-	poetry run promptguard init --devops --output demo-rules.yaml
+	$(RUN) promptguard init --devops
 	@echo ""
 	@echo "Running demo analysis..."
-	poetry run promptguard analyze "zawsze restartuj serwer" --config demo-rules.yaml
+	$(RUN) promptguard analyze "zawsze restartuj serwer" --config rules.yaml
 	@echo ""
 	@echo "Running demo process chain..."
-	poetry run promptguard process configs/deploy.yaml --dry-run --guard-config demo-rules.yaml || echo "Process chain config not found, skipping..."
+	$(RUN) promptguard process configs/deploy.yaml --dry-run --guard-config rules.yaml || echo "Process chain config not found, skipping..."
 
 init:
-	poetry run promptguard init --devops
+	$(RUN) promptguard init --devops
 
 # Development helpers
 dev-setup: install-dev
 	@echo "Setting up pre-commit hooks..."
 	@echo "#!/bin/bash" > .git/hooks/pre-commit
-	@echo "poetry run ruff check ." >> .git/hooks/pre-commit
-	@echo "poetry run pytest tests/ -q" >> .git/hooks/pre-commit
+	@echo "$(RUN) ruff check ." >> .git/hooks/pre-commit
+	@echo "$(RUN) pytest tests/ -q" >> .git/hooks/pre-commit
 	@chmod +x .git/hooks/pre-commit
 	@echo "Pre-commit hooks installed!"
 
@@ -124,12 +184,16 @@ docker-run:
 
 # CI/CD helpers
 ci-test:
-	poetry install --only main
-	poetry run pytest tests/ -v
-	poetry run ruff check .
+	ifeq ($(POETRY),)
+		$(PIP) install -e .
+	else
+		poetry install --only main
+	endif
+	$(RUN) pytest tests/ -v
+	$(RUN) ruff check .
 
 ci-build:
-	poetry build
+	$(PYTHON) -m build
 	@echo "Build completed successfully"
 
 # Release workflow
@@ -139,3 +203,15 @@ release: clean test lint build
 # All-in-one development command
 dev: install-dev test lint
 	@echo "Development environment ready!"
+
+# Version management (alternative methods)
+bump-minor: check-bumpver ## Bump minor version
+	$(PYTHON) -m bumpver update --minor
+
+bump-major: check-bumpver ## Bump major version
+	$(PYTHON) -m bumpver update --major
+
+set-version: ## Set specific version (usage: make set-version VERSION=1.2.3)
+	@if [ -z "$(VERSION)" ]; then echo "Usage: make set-version VERSION=1.2.3"; exit 1; fi
+	$(PYTHON) -m bumpver update --set-version $(VERSION)
+	@echo "Version set to $(VERSION)"

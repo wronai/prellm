@@ -1,6 +1,6 @@
 """PromptGuard — Lightweight LLM prompt middleware for bias detection, standardization, and DevOps process chains."""
 
-__version__ = "0.1.0"
+__version__ = "0.1.4"
 
 from promptguard.core import PromptGuard
 from promptguard.models import GuardResponse, GuardConfig, AnalysisResult
