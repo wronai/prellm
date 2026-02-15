@@ -22,8 +22,8 @@
   <h2>
 143 projects</h2>
 <div class="package-list">
-      <a class="package-snippet" href="/project/softreck-promptguard/">
-        <h3 class="package-snippet__title">softreck-promptguard</h3>
+      <a class="package-snippet" href="/project/softreck-prellm/">
+        <h3 class="package-snippet__title">softreck-prellm</h3>
         <p class="package-snippet__meta">
 Last released <time datetime="2026-02-15T16:19:13+0000" data-controller="localized-time" data-localized-time-relative="true" data-localized-time-show-time="false" title="2026-02-15 17:19:13 (+01:00)" aria-label="2026-02-15 17:19:13 (+01:00)">about 1 hour ago</time>        </p>
         <p class="package-snippet__description">Lightweight LLM prompt middleware — bias detection, standardization, and DevOps process chains via YAML config</p>

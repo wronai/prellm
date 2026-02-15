@@ -20,7 +20,7 @@ from prellm.models import (
 )
 from prellm.analyzers.bias_detector import BiasDetector
 from prellm.analyzers.context_engine import ContextEngine
-from prellm.core import PromptGuard
+from prellm.core import prellm
 
 
 # === BiasDetector Tests ===
@@ -114,22 +114,22 @@ class TestContextEngine:
         assert "python" in ctx
 
 
-# === PromptGuard Core Tests ===
+# === prellm Core Tests ===
 
-class TestPromptGuardCore:
+class TestprellmCore:
     def test_load_inline_config(self):
         config = GuardConfig(policy=Policy.DEVOPS, max_retries=5)
-        guard = PromptGuard(config=config)
+        guard = prellm(config=config)
         assert guard.config.policy == Policy.DEVOPS
         assert guard.config.max_retries == 5
 
     def test_analyze_only(self):
-        guard = PromptGuard(config=GuardConfig())
+        guard = prellm(config=GuardConfig())
         result = guard.analyze_only("Deploy to production immediately")
         assert result["needs_clarify"] is True
 
     def test_analyze_only_clean(self):
-        guard = PromptGuard(config=GuardConfig(bias_patterns=[]))
+        guard = prellm(config=GuardConfig(bias_patterns=[]))
         result = guard.analyze_only("Show me the detailed server metrics from staging environment for last month")
         assert result["needs_clarify"] is False
 
@@ -139,7 +139,7 @@ class TestPromptGuardCore:
         mock_response.choices = [MagicMock()]
         mock_response.choices[0].message.content = "Mocked LLM response"
 
-        guard = PromptGuard(config=GuardConfig(bias_patterns=[]))
+        guard = prellm(config=GuardConfig(bias_patterns=[]))
 
         with patch("litellm.acompletion", new=AsyncMock(return_value=mock_response)):
             result = await guard("Show server status on staging for all services", model="gpt-4o-mini")
@@ -153,7 +153,7 @@ class TestPromptGuardCore:
         mock_response.choices = [MagicMock()]
         mock_response.choices[0].message.content = "Clarified response"
 
-        guard = PromptGuard(config=GuardConfig())
+        guard = prellm(config=GuardConfig())
 
         with patch("litellm.acompletion", new=AsyncMock(return_value=mock_response)):
             result = await guard("Deploy to production", model="gpt-4o-mini")
@@ -162,7 +162,7 @@ class TestPromptGuardCore:
         assert result.content == "Clarified response"
 
     def test_audit_log(self):
-        guard = PromptGuard(config=GuardConfig())
+        guard = prellm(config=GuardConfig())
         assert guard.get_audit_log() == []
 
 

@@ -11,7 +11,7 @@ import pytest
 import yaml
 
 from prellm.chains.process_chain import ProcessChain
-from prellm.core import PromptGuard
+from prellm.core import prellm
 from prellm.models import (
     ApprovalMode,
     GuardConfig,
@@ -33,7 +33,7 @@ class TestYAMLConfigLoading:
 
     def test_load_minimal_config(self):
         path = self._write_yaml({"max_retries": 5, "policy": "lenient"})
-        guard = PromptGuard(config_path=path)
+        guard = prellm(config_path=path)
         assert guard.config.max_retries == 5
         assert guard.config.policy == Policy.LENIENT
         os.unlink(path)
@@ -49,7 +49,7 @@ class TestYAMLConfigLoading:
             "models": {"fallback": ["llama3", "mistral"], "timeout": 60},
             "context_sources": [{"env": ["HOME"]}],
         })
-        guard = PromptGuard(config_path=path)
+        guard = prellm(config_path=path)
         assert guard.config.policy == Policy.DEVOPS
         assert len(guard.config.bias_patterns) == 1
         assert guard.config.models.fallback == ["llama3", "mistral"]
@@ -58,7 +58,7 @@ class TestYAMLConfigLoading:
 
     def test_load_empty_config(self):
         path = self._write_yaml({})
-        guard = PromptGuard(config_path=path)
+        guard = prellm(config_path=path)
         assert guard.config.max_retries == 3  # default
         os.unlink(path)
 
@@ -66,7 +66,7 @@ class TestYAMLConfigLoading:
         """Test that the shipped configs/rules.yaml loads correctly."""
         rules_path = Path(__file__).parent.parent / "configs" / "rules.yaml"
         if rules_path.exists():
-            guard = PromptGuard(config_path=rules_path)
+            guard = prellm(config_path=rules_path)
             assert guard.config.policy == Policy.DEVOPS
             assert len(guard.config.bias_patterns) >= 8
 
@@ -75,39 +75,39 @@ class TestYAMLConfigLoading:
 
 class TestAnalyzeOnly:
     def test_production_deploy_detected(self):
-        guard = PromptGuard(config=GuardConfig())
+        guard = prellm(config=GuardConfig())
         result = guard.analyze_only("Deploy to production now please")
         assert result["needs_clarify"] is True
 
     def test_db_delete_detected(self):
-        guard = PromptGuard(config=GuardConfig())
+        guard = prellm(config=GuardConfig())
         result = guard.analyze_only("Usuń bazę danych użytkowników")
         assert result["needs_clarify"] is True
 
     def test_safe_query_passes(self):
-        guard = PromptGuard(config=GuardConfig())
+        guard = prellm(config=GuardConfig())
         result = guard.analyze_only(
             "Pokaż status health-checków dla klastra staging z ostatnich 24 godzin"
         )
         assert result["needs_clarify"] is False
 
     def test_short_devops_query_flagged(self):
-        guard = PromptGuard(config=GuardConfig())
+        guard = prellm(config=GuardConfig())
         result = guard.analyze_only("restart serwer")
         assert result["needs_clarify"] is True
 
     def test_scale_operation_detected(self):
-        guard = PromptGuard(config=GuardConfig())
+        guard = prellm(config=GuardConfig())
         result = guard.analyze_only("Scale up to 10 replicas in production cluster")
         assert result["needs_clarify"] is True
 
     def test_config_change_detected(self):
-        guard = PromptGuard(config=GuardConfig())
+        guard = prellm(config=GuardConfig())
         result = guard.analyze_only("Change config for the main service")
         assert result["needs_clarify"] is True
 
     def test_polish_migration_detected(self):
-        guard = PromptGuard(config=GuardConfig())
+        guard = prellm(config=GuardConfig())
         result = guard.analyze_only("Migruj bazę na production")
         assert result["needs_clarify"] is True
 
@@ -117,7 +117,7 @@ class TestAnalyzeOnly:
 class TestProcessChainDryRun:
     def _make_chain(self, steps: list[ProcessStep]) -> ProcessChain:
         config = ProcessConfig(process="test-process", steps=steps)
-        guard = PromptGuard(config=GuardConfig(bias_patterns=[]))
+        guard = prellm(config=GuardConfig(bias_patterns=[]))
         return ProcessChain(config=config, guard=guard)
 
     @pytest.mark.asyncio
@@ -181,7 +181,7 @@ class TestProcessChainDryRun:
             context_sources=[{"env": ["CLUSTER"]}],
             steps=[ProcessStep(name="check", prompt="Check {CLUSTER}", approval=ApprovalMode.AUTO)],
         )
-        guard = PromptGuard(config=GuardConfig(bias_patterns=[]))
+        guard = prellm(config=GuardConfig(bias_patterns=[]))
         chain = ProcessChain(config=config, guard=guard)
         result = await chain.execute(dry_run=True)
         assert result.completed is True
@@ -230,7 +230,7 @@ class TestDeployConfig:
         if deploy_path.exists():
             chain = ProcessChain(
                 config_path=deploy_path,
-                guard=PromptGuard(config=GuardConfig(bias_patterns=[])),
+                guard=prellm(config=GuardConfig(bias_patterns=[])),
             )
             assert chain.process_config.process == "deploy-production"
             assert len(chain.process_config.steps) == 6

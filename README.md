@@ -36,10 +36,10 @@ prellm process deploy.yaml --guard-config rules.yaml --env production
 ## Python API
 
 ```python
-from prellm import PromptGuard, ProcessChain
+from prellm import preLLM, ProcessChain
 
 # Simple query
-guard = PromptGuard("rules.yaml")
+guard = preLLM("rules.yaml")
 result = await guard("Deploy to production", model="gpt-4o-mini")
 print(result.clarified)  # True — detected missing context
 print(result.content)     # Enriched response
@@ -97,8 +97,8 @@ User Query → BiasDetector → ContextEngine → Enrichment → LiteLLM → Pyd
 ## Development
 
 ```bash
-git clone https://github.com/softreck/promptguard
-cd promptguard
+git clone https://github.com/softreck/prellm
+cd prellm
 poetry install
 poetry run pytest
 ```

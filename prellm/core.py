@@ -23,15 +23,15 @@ from prellm.models import (
 logger = logging.getLogger("prellm")
 
 
-class PromptGuard:
+class prellm:
     """Main Prellm middleware — analyze, enrich, and proxy LLM calls.
 
     Usage:
-        guard = PromptGuard("rules.yaml")
+        guard = prellm("rules.yaml")
         result = await guard("Zdeployuj na produkcję", model="gpt-4o-mini")
 
     Or with inline config:
-        guard = PromptGuard(config=GuardConfig(policy=Policy.DEVOPS))
+        guard = prellm(config=GuardConfig(policy=Policy.DEVOPS))
         result = await guard("Deploy the app")
     """
 

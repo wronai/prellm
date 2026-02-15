@@ -15,7 +15,7 @@ from typing import Any, Awaitable, Callable
 import yaml
 
 from prellm.analyzers.context_engine import ContextEngine
-from prellm.core import PromptGuard
+from prellm.core import prellm
 from prellm.models import (
     ApprovalMode,
     AuditEntry,
@@ -52,7 +52,7 @@ class ProcessChain:
         config_path: str | Path | None = None,
         config: ProcessConfig | None = None,
         guard_config_path: str | Path | None = None,
-        guard: PromptGuard | None = None,
+        guard: prellm | None = None,
     ):
         if config:
             self.process_config = config
@@ -61,7 +61,7 @@ class ProcessChain:
         else:
             raise ValueError("Either config_path or config must be provided")
 
-        self.guard = guard or PromptGuard(config_path=guard_config_path)
+        self.guard = guard or prellm(config_path=guard_config_path)
         self.context_engine = ContextEngine(self.process_config.context_sources)
         self.audit_log: list[AuditEntry] = []
         self._step_results: dict[str, StepResult] = {}
@@ -176,7 +176,7 @@ class ProcessChain:
             logger.info(f"Step '{step.name}' (dry-run): {analysis}")
             return step_result
 
-        # Execute through PromptGuard
+        # Execute through prellm
         try:
             response = await self.guard(enriched_prompt, extra_context=ctx)
             step_result.response = response

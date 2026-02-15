@@ -41,25 +41,25 @@ help:
 
 # Installation
 install:
-	ifeq ($(POETRY),)
-		$(PIP) install -e .
-	else
-		poetry install --only main
-	endif
+	@if [ -z "$(POETRY)" ]; then \
+		$(PIP) install -e .; \
+	else \
+		poetry install --only main; \
+	fi
 
 install-dev:
-	ifeq ($(POETRY),)
-		$(PIP) install -e ".[dev]"
-	else
-		poetry install
-	endif
+	@if [ -z "$(POETRY)" ]; then \
+		$(PIP) install -e ".[dev]"; \
+	else \
+		poetry install; \
+	fi
 
 # Quality checks
 test:
-	$(RUN) pytest tests/ -v
+	$(RUN) python -m pytest tests/ -v
 
 test-cov:
-	$(RUN) pytest tests/ -v --cov=prellm --cov-report=html --cov-report=term
+	$(RUN) python -m pytest tests/ -v --cov=prellm --cov-report=html --cov-report=term
 
 lint:
 	$(RUN) ruff check .
@@ -142,7 +142,7 @@ dev-setup: install-dev
 	@echo "Setting up pre-commit hooks..."
 	@echo "#!/bin/bash" > .git/hooks/pre-commit
 	@echo "$(RUN) ruff check ." >> .git/hooks/pre-commit
-	@echo "$(RUN) pytest tests/ -q" >> .git/hooks/pre-commit
+	@echo "$(RUN) python -m pytest tests/ -q" >> .git/hooks/pre-commit
 	@chmod +x .git/hooks/pre-commit
 	@echo "Pre-commit hooks installed!"
 
@@ -189,7 +189,7 @@ ci-test:
 	else
 		poetry install --only main
 	endif
-	$(RUN) pytest tests/ -v
+	$(RUN) python -m pytest tests/ -v
 	$(RUN) ruff check .
 
 ci-build:

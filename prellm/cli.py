@@ -26,9 +26,9 @@ def run(
     json_output: bool = typer.Option(False, "--json", "-j", help="Output as JSON"),
 ):
     """Run a single query through Prellm."""
-    from prellm.core import PromptGuard
+    from prellm.core import prellm
 
-    guard = PromptGuard(config_path=config)
+    guard = prellm(config_path=config)
 
     if dry_run:
         result = guard.analyze_only(query)
@@ -103,9 +103,9 @@ def analyze(
     config: Path = typer.Option("rules.yaml", "--config", "-c", help="Path to YAML config"),
 ):
     """Analyze a query without calling any LLM (bias detection + ambiguity check)."""
-    from prellm.core import PromptGuard
+    from prellm.core import prellm
 
-    guard = PromptGuard(config_path=config)
+    guard = prellm(config_path=config)
     result = guard.analyze_only(query)
 
     typer.echo(f"\n🔍 Analysis: {query}")

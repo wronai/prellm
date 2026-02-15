@@ -223,7 +223,7 @@ git:
     format: '{prefix}{version}'
 strategies:
   python:
-    test: pytest tests/ -v
+    test: poetry run python -m pytest tests/ -v
     build: python -m build
     publish: twine upload dist/goal-{version}*
     dependencies:
