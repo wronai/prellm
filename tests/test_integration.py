@@ -233,7 +233,7 @@ class TestDeployConfig:
                 guard=prellm(config=GuardConfig(bias_patterns=[])),
             )
             assert chain.process_config.process == "deploy-production"
-            assert len(chain.process_config.steps) == 6
+            assert len(chain.process_config.steps) == 5
             assert chain.process_config.steps[1].approval == ApprovalMode.MANUAL
             assert chain.process_config.steps[1].rollback is True
             assert "pre-check" in chain.process_config.steps[1].depends_on

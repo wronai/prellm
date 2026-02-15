@@ -1,3 +1,35 @@
+## [0.2.1] - 2026-02-15
+
+### Summary
+
+feat(tests): CLI interface improvements
+
+### Test
+
+- update tests/test_context.py
+- update tests/test_decomposer.py
+- update tests/test_integration.py
+- update tests/test_models.py
+- update tests/test_v2_architecture.py
+
+### Build
+
+- update pyproject.toml
+
+### Other
+
+- config: update config.yaml
+- config: update deploy.yaml
+- config: update prellm_config.yaml
+- update prellm/__init__.py
+- update prellm/chains/process_chain.py
+- update prellm/cli.py
+- update prellm/core.py
+- update prellm/llm_provider.py
+- update prellm/models.py
+- update prellm/query_decomposer.py
+
+
 ## [0.1.15] - 2026-02-15
 
 ### Summary

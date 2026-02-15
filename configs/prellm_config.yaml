@@ -1,0 +1,130 @@
+# preLLM v0.2 — Configuration
+# All prompts, rules, and model settings are YAML-driven. Zero hardcoded text.
+
+# Small model (≤3B) — used for query decomposition (classify, structure, compose)
+small_model:
+  model: "phi3:mini"
+  fallback: ["qwen2:1.5b", "gemma2:2b"]
+  max_retries: 2
+  timeout: 10
+  max_tokens: 512
+  temperature: 0.0
+
+# Large model — receives the composed, structured prompt
+large_model:
+  model: "gpt-4o-mini"
+  fallback: ["llama3", "mistral", "claude-3-haiku-20240307"]
+  max_retries: 3
+  timeout: 30
+  max_tokens: 2048
+  temperature: 0.7
+
+# Default decomposition strategy: classify | structure | split | enrich | passthrough
+default_strategy: classify
+
+policy: devops
+max_retries: 3
+
+# Domain rules — replace hardcoded regex patterns with dynamic LLM-based matching
+domain_rules:
+  - name: production_deploy
+    keywords: ["deploy", "zdeployuj", "push", "release"]
+    intent: deploy
+    required_fields: ["environment_details", "version", "rollback_plan"]
+    enrich_template: >
+      Deploy application to {environment_details}.
+      Version: {version}. Rollback plan: {rollback_plan}.
+    severity: critical
+    strategy: structure
+
+  - name: database_operation
+    keywords: ["delete", "drop", "remove", "usuń", "migrate", "migruj"]
+    intent: database
+    required_fields: ["target_database", "backup_confirmed", "environment"]
+    enrich_template: >
+      Database operation on {target_database} in {environment}.
+      Backup confirmed: {backup_confirmed}.
+    severity: critical
+    strategy: structure
+
+  - name: scaling_operation
+    keywords: ["scale", "skaluj", "resize", "autoscale"]
+    intent: scale
+    required_fields: ["cluster", "target_replicas", "resource_limits"]
+    enrich_template: >
+      Scale {cluster} to {target_replicas} replicas.
+      Resource limits: {resource_limits}.
+    severity: high
+    strategy: classify
+
+  - name: service_disruption
+    keywords: ["restart", "reboot", "kill", "stop"]
+    intent: disruption
+    required_fields: ["target_service", "environment", "impact_assessment"]
+    enrich_template: >
+      Restart {target_service} in {environment}.
+      Impact: {impact_assessment}.
+    severity: high
+    strategy: classify
+
+  - name: config_change
+    keywords: ["config", "konfiguracja", "env", "secret", "variable"]
+    intent: config
+    required_fields: ["target_config", "scope", "change_description"]
+    enrich_template: >
+      Update {target_config} configuration.
+      Scope: {scope}. Change: {change_description}.
+    severity: high
+    strategy: structure
+
+  - name: monitoring_query
+    keywords: ["status", "health", "metrics", "logs", "logi", "sprawdź"]
+    intent: monitoring
+    required_fields: []
+    enrich_template: ""
+    severity: low
+    strategy: passthrough
+
+# System prompts for each decomposition step (all overridable)
+prompts:
+  classify_prompt: >
+    You are a query classifier for DevOps operations.
+    Analyze the user query and return JSON:
+    {"intent": "<intent>", "confidence": <0.0-1.0>, "domain": "<domain>"}.
+    Possible intents: deploy, database, scale, disruption, config, monitoring, general.
+    Possible domains: devops, development, infrastructure, general.
+    Be concise. Only return valid JSON.
+
+  structure_prompt: >
+    You are a field extractor for DevOps queries.
+    Given the user query, extract structured fields as JSON:
+    {"action": "<action>", "target": "<target>", "parameters": {}}.
+    Extract environment, version, service name, cluster, namespace if mentioned.
+    Only return valid JSON.
+
+  enrich_prompt: >
+    You are a prompt enricher for DevOps operations.
+    The user query is missing critical context for safe execution.
+    Given the query and the list of missing fields, compose a complete,
+    unambiguous prompt for a large LLM. Include safety warnings for
+    critical operations. Return only the enriched prompt text.
+
+  compose_prompt: >
+    You are a prompt composer for DevOps operations.
+    Given the classification, structured fields, and domain context,
+    compose a final optimized prompt for a large LLM.
+    Be specific, include all available context, and flag any missing
+    critical information. Return only the composed prompt text.
+
+  split_prompt: >
+    You are a query splitter for complex DevOps requests.
+    Break the complex user query into independent sub-questions
+    that can be processed separately.
+    Return JSON: {"sub_queries": ["q1", "q2", ...]}.
+    Only return valid JSON.
+
+# Context sources — gathered at runtime
+context_sources:
+  - env: [CLUSTER, NAMESPACE, GIT_SHA, ENV, APP_VERSION]
+  - git: [branch, short_sha, last_commit_msg]
+  - system: [hostname, os]

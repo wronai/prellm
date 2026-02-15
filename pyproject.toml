@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "prellm"
-version = "0.1.15"
-description = "Prellm - Lightweight LLM prompt middleware for bias detection, standardization, and DevOps process chains via YAML config, supporting context injection and multi-provider orchestration."
+version = "0.2.1"
+description = "preLLM — Small LLM decomposition middleware for prompt preprocessing, bias detection, DevOps process chains, and multi-provider orchestration via YAML config."
 authors = [
     "Softreck <tom@sapletta.com>",
     "Tom Sapletta <tom@sapletta.com>",
@@ -9,7 +9,7 @@ authors = [
 license = "Apache-2.0"
 readme = "README.md"
 repository = "https://github.com/wronai/prellm"
-keywords = ["llm", "prompt-engineering", "bias-detection", "devops", "litellm"]
+keywords = ["llm", "prompt-engineering", "prompt-decomposition", "small-llm", "devops", "litellm"]
 packages = [{include = "prellm"}]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -22,9 +22,7 @@ python = "^3.10"
 litellm = "^1.40"
 pydantic = "^2.0"
 pyyaml = "^6.0"
-nltk = "^3.8"
 typer = {version = "^0.12", extras = ["all"]}
-textstat = "^0.7"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0"

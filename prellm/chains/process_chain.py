@@ -1,7 +1,9 @@
 """ProcessChain — Multi-step DevOps workflow engine with approval gates and audit trail.
 
-Defines workflows as YAML, validates each step through Prellm, supports
-manual/auto approval, rollback, and full audit logging.
+Defines workflows as YAML, validates each step through preLLM, supports
+manual/auto approval, rollback, per-step decomposition strategy, and full audit logging.
+
+v0.2: Supports both old `prellm` (v0.1) and new `PreLLM` (v0.2) engines.
 """
 
 from __future__ import annotations
@@ -10,12 +12,11 @@ import logging
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Awaitable, Callable
+from typing import Any, Awaitable, Callable, Union
 
 import yaml
 
 from prellm.analyzers.context_engine import ContextEngine
-from prellm.core import prellm
 from prellm.models import (
     ApprovalMode,
     AuditEntry,
@@ -34,17 +35,21 @@ ApprovalCallback = Callable[[str, str], Awaitable[tuple[bool, str]]]
 
 
 class ProcessChain:
-    """Execute multi-step DevOps workflows with Prellm validation at each step.
+    """Execute multi-step DevOps workflows with preLLM validation at each step.
+
+    Supports both v0.1 (prellm) and v0.2 (PreLLM) engines.
+    v0.2 adds per-step decomposition strategy.
 
     Usage:
-        chain = ProcessChain("deploy.yaml")
-        result = await chain.execute(
-            env="production",
-            approval_callback=my_slack_approval_fn,
-        )
+        # v0.2 (recommended)
+        from prellm.core import PreLLM
+        engine = PreLLM("prellm_config.yaml")
+        chain = ProcessChain("deploy.yaml", engine=engine)
+        result = await chain.execute(env="production")
 
-    Each step's prompt goes through Prellm's full pipeline (bias detection,
-    enrichment, LLM call, validation) before execution.
+        # v0.1 (backward compat)
+        chain = ProcessChain("deploy.yaml", guard=prellm("rules.yaml"))
+        result = await chain.execute(dry_run=True)
     """
 
     def __init__(
@@ -52,7 +57,8 @@ class ProcessChain:
         config_path: str | Path | None = None,
         config: ProcessConfig | None = None,
         guard_config_path: str | Path | None = None,
-        guard: prellm | None = None,
+        guard: Any | None = None,
+        engine: Any | None = None,
     ):
         if config:
             self.process_config = config
@@ -61,7 +67,13 @@ class ProcessChain:
         else:
             raise ValueError("Either config_path or config must be provided")
 
-        self.guard = guard or prellm(config_path=guard_config_path)
+        # v0.2 engine takes priority over v0.1 guard
+        self._engine = engine
+        self._guard = guard
+        if not engine and not guard:
+            from prellm.core import prellm
+            self._guard = prellm(config_path=guard_config_path)
+
         self.context_engine = ContextEngine(self.process_config.context_sources)
         self.audit_log: list[AuditEntry] = []
         self._step_results: dict[str, StepResult] = {}
@@ -170,15 +182,25 @@ class ProcessChain:
 
         # Dry run — just analyze, don't call LLM
         if dry_run:
-            analysis = self.guard.analyze_only(enriched_prompt)
+            if self._engine:
+                analysis = await self._engine.decompose_only(enriched_prompt, strategy=step.strategy)
+            elif self._guard:
+                analysis = self._guard.analyze_only(enriched_prompt)
+            else:
+                analysis = {}
             step_result.status = StepStatus.COMPLETED
             step_result.duration_seconds = time.time() - step_start
             logger.info(f"Step '{step.name}' (dry-run): {analysis}")
             return step_result
 
-        # Execute through prellm
+        # Execute through engine (v0.2) or guard (v0.1)
         try:
-            response = await self.guard(enriched_prompt, extra_context=ctx)
+            if self._engine:
+                response = await self._engine(enriched_prompt, strategy=step.strategy, extra_context=ctx)
+            elif self._guard:
+                response = await self._guard(enriched_prompt, extra_context=ctx)
+            else:
+                raise RuntimeError("No engine or guard configured")
             step_result.response = response
             step_result.status = StepStatus.COMPLETED
 

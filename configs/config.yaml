@@ -1,0 +1,125 @@
+# preLLM Configuration — DevOps Domain
+# All prompts, rules, and templates are defined here. Nothing is hardcoded in Python.
+
+# --- Small LLM (pre-processor, runs locally or cheap API) ---
+small_model:
+  model: "ollama/phi3:mini"          # 3.8B, fast, good at structured output
+  fallback:
+    - "ollama/qwen2:1.5b"            # 1.5B, ultra-fast fallback
+    - "ollama/gemma2:2b"             # 2B, Google's small model
+  max_tokens: 512                     # short structured outputs only
+  timeout: 10                         # fast or fail
+  temperature: 0.1                    # deterministic for classification
+
+# --- Large LLM (main generation) ---
+large_model:
+  model: "gpt-4o-mini"
+  fallback:
+    - "anthropic/claude-sonnet-4-20250514"
+    - "ollama/llama3"
+  max_tokens: 4096
+  timeout: 60
+  temperature: 0.7
+
+# --- Decomposition settings ---
+default_strategy: structure           # classify | structure | split | enrich | passthrough
+max_retries: 3
+policy: devops
+
+# --- Prompts for the small LLM (all configurable) ---
+
+# Step 1: Classify user intent
+classify_prompt: |
+  You are a DevOps query classifier. Analyze the user query and determine the intent.
+  Respond ONLY with a JSON object, no other text:
+  {"intent": "<one of: deploy, query, create, delete, scale, migrate, configure, monitor, rollback, other>", "confidence": <float 0.0-1.0>}
+
+# Step 2: Extract structured fields from the query
+structure_prompt: |
+  You are a DevOps query analyzer. Extract all relevant structured fields from the user query.
+  Available context: branch={branch}, cluster={CLUSTER}, namespace={NAMESPACE}
+  Respond ONLY with a JSON object containing the fields found:
+  {"action": "...", "target": "...", "environment": "...", "version": "...", "scope": "...", "urgency": "...", "constraints": "..."}
+  Only include fields that are explicitly or implicitly present in the query.
+
+# Step 3 (optional): Split complex query into sub-questions
+split_prompt: |
+  You are a query decomposer. Break the complex user query into smaller, independent sub-questions.
+  Each sub-question should be answerable on its own.
+  Respond ONLY with JSON: {"sub_queries": ["question 1", "question 2", ...]}
+
+# Step 4 (optional): Enrich query with missing context
+enrich_prompt: |
+  You are a DevOps context enricher. The user query may be missing critical details.
+  Available context: branch={branch}, cluster={CLUSTER}, namespace={NAMESPACE}
+  Add any missing but inferrable context, and list fields that cannot be inferred.
+  Respond ONLY with JSON:
+  {"enriched_query": "<improved complete query>", "missing_fields": ["<field1>", "<field2>"]}
+
+# Step 5: Compose final prompt for the large LLM
+compose_prompt: |
+  You are a prompt composer for a DevOps AI assistant. Given the decomposed query data,
+  compose a clear, complete, and safe prompt for the main LLM.
+  Include all known context and flag any risks.
+  Respond ONLY with JSON: {"composed_prompt": "<full structured prompt>"}
+
+# --- Domain rules (replace hardcoded regex patterns) ---
+domain_rules:
+  - name: production_deploy
+    keywords: ["deploy", "zdeployuj", "push to prod", "release to production"]
+    intent: deploy
+    required_fields: ["target", "environment", "version"]
+    severity: critical
+    action: enrich
+    enrich_template: |
+      CRITICAL: User wants to deploy to production.
+      Current context: branch={branch}, cluster={CLUSTER}
+      Extract and validate ALL deployment details. Flag anything missing.
+      Respond with JSON:
+      {"enriched_query": "<safe deployment prompt>", "missing_fields": ["<missing>"]}
+
+  - name: destructive_db
+    keywords: ["delete", "drop", "remove", "usuń", "truncate", "destroy"]
+    intent: delete
+    required_fields: ["target", "scope", "confirmation", "backup_status"]
+    severity: critical
+    action: enrich
+    enrich_template: |
+      CRITICAL: Destructive database operation detected.
+      Ensure the query specifies: what to delete, scope/filters, backup status.
+      Respond with JSON:
+      {"enriched_query": "<safe query with all safeguards>", "missing_fields": ["<missing>"]}
+
+  - name: scaling
+    keywords: ["scale", "skaluj", "resize", "replicas", "autoscale"]
+    intent: scale
+    required_fields: ["target", "direction", "limit", "environment"]
+    severity: high
+    action: enrich
+
+  - name: migration
+    keywords: ["migrate", "migruj", "migration", "schema change"]
+    intent: migrate
+    required_fields: ["source", "target", "reversible", "environment"]
+    severity: critical
+    action: enrich
+
+  - name: config_change
+    keywords: ["config", "konfiguracja", "env var", "secret", "settings"]
+    intent: configure
+    required_fields: ["target", "scope", "impact"]
+    severity: high
+    action: enrich
+
+  - name: service_restart
+    keywords: ["restart", "reboot", "kill", "stop", "start"]
+    intent: configure
+    required_fields: ["target", "environment", "impact_assessment"]
+    severity: high
+    action: enrich
+
+# --- Context sources ---
+context_sources:
+  - env: [CLUSTER, NAMESPACE, GIT_SHA, ENV, APP_VERSION]
+  - git: [branch, short_sha, last_commit_msg]
+  - system: [hostname, os]
