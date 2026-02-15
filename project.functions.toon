@@ -1,13 +1,22 @@
 project: prellm
-generated: "2026-02-15T19:19:49.336018"
-modules[14]{path,lang,items}:
-  prellm/cli.py,python,5
+generated: "2026-02-15T20:00:15.124467"
+modules[23]{path,lang,items}:
+  prellm/cli.py,python,8
+  prellm/server.py,python,8
   prellm/__init__.py,python,0
+  prellm/query_decomposer.py,python,9
   prellm/models.py,python,0
-  prellm/core.py,python,6
+  prellm/core.py,python,14
+  prellm/llm_provider.py,python,4
+  tests/test_one_function.py,python,20
   tests/test_edge_cases.py,python,17
   tests/test_promptguard.py,python,25
+  tests/test_server.py,python,24
+  tests/test_decomposer.py,python,14
   tests/__init__.py,python,0
+  tests/test_context.py,python,7
+  tests/test_v2_architecture.py,python,43
+  tests/test_models.py,python,21
   tests/test_integration.py,python,22
   htmlcov/coverage_html_cb_dd2e7eb5.js,javascript,6
   prellm/chains/__init__.py,python,0
@@ -18,20 +27,80 @@ modules[14]{path,lang,items}:
 
 function_details:
   prellm/cli.py:
-    functions[5]{name,kind,sig,loc,async,lines,cc,does}:
-      run,function,"(query:str=typer.Argument(..., help='The prompt/query to process'), config:Path=typer.Option('rules.yaml', '--config', '-c', help='Path to YAML config'), model:str=typer.Option('gpt-4o-mini', '--model', '-m', help='LLM model to use'), dry_run:bool=typer.Option(False, '--dry-run', '-d', help=\"Analyze only, don't call LLM\"), json_output:bool=typer.Option(False, '--json', '-j', help='Output as JSON'))",21-57,false,37,7,Run a single query through Prellm.
-      process,function,"(config:Path=typer.Argument(..., help='Path to process chain YAML'), guard_config:Path=typer.Option('rules.yaml', '--guard-config', '-g', help='Path to guard YAML config'), dry_run:bool=typer.Option(False, '--dry-run', '-d', help='Analyze steps without calling LLM'), json_output:bool=typer.Option(False, '--json', '-j', help='Output as JSON'), env:Optional[str]=typer.Option(None, '--env', '-e', help='Environment override (e.g., production)'))",61-97,false,37,6,Execute a DevOps process chain.
-      analyze,function,"(query:str=typer.Argument(..., help='Query to analyze for bias/ambiguity'), config:Path=typer.Option('rules.yaml', '--config', '-c', help='Path to YAML config'))",101-119,false,19,5,Analyze a query without calling any LLM (bias detection + ambiguity check).
-      init,function,"(output:Path=typer.Option('rules.yaml', '--output', '-o', help='Output path for config'), devops:bool=typer.Option(False, '--devops', help='Include DevOps-specific patterns'))",123-167,false,45,2,Generate a starter rules.yaml config file.
-      _run_guard,function,"(guard, query:str, model:str)",170-171,true,2,1,starts guard
+    functions[8]{name,kind,sig,loc,async,lines,cc,does}:
+      query,function,"(prompt:str=typer.Argument(..., help='The prompt/query to preprocess and execute'), small:str=typer.Option('ollama/qwen2.5:3b', '--small', '-s', help='Small LLM for preprocessing'), large:str=typer.Option('gpt-4o-mini', '--large', '-l', help='Large LLM for execution'), strategy:str=typer.Option('classify', '--strategy', '-S', help='Strategy: classify|structure|split|enrich|passthrough'), context:Optional[str]=typer.Option(None, '--context', '-C', help=\"User context tag (e.g. 'gdansk_embedded_python')\"), config:Optional[Path]=typer.Option(None, '--config', '-c', help='Optional YAML config file'), json_output:bool=typer.Option(False, '--json', '-j', help='Output as JSON'))",26-64,false,39,9,"Preprocess a query with small LLM, then execute with large LLM."
+      run,function,"(query:str=typer.Argument(..., help='The prompt/query to process'), config:Path=typer.Option('rules.yaml', '--config', '-c', help='Path to YAML config'), model:str=typer.Option('gpt-4o-mini', '--model', '-m', help='LLM model to use'), dry_run:bool=typer.Option(False, '--dry-run', '-d', help=\"Analyze only, don't call LLM\"), json_output:bool=typer.Option(False, '--json', '-j', help='Output as JSON'))",68-104,false,37,7,"[v0.1 compat] Run a single query through the old Prellm pipeline."
+      process,function,"(config:Path=typer.Argument(..., help='Path to process chain YAML'), guard_config:Path=typer.Option('rules.yaml', '--guard-config', '-g', help='Path to guard YAML config'), dry_run:bool=typer.Option(False, '--dry-run', '-d', help='Analyze steps without calling LLM'), json_output:bool=typer.Option(False, '--json', '-j', help='Output as JSON'), env:Optional[str]=typer.Option(None, '--env', '-e', help='Environment override (e.g., production)'))",108-144,false,37,6,Execute a DevOps process chain.
+      analyze,function,"(query:str=typer.Argument(..., help='Query to analyze for bias/ambiguity'), config:Path=typer.Option('rules.yaml', '--config', '-c', help='Path to YAML config'))",148-166,false,19,5,Analyze a query without calling any LLM (bias detection + ambiguity check).
+      decompose,function,"(query:str=typer.Argument(..., help='The prompt/query to decompose'), config:Path=typer.Option('configs/prellm_config.yaml', '--config', '-c', help='Path to preLLM v0.2 YAML config'), strategy:str=typer.Option('classify', '--strategy', '-s', help='Decomposition strategy: classify|structure|split|enrich|passthrough'), json_output:bool=typer.Option(False, '--json', '-j', help='Output as JSON'))",170-206,false,37,7,"[v0.2] Decompose a query using small LLM without calling the large model."
+      init,function,"(output:Path=typer.Option('rules.yaml', '--output', '-o', help='Output path for config'), devops:bool=typer.Option(False, '--devops', help='Include DevOps-specific patterns'), v2:bool=typer.Option(False, '--v2', help='Generate preLLM v0.2 config instead of v0.1'))",210-278,false,69,7,Generate a starter config file (v0.1 rules.yaml or v0.2 prellm_config.yaml).
+      serve,function,"(host:str=typer.Option('0.0.0.0', '--host', '-H', help='Bind host'), port:int=typer.Option(8080, '--port', '-p', help='Bind port'), small:str=typer.Option('ollama/qwen2.5:3b', '--small', '-s', help='Default small LLM'), large:str=typer.Option('gpt-4o-mini', '--large', '-l', help='Default large LLM'), strategy:str=typer.Option('classify', '--strategy', '-S', help='Default strategy'), config:Optional[Path]=typer.Option(None, '--config', '-c', help='YAML config file'), reload:bool=typer.Option(False, '--reload', help='Auto-reload on code changes (dev mode)'))",282-321,false,40,2,Start the OpenAI-compatible API server.
+      _run_guard,function,"(guard, query:str, model:str)",324-325,true,2,1,starts guard
+  prellm/server.py:
+    functions[8]{name,kind,sig,loc,async,lines,cc,does}:
+      _parse_model_pair,function,"(model_str:str) -> tuple[str, str]",140-159,false,20,9,"Parse 'prellm:qwen→claude' or 'prellm:small→large' into (small, large) model str..."
+      _build_prellm_meta,function,"(result:PreLLMResponse, strategy:str) -> PreLLMMeta",162-177,false,16,3,Build preLLM metadata from a PreLLMResponse.
+      health,function,() -> HealthResponse,185-191,true,7,1,health
+      list_models,function,(),195-203,true,9,1,List available model pairs.
+      chat_completions,function,"(req:ChatCompletionRequest)",207-274,true,68,11,OpenAI-compatible chat completions with preLLM preprocessing.
+      _stream_response,function,"(query:str, small:str, large:str, strategy:str, extras:PreLLMExtras) -> AsyncGenerator[str, None]",277-330,true,54,4,SSE streaming response with stage progress.
+      batch_process,function,"(items:list[BatchItem])",334-357,true,24,3,Process multiple queries in parallel.
+      create_app,function,"(small_model:Any=None, large_model:Any=None, strategy:Any=None, config_path:Any=None) -> FastAPI",360-376,false,17,5,Factory function to create a configured preLLM API server.
+  prellm/query_decomposer.py:
+    functions[9]{name,kind,sig,loc,async,lines,cc,does}:
+      QueryDecomposer.__init__,method,"(small_llm:LLMProvider, prompts:Any=None, domain_rules:Any=None)",45-53,false,9,3,creates
+      QueryDecomposer.decompose,method,"(query:str, strategy:DecompositionStrategy=DecompositionStrategy.CLASSIFY, context:Any=None) -> DecompositionResult",55-111,true,57,7,Run the decomposition pipeline for the given strategy.
+      QueryDecomposer._classify,method,"(query:str) -> ClassificationResult",113-127,true,15,2,Classify the query intent and domain using the small LLM.
+      QueryDecomposer._structure,method,"(query:str) -> StructureResult",129-143,true,15,2,Extract structured fields from the query.
+      QueryDecomposer._split,method,"(query:str) -> list[str]",145-158,true,14,4,Split a complex query into sub-queries.
+      QueryDecomposer._enrich,method,"(query:str, result:DecompositionResult, context:Any) -> str",160-189,true,30,7,Enrich the query with missing context using the small LLM.
+      QueryDecomposer._compose,method,"(query:str, result:DecompositionResult, context:Any) -> str",191-236,true,46,9,Compose the final prompt for the large LLM.
+      QueryDecomposer._match_domain_rule,method,"(query:str, classification:ClassificationResult) -> DomainRule | None",238-265,false,28,8,Find the best matching domain rule for the query.
+      QueryDecomposer._find_missing_fields,method,"(query:str, rule:DomainRule, context:Any) -> list[str]",268-283,false,16,5,Determine which required fields are missing from the query and context.
   prellm/core.py:
-    functions[6]{name,kind,sig,loc,async,lines,cc,does}:
-      prellm.__init__,method,"(config_path:Any=None, config:Any=None)",38-52,false,15,4,creates
-      prellm.__call__,method,"(query:str, model:Any=None, extra_context:Any=None) -> GuardResponse",54-120,true,67,11,"Analyze query, enrich if needed, call LLM, validate response."
-      prellm.analyze_only,method,"(query:str) -> dict[str, Any]",122-133,false,12,2,Run analysis without calling LLM — useful for dry-run / testing.
-      prellm.get_audit_log,method,"() -> list[dict[str, Any]]",135-137,false,3,2,Return audit log as list of dicts.
-      prellm._audit,method,"(action:str, query:str, response:GuardResponse, model:str) -> None",139-147,false,9,2,audit
-      prellm._load_config,method,"(path:Path) -> GuardConfig",150-171,false,22,5,Load config from YAML file.
+    functions[14]{name,kind,sig,loc,async,lines,cc,does}:
+      preprocess_and_execute,function,"(query:str, small_llm:str='ollama/qwen2.5:3b', large_llm:str='anthropic/claude-sonnet-4-20250514', strategy:Any='classify', user_context:Any=None, config_path:Any=None, domain_rules:Any=None) -> PreLLMResponse",48-126,true,79,11,One function to preprocess and execute — like litellm.completion() but with smal...
+      preprocess_and_execute_sync,function,"(query:str, small_llm:str='ollama/qwen2.5:3b', large_llm:str='anthropic/claude-sonnet-4-20250514', strategy:Any='classify', user_context:Any=None, config_path:Any=None, domain_rules:Any=None) -> PreLLMResponse",130-156,false,27,1,Synchronous version of preprocess_and_execute() — runs the async function in an...
+      PreLLM.__init__,method,"(config_path:Any=None, config:Any=None)",175-195,false,21,3,creates
+      PreLLM.__call__,method,"(query:str, strategy:Any=None, extra_context:Any=None) -> PreLLMResponse",197-257,true,61,6,"Full pipeline: context → decompose (small LLM) → large LLM → response."
+      PreLLM.decompose_only,method,"(query:str, strategy:Any=None, extra_context:Any=None) -> dict[str, Any]",259-287,true,29,5,Run decomposition without calling the large LLM — useful for dry-run / testing.
+      PreLLM.get_audit_log,method,"() -> list[dict[str, Any]]",289-291,false,3,2,Return audit log as list of dicts.
+      PreLLM._audit,method,"(action:str, query:str, response:PreLLMResponse) -> None",293-305,false,13,3,audit
+      PreLLM._load_config,method,"(path:Path) -> PreLLMConfig",308-348,false,41,10,Load preLLM v0.2 config from YAML file.
+      prellm.__init__,method,"(config_path:Any=None, config:Any=None)",365-379,false,15,4,creates
+      prellm.__call__,method,"(query:str, model:Any=None, extra_context:Any=None) -> GuardResponse",381-447,true,67,11,"Analyze query, enrich if needed, call LLM, validate response."
+      prellm.analyze_only,method,"(query:str) -> dict[str, Any]",449-460,false,12,2,Run analysis without calling LLM — useful for dry-run / testing.
+      prellm.get_audit_log,method,"() -> list[dict[str, Any]]",462-464,false,3,2,Return audit log as list of dicts.
+      prellm._audit,method,"(action:str, query:str, response:GuardResponse, model:str) -> None",466-474,false,9,2,audit
+      prellm._load_config,method,"(path:Path) -> GuardConfig",477-498,false,22,5,Load config from YAML file.
+  prellm/llm_provider.py:
+    functions[4]{name,kind,sig,loc,async,lines,cc,does}:
+      LLMProvider.__init__,method,"(config:LLMProviderConfig)",26-27,false,2,1,creates
+      LLMProvider.complete,method,"(user_message:str, system_prompt:str='', response_format:Any=None) -> str",29-87,true,59,9,Send a completion request with retry/fallback.
+      LLMProvider.complete_json,method,"(user_message:str, system_prompt:str='') -> dict[str, Any]",89-106,true,18,1,Complete and parse response as JSON.
+      LLMProvider._parse_json,method,"(text:str) -> dict[str, Any]",109-141,false,33,10,Best-effort JSON extraction from LLM output.
+  tests/test_one_function.py:
+    functions[20]{name,kind,sig,loc,async,lines,cc,does}:
+      _mock_litellm_response,function,"(content:str) -> MagicMock",16-20,false,5,1,mock litellm response
+      TestPreprocessAndExecute.test_zero_config,method,(),27-43,true,17,1,Just query — everything else defaults.
+      TestPreprocessAndExecute.test_custom_models,method,(),46-66,true,21,1,Specify both small and large models.
+      TestPreprocessAndExecute.test_passthrough_strategy,method,(),69-81,true,13,1,Passthrough skips small LLM entirely.
+      TestPreprocessAndExecute.test_strategy_as_enum,method,(),84-94,true,11,1,Strategy can be passed as enum.
+      TestPreprocessAndExecute.test_user_context_string,method,(),97-114,true,18,1,User context as a string tag gets injected.
+      TestPreprocessAndExecute.test_user_context_dict,method,(),117-135,true,19,1,User context as a dict gets injected.
+      TestPreprocessAndExecute.test_with_domain_rules,method,(),138-164,true,27,1,Inline domain rules get matched.
+      TestPreprocessAndExecute.test_with_config_path,method,(tmp_path),167-197,true,31,1,Load config from YAML file.
+      TestPreprocessAndExecute.test_config_path_with_model_override,method,(tmp_path),200-230,true,31,1,Config from file but override models.
+      TestPreprocessAndExecute.test_large_llm_failure,method,(),233-252,true,20,1,Large LLM failure returns fallback response.
+      TestPreprocessAndExecute.test_structure_strategy,method,(),255-280,true,26,1,Structure strategy extracts fields.
+      TestPreprocessAndExecute.test_split_strategy,method,(),283-306,true,24,1,Split strategy breaks query into sub-queries.
+      TestPreprocessAndExecute.test_returns_prellm_response,method,(),309-322,true,14,1,Result is always a PreLLMResponse.
+      TestPreprocessAndExecute.test_kwargs_forwarded,method,(),325-337,true,13,1,Extra kwargs like max_tokens are forwarded to config.
+      TestPreprocessAndExecuteSync.test_sync_wrapper_works,method,(),343-353,false,11,1,checks sync wrapper works
+      TestImportFromPackage.test_import_async,method,(),359-361,false,3,1,checks import async
+      TestImportFromPackage.test_import_sync,method,(),363-365,false,3,1,checks import sync
+      TestImportFromPackage.test_version,method,(),367-369,false,3,1,checks version
+      TestImportFromPackage.test_all_exports,method,(),371-376,false,6,1,checks all exports
   tests/test_edge_cases.py:
     functions[17]{name,kind,sig,loc,async,lines,cc,does}:
       TestPolishPatterns.test_polish_deploy_production,method,(),12-16,false,5,1,checks polish deploy production
@@ -78,6 +147,125 @@ function_details:
       TestModels.test_guard_response_defaults,method,(),191-195,false,5,1,checks guard response defaults
       TestModels.test_analysis_result,method,(),197-203,false,7,1,checks analysis result
       TestModels.test_config_defaults,method,(),205-208,false,4,1,checks config defaults
+  tests/test_server.py:
+    functions[24]{name,kind,sig,loc,async,lines,cc,does}:
+      _mock_litellm_response,function,"(content:str) -> MagicMock",14-18,false,5,1,mock litellm response
+      _mock_completion_side_effect,function,(),21-32,false,12,1,Returns a side_effect that handles small LLM (classify+compose) then large LLM.
+      TestParseModelPair.test_default,method,(),36-39,false,4,1,checks default
+      TestParseModelPair.test_arrow_unicode,method,(),41-44,false,4,1,checks arrow unicode
+      TestParseModelPair.test_arrow_ascii,method,(),46-49,false,4,1,checks arrow ascii
+      TestParseModelPair.test_single_model,method,(),51-53,false,3,1,checks single model
+      TestParseModelPair.test_no_prefix,method,(),55-58,false,4,1,checks no prefix
+      TestHealthEndpoint.test_health,method,(),62-68,false,7,1,checks health
+      TestHealthEndpoint.test_models,method,(),70-76,false,7,1,checks models
+      TestChatCompletions.test_basic_completion,method,(),80-94,false,15,1,checks basic completion
+      TestChatCompletions.test_with_prellm_extras,method,(),96-111,false,16,1,checks with prellm extras
+      TestChatCompletions.test_with_yaml_response_format,method,(),113-122,false,10,1,checks with yaml response format
+      TestChatCompletions.test_prellm_meta_in_response,method,(),124-137,false,14,1,checks prellm meta in response
+      TestChatCompletions.test_passthrough_strategy,method,(),139-153,false,15,1,checks passthrough strategy
+      TestChatCompletions.test_empty_messages_error,method,(),155-161,false,7,1,checks empty messages error
+      TestChatCompletions.test_no_user_message_error,method,(),163-169,false,7,1,checks no user message error
+      TestChatCompletions.test_usage_info,method,(),171-182,false,12,1,checks usage info
+      TestChatCompletions.test_with_domain_rules,method,(),184-212,false,29,1,checks with domain rules
+      TestChatCompletions.test_max_tokens_and_temperature,method,(),214-224,false,11,1,checks max tokens and temperature
+      TestStreamingEndpoint.test_streaming_response,method,(),228-245,false,18,3,checks streaming response
+      TestStreamingEndpoint.test_streaming_with_stages,method,(),247-260,false,14,1,checks streaming with stages
+      TestBatchEndpoint.test_batch_processing,method,(),264-286,false,23,1,checks batch processing
+      TestBatchEndpoint.test_batch_empty_error,method,(),288-291,false,4,1,checks batch empty error
+      TestCreateApp.test_factory_function,method,(),295-301,false,7,1,checks factory function
+  tests/test_decomposer.py:
+    functions[14]{name,kind,sig,loc,async,lines,cc,does}:
+      TestLLMProvider.test_complete_returns_content,method,(),25-34,true,10,1,checks complete returns content
+      TestLLMProvider.test_complete_with_system_prompt,method,(),37-50,true,14,1,checks complete with system prompt
+      TestLLMProvider.test_complete_json_parses,method,(),53-63,true,11,1,checks complete json parses
+      TestLLMProvider.test_complete_json_handles_markdown_fence,method,(),66-75,true,10,1,checks complete json handles markdown fence
+      TestLLMProvider.test_complete_json_returns_empty_on_bad_json,method,(),78-87,true,10,1,checks complete json returns empty on bad json
+      TestLLMProvider.test_fallback_on_failure,method,(),90-109,true,20,1,checks fallback on failure
+      TestLLMProvider.test_all_models_fail,method,(),112-119,true,8,1,checks all models fail
+      TestQueryDecomposer._make_decomposer,method,"(domain_rules:Any=None) -> tuple[QueryDecomposer, LLMProvider]",125-136,false,12,2,creates decomposer
+      TestQueryDecomposer.test_passthrough_strategy,method,(),139-144,true,6,1,checks passthrough strategy
+      TestQueryDecomposer.test_classify_strategy,method,(),147-164,true,18,1,checks classify strategy
+      TestQueryDecomposer.test_structure_strategy,method,(),167-180,true,14,1,checks structure strategy
+      TestQueryDecomposer.test_split_strategy,method,(),183-196,true,14,1,checks split strategy
+      TestQueryDecomposer.test_enrich_strategy,method,(),199-217,true,19,1,checks enrich strategy
+      TestQueryDecomposer.test_missing_fields_from_domain_rules,method,(),220-237,true,18,1,checks missing fields from domain rules
+  tests/test_context.py:
+    functions[7]{name,kind,sig,loc,async,lines,cc,does}:
+      TestContextEngine.test_env_context,method,(monkeypatch),10-16,false,7,1,checks env context
+      TestContextEngine.test_enrich_prompt,method,(monkeypatch),18-22,false,5,1,checks enrich prompt
+      TestContextEngine.test_extra_overrides_env,method,(monkeypatch),24-28,false,5,1,checks extra overrides env
+      TestContextEngine.test_missing_env_graceful,method,(),30-33,false,4,1,checks missing env graceful
+      TestContextEngine.test_system_context,method,(),35-40,false,6,1,checks system context
+      TestContextEngine.test_empty_sources,method,(),42-44,false,3,1,checks empty sources
+      TestContextEngine.test_multiple_sources,method,(monkeypatch),46-54,false,9,1,checks multiple sources
+  tests/test_v2_architecture.py:
+    functions[43]{name,kind,sig,loc,async,lines,cc,does}:
+      TestLLMProvider.test_init_with_config,method,(),34-38,false,5,1,checks init with config
+      TestLLMProvider.test_complete_success,method,(),41-52,true,12,1,checks complete success
+      TestLLMProvider.test_complete_with_system_prompt,method,(),55-69,true,15,1,checks complete with system prompt
+      TestLLMProvider.test_complete_fallback,method,(),72-92,true,21,1,checks complete fallback
+      TestLLMProvider.test_complete_all_fail,method,(),95-101,true,7,1,checks complete all fail
+      TestLLMProvider.test_complete_json_success,method,(),104-116,true,13,1,checks complete json success
+      TestLLMProvider.test_parse_json_direct,method,(),118-120,false,3,1,checks parse json direct
+      TestLLMProvider.test_parse_json_markdown_block,method,(),122-125,false,4,1,checks parse json markdown block
+      TestLLMProvider.test_parse_json_embedded,method,(),127-130,false,4,1,checks parse json embedded
+      TestLLMProvider.test_parse_json_invalid,method,(),132-134,false,3,1,checks parse json invalid
+      TestQueryDecomposer._make_decomposer,method,"(llm_response:str='{\"intent\": \"deploy\", \"confidence\": 0.9, \"domain\": \"devops\"}')",142-167,false,26,1,creates decomposer
+      TestQueryDecomposer.test_passthrough_strategy,method,(),170-175,true,6,1,checks passthrough strategy
+      TestQueryDecomposer.test_classify_strategy,method,(),178-203,true,26,1,checks classify strategy
+      TestQueryDecomposer.test_structure_strategy,method,(),206-219,true,14,1,checks structure strategy
+      TestQueryDecomposer.test_split_strategy,method,(),222-237,true,16,1,checks split strategy
+      TestQueryDecomposer.test_enrich_strategy,method,(),240-253,true,14,1,checks enrich strategy
+      TestQueryDecomposer.test_match_domain_rule_by_keyword,method,(),255-260,false,6,1,checks match domain rule by keyword
+      TestQueryDecomposer.test_match_domain_rule_by_intent,method,(),262-267,false,6,1,checks match domain rule by intent
+      TestQueryDecomposer.test_no_domain_rule_match,method,(),269-273,false,5,1,checks no domain rule match
+      TestQueryDecomposer.test_find_missing_fields,method,(),275-286,false,12,1,checks find missing fields
+      TestQueryDecomposer.test_classify_failure_graceful,method,(),289-296,true,8,1,checks classify failure graceful
+      TestDomainRule.test_defaults,method,(),304-309,false,6,1,checks defaults
+      TestDomainRule.test_full_rule,method,(),311-323,false,13,1,checks full rule
+      TestPreLLMConfig.test_defaults,method,(),331-336,false,6,1,checks defaults
+      TestPreLLMConfig.test_custom_config,method,(),338-347,false,10,1,checks custom config
+      TestPreLLMCore.test_init_default,method,(),355-358,false,4,1,checks init default
+      TestPreLLMCore.test_init_with_config,method,(),360-366,false,7,1,checks init with config
+      TestPreLLMCore.test_full_pipeline,method,(),369-408,true,40,1,checks full pipeline
+      TestPreLLMCore.test_decompose_only,method,(),411-439,true,29,1,checks decompose only
+      TestPreLLMCore.test_passthrough_strategy,method,(),442-457,true,16,1,checks passthrough strategy
+      TestPreLLMCore.test_audit_log_empty,method,(),459-461,false,3,1,checks audit log empty
+      TestPreLLMCore.test_large_llm_failure,method,(),464-477,true,14,1,checks large llm failure
+      TestPreLLMConfigLoading.test_load_yaml_config,method,(tmp_path),485-506,false,22,1,checks load yaml config
+      TestPreLLMConfigLoading.test_load_empty_yaml,method,(tmp_path),508-515,false,8,1,checks load empty yaml
+      TestPreLLMConfigLoading.test_load_shipped_config,method,(),517-523,false,7,2,checks load shipped config
+      TestProcessChainV2.test_chain_with_v2_engine_dry_run,method,(),532-568,true,37,2,checks chain with v2 engine dry run
+      TestProcessChainV2.test_chain_per_step_strategy,method,(),571-611,true,41,1,checks chain per step strategy
+      TestDecompositionResult.test_defaults,method,(),619-626,false,8,1,checks defaults
+      TestDecompositionResult.test_full_result,method,(),628-640,false,13,1,checks full result
+      TestPreLLMResponse.test_defaults,method,(),644-649,false,6,1,checks defaults
+      TestPreLLMResponse.test_with_decomposition,method,(),651-664,false,14,1,checks with decomposition
+      TestDecompositionStrategy.test_all_strategies,method,(),668-673,false,6,1,checks all strategies
+      TestDecompositionStrategy.test_from_string,method,(),675-677,false,3,1,checks from string
+  tests/test_models.py:
+    functions[21]{name,kind,sig,loc,async,lines,cc,does}:
+      TestModelDefaults.test_llm_provider_config_defaults,method,(),30-34,false,5,1,checks llm provider config defaults
+      TestModelDefaults.test_prellm_config_defaults,method,(),36-43,false,8,1,checks prellm config defaults
+      TestModelDefaults.test_response_defaults,method,(),45-49,false,5,1,checks response defaults
+      TestModelDefaults.test_decomposition_result_defaults,method,(),51-57,false,7,1,checks decomposition result defaults
+      TestModelDefaults.test_classification_result,method,(),59-62,false,4,1,checks classification result
+      TestModelDefaults.test_structure_result,method,(),64-67,false,4,1,checks structure result
+      TestModelDefaults.test_audit_entry,method,(),69-75,false,7,1,checks audit entry
+      TestDomainRules.test_rule_with_all_fields,method,(),79-89,false,11,1,checks rule with all fields
+      TestDomainRules.test_rule_keyword_matching,method,(),91-94,false,4,2,checks rule keyword matching
+      TestDomainRules.test_rule_no_match,method,(),96-99,false,4,2,checks rule no match
+      TestDecompositionStrategy.test_all_strategies_exist,method,(),103-109,false,7,2,checks all strategies exist
+      TestDecompositionStrategy.test_strategy_from_string,method,(),111-113,false,3,1,checks strategy from string
+      TestConfigLoading._write_yaml,method,"(data:dict) -> str",117-121,false,5,1,logs yaml
+      TestConfigLoading.test_load_minimal_config,method,(),123-128,false,6,1,checks load minimal config
+      TestConfigLoading.test_load_with_models,method,(),130-140,false,11,1,checks load with models
+      TestConfigLoading.test_load_with_domain_rules,method,(),142-152,false,11,1,checks load with domain rules
+      TestConfigLoading.test_load_with_prompts,method,(),154-164,false,11,1,checks load with prompts
+      TestConfigLoading.test_load_empty_config,method,(),166-170,false,5,1,checks load empty config
+      TestConfigLoading.test_shipped_config_loads,method,(),172-178,false,7,2,checks shipped config loads
+      TestProcessModels.test_process_step_with_strategy,method,(),182-190,false,9,1,checks process step with strategy
+      TestProcessModels.test_process_config,method,(),192-201,false,10,1,checks process config
   tests/test_integration.py:
     functions[22]{name,kind,sig,loc,async,lines,cc,does}:
       TestYAMLConfigLoading._write_yaml,method,"(data:dict) -> str",28-32,false,5,1,logs yaml
@@ -112,12 +300,12 @@ function_details:
       sortColumn,function,(th),59-110,false,52,1,sorts column
   prellm/chains/process_chain.py:
     functions[6]{name,kind,sig,loc,async,lines,cc,does}:
-      ProcessChain.__init__,method,"(config_path:Any=None, config:Any=None, guard_config_path:Any=None, guard:Any=None)",50-67,false,18,4,creates
-      ProcessChain.execute,method,"(extra_context:Any=None, approval_callback:Any=None, dry_run:bool=False) -> ProcessResult",69-123,true,55,6,Execute the full process chain.
-      ProcessChain._execute_step,method,"(step:ProcessStep, ctx:dict[str,str], approval_callback:Any, dry_run:bool) -> StepResult",125-197,true,73,11,Execute a single step in the chain.
-      ProcessChain.get_audit_log,method,"() -> list[dict[str, Any]]",199-200,false,2,2,retrieves audit log
-      ProcessChain._audit_step,method,"(step_name:str, prompt:str, response:str) -> None",202-210,false,9,2,audit step
-      ProcessChain._load_process_config,method,"(path:Path) -> ProcessConfig",213-226,false,14,3,retrieves process config
+      ProcessChain.__init__,method,"(config_path:Any=None, config:Any=None, guard_config_path:Any=None, guard:Any=None, engine:Any=None)",55-79,false,25,5,creates
+      ProcessChain.execute,method,"(extra_context:Any=None, approval_callback:Any=None, dry_run:bool=False) -> ProcessResult",81-135,true,55,6,Execute the full process chain.
+      ProcessChain._execute_step,method,"(step:ProcessStep, ctx:dict[str,str], approval_callback:Any, dry_run:bool) -> StepResult",137-219,true,83,15,Execute a single step in the chain.
+      ProcessChain.get_audit_log,method,"() -> list[dict[str, Any]]",221-222,false,2,2,retrieves audit log
+      ProcessChain._audit_step,method,"(step_name:str, prompt:str, response:str) -> None",224-232,false,9,2,audit step
+      ProcessChain._load_process_config,method,"(path:Path) -> ProcessConfig",235-248,false,14,3,retrieves process config
   prellm/analyzers/bias_detector.py:
     functions[2]{name,kind,sig,loc,async,lines,cc,does}:
       BiasDetector.__init__,method,"(patterns:Any=None)",38-49,false,12,4,creates

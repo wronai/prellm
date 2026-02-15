@@ -42,6 +42,121 @@ logger = logging.getLogger("prellm")
 
 
 # ============================================================
+# 1-function API — like litellm.completion() but with preprocessing
+# ============================================================
+
+async def preprocess_and_execute(
+    query: str,
+    small_llm: str = "ollama/qwen2.5:3b",
+    large_llm: str = "anthropic/claude-sonnet-4-20250514",
+    strategy: str | DecompositionStrategy = "classify",
+    user_context: str | dict[str, str] | None = None,
+    config_path: str | Path | None = None,
+    domain_rules: list[dict[str, Any]] | None = None,
+    **kwargs: Any,
+) -> PreLLMResponse:
+    """One function to preprocess and execute — like litellm.completion() but with small LLM decomposition.
+
+    Args:
+        query: The raw user query / prompt.
+        small_llm: Model string for the small preprocessing LLM (e.g. "ollama/qwen2.5:3b").
+        large_llm: Model string for the large executor LLM (e.g. "anthropic/claude-sonnet-4-20250514").
+        strategy: Decomposition strategy — "classify", "structure", "split", "enrich", or "passthrough".
+        user_context: Extra context as a string tag (e.g. "gdansk_embedded_python") or dict.
+        config_path: Optional YAML config file for domain rules, prompts, etc.
+        domain_rules: Optional inline domain rules as list of dicts.
+        **kwargs: Extra kwargs passed to the large LLM call (max_tokens, temperature, etc.).
+
+    Returns:
+        PreLLMResponse with content, decomposition details, model info.
+
+    Usage:
+        from prellm import preprocess_and_execute
+
+        result = await preprocess_and_execute(
+            query="Deploy app to production",
+            small_llm="ollama/qwen2.5:3b",
+            large_llm="gpt-4o-mini",
+        )
+        print(result.content)
+
+    Zero-config:
+        result = await preprocess_and_execute("Refaktoryzuj kod")
+    """
+    # Resolve strategy
+    if isinstance(strategy, str):
+        strat = DecompositionStrategy(strategy)
+    else:
+        strat = strategy
+
+    # Build config — from file or inline
+    if config_path:
+        config = PreLLM._load_config(Path(config_path))
+        # Override models if explicitly provided (non-default)
+        if small_llm != "ollama/qwen2.5:3b":
+            config.small_model = LLMProviderConfig(model=small_llm, max_tokens=512, temperature=0.0)
+        if large_llm != "anthropic/claude-sonnet-4-20250514":
+            config.large_model = LLMProviderConfig(model=large_llm, max_tokens=kwargs.pop("max_tokens", 2048))
+    else:
+        # Extract LLM-specific kwargs
+        max_tokens = kwargs.pop("max_tokens", 2048)
+        temperature = kwargs.pop("temperature", 0.7)
+
+        rules = []
+        if domain_rules:
+            for r in domain_rules:
+                rules.append(DomainRule(**r) if isinstance(r, dict) else r)
+
+        config = PreLLMConfig(
+            small_model=LLMProviderConfig(model=small_llm, max_tokens=512, temperature=0.0),
+            large_model=LLMProviderConfig(model=large_llm, max_tokens=max_tokens, temperature=temperature),
+            default_strategy=strat,
+            domain_rules=rules,
+        )
+
+    # Build context
+    extra_context: dict[str, str] | None = None
+    if isinstance(user_context, str) and user_context:
+        extra_context = {"user_context": user_context}
+    elif isinstance(user_context, dict):
+        extra_context = user_context
+
+    # Execute
+    engine = PreLLM(config=config)
+    return await engine(query, strategy=strat, extra_context=extra_context, **kwargs)
+
+
+# Sync wrapper for non-async code
+def preprocess_and_execute_sync(
+    query: str,
+    small_llm: str = "ollama/qwen2.5:3b",
+    large_llm: str = "anthropic/claude-sonnet-4-20250514",
+    strategy: str | DecompositionStrategy = "classify",
+    user_context: str | dict[str, str] | None = None,
+    config_path: str | Path | None = None,
+    domain_rules: list[dict[str, Any]] | None = None,
+    **kwargs: Any,
+) -> PreLLMResponse:
+    """Synchronous version of preprocess_and_execute() — runs the async function in an event loop.
+
+    Usage:
+        from prellm import preprocess_and_execute_sync
+        result = preprocess_and_execute_sync("Deploy app", large_llm="gpt-4o-mini")
+    """
+    import asyncio
+    return asyncio.run(preprocess_and_execute(
+        query=query,
+        small_llm=small_llm,
+        large_llm=large_llm,
+        strategy=strategy,
+        user_context=user_context,
+        config_path=config_path,
+        domain_rules=domain_rules,
+        **kwargs,
+    ))
+
+
+# ============================================================
 # v0.2 — PreLLM (new architecture)
 # ============================================================
 

@@ -13,5 +13,7 @@ RUN pip install --no-cache-dir poetry && \
 
 COPY configs/ configs/
 
+# Default: prellm query "..." --small ollama/qwen2.5:3b --large gpt-4o-mini
+# Override: docker run prellm/prellm query "Deploy app" --small phi3:mini --large claude-sonnet-4-20250514
 ENTRYPOINT ["prellm"]
 CMD ["--help"]

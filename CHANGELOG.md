@@ -1,3 +1,33 @@
+## [0.3.1] - 2026-02-15
+
+### Summary
+
+fix(docs): CLI interface improvements
+
+### Docs
+
+- docs: update README
+- docs: update ROADMAP.md
+
+### Test
+
+- update tests/test_one_function.py
+- update tests/test_server.py
+
+### Build
+
+- update pyproject.toml
+
+### Other
+
+- update prellm/__init__.py
+- update prellm/cli.py
+- update prellm/core.py
+- update prellm/server.py
+- update project.functions.toon
+- update project.toon
+
+
 ## [0.2.1] - 2026-02-15
 
 ### Summary

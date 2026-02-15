@@ -1,4 +1,9 @@
-"""Prellm CLI — run prompts, execute process chains, and manage configs."""
+"""preLLM CLI — small LLM preprocessing before large LLM execution.
+
+Usage:
+    prellm "Deploy app to prod" --small ollama/qwen2.5:3b --large gpt-4o-mini
+    prellm "Refaktoryzuj kod" --strategy structure --json
+"""
 
 from __future__ import annotations
 
@@ -12,9 +17,51 @@ import typer
 
 app = typer.Typer(
     name="prellm",
-    help="preLLM — Small LLM decomposition middleware for prompt preprocessing, DevOps process chains, and multi-provider orchestration.",
+    help="preLLM — Small LLM preprocessing before large LLM execution. Like litellm.completion() but with decomposition.",
     no_args_is_help=True,
 )
+
+
+@app.command()
+def query(
+    prompt: str = typer.Argument(..., help="The prompt/query to preprocess and execute"),
+    small: str = typer.Option("ollama/qwen2.5:3b", "--small", "-s", help="Small LLM for preprocessing"),
+    large: str = typer.Option("gpt-4o-mini", "--large", "-l", help="Large LLM for execution"),
+    strategy: str = typer.Option("classify", "--strategy", "-S", help="Strategy: classify|structure|split|enrich|passthrough"),
+    context: Optional[str] = typer.Option(None, "--context", "-C", help="User context tag (e.g. 'gdansk_embedded_python')"),
+    config: Optional[Path] = typer.Option(None, "--config", "-c", help="Optional YAML config file"),
+    json_output: bool = typer.Option(False, "--json", "-j", help="Output as JSON"),
+):
+    """Preprocess a query with small LLM, then execute with large LLM."""
+    from prellm.core import preprocess_and_execute
+
+    result = asyncio.run(preprocess_and_execute(
+        query=prompt,
+        small_llm=small,
+        large_llm=large,
+        strategy=strategy,
+        user_context=context,
+        config_path=str(config) if config else None,
+    ))
+
+    if json_output:
+        typer.echo(result.model_dump_json(indent=2))
+    else:
+        typer.echo(f"\n{'='*60}")
+        typer.echo(f"\U0001f9e0 preLLM [{small} \u2192 {large}]")
+        typer.echo(f"{'='*60}")
+        if result.decomposition and result.decomposition.classification:
+            c = result.decomposition.classification
+            typer.echo(f"   Intent: {c.intent} (confidence: {c.confidence:.2f})")
+        if result.decomposition and result.decomposition.matched_rule:
+            typer.echo(f"   Rule: {result.decomposition.matched_rule}")
+        if result.decomposition and result.decomposition.missing_fields:
+            typer.echo(f"   \u26a0\ufe0f  Missing: {', '.join(result.decomposition.missing_fields)}")
+        typer.echo(f"{'='*60}")
+        typer.echo(f"\n{result.content}")
+        typer.echo(f"\n{'='*60}")
+        typer.echo(f"   Small: {result.small_model_used} | Large: {result.model_used} | Retries: {result.retries}")
+        typer.echo(f"{'='*60}")
 
 
 @app.command()
@@ -25,7 +72,7 @@ def run(
     dry_run: bool = typer.Option(False, "--dry-run", "-d", help="Analyze only, don't call LLM"),
     json_output: bool = typer.Option(False, "--json", "-j", help="Output as JSON"),
 ):
-    """Run a single query through Prellm."""
+    """[v0.1 compat] Run a single query through the old Prellm pipeline."""
     from prellm.core import prellm
 
     guard = prellm(config_path=config)
@@ -229,6 +276,49 @@ def init(
         yaml.dump(config, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
 
     typer.echo(f"\u2705 Config written to {out}")
+
+
+@app.command()
+def serve(
+    host: str = typer.Option("0.0.0.0", "--host", "-H", help="Bind host"),
+    port: int = typer.Option(8080, "--port", "-p", help="Bind port"),
+    small: str = typer.Option("ollama/qwen2.5:3b", "--small", "-s", help="Default small LLM"),
+    large: str = typer.Option("gpt-4o-mini", "--large", "-l", help="Default large LLM"),
+    strategy: str = typer.Option("classify", "--strategy", "-S", help="Default strategy"),
+    config: Optional[Path] = typer.Option(None, "--config", "-c", help="YAML config file"),
+    reload: bool = typer.Option(False, "--reload", help="Auto-reload on code changes (dev mode)"),
+):
+    """Start the OpenAI-compatible API server.
+
+    Example:
+        prellm serve --small ollama/qwen2.5:3b --large gpt-4o-mini --port 8080
+
+    Then:
+        curl http://localhost:8080/v1/chat/completions -d '{"model":"prellm:default","messages":[...]}'
+    """
+    import uvicorn
+    from prellm.server import create_app
+
+    create_app(
+        small_model=small,
+        large_model=large,
+        strategy=strategy,
+        config_path=str(config) if config else None,
+    )
+
+    typer.echo(f"\n\U0001f9e0 preLLM API Server")
+    typer.echo(f"   http://{host}:{port}")
+    typer.echo(f"   Small: {small} | Large: {large} | Strategy: {strategy}")
+    typer.echo(f"   Endpoints: /v1/chat/completions, /v1/batch, /v1/models, /health")
+    typer.echo(f"{'='*60}\n")
+
+    uvicorn.run(
+        "prellm.server:app",
+        host=host,
+        port=port,
+        reload=reload,
+        log_level="info",
+    )
 
 
 async def _run_guard(guard, query: str, model: str):

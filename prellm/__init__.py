@@ -1,8 +1,22 @@
-"""preLLM — Small LLM decomposition middleware for prompt preprocessing and DevOps process chains."""
+"""preLLM — Small LLM preprocessing before large LLM execution. One function, like litellm.completion().
 
-__version__ = "0.2.0"
+Usage:
+    from prellm import preprocess_and_execute
 
-# v0.2 — new architecture
+    result = await preprocess_and_execute(
+        query="Deploy app to production",
+        small_llm="ollama/qwen2.5:3b",
+        large_llm="gpt-4o-mini",
+    )
+    print(result.content)
+"""
+
+__version__ = "0.3.0"
+
+# 1-function API — the primary interface
+from prellm.core import preprocess_and_execute, preprocess_and_execute_sync
+
+# v0.2 — class-based architecture
 from prellm.core import PreLLM
 from prellm.llm_provider import LLMProvider
 from prellm.query_decomposer import QueryDecomposer
@@ -23,7 +37,10 @@ from prellm.analyzers.bias_detector import BiasDetector
 from prellm.analyzers.context_engine import ContextEngine
 
 __all__ = [
-    # v0.2
+    # 1-function API (primary)
+    "preprocess_and_execute",
+    "preprocess_and_execute_sync",
+    # v0.2 class-based
     "PreLLM",
     "LLMProvider",
     "QueryDecomposer",
