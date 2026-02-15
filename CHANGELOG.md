@@ -1,3 +1,21 @@
+## [0.3.6] - 2026-02-15
+
+### Summary
+
+refactor(tests): deep code analysis engine with 4 supporting modules
+
+### Test
+
+- update tests/test_codebase_indexer.py
+
+### Other
+
+- update prellm/analyzers/context_engine.py
+- update prellm/context/__init__.py
+- update prellm/context/codebase_indexer.py
+- update prellm/context/user_memory.py
+
+
 ## [0.3.5] - 2026-02-15
 
 ### Summary

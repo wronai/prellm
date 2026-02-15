@@ -53,6 +53,47 @@ class ContextEngine:
 
     @staticmethod
     def _gather_git(fields: list[str]) -> dict[str, str]:
+        # Try gitpython first (stable, no subprocess), fall back to subprocess
+        try:
+            return ContextEngine._gather_git_gitpython(fields)
+        except Exception:
+            return ContextEngine._gather_git_subprocess(fields)
+
+    @staticmethod
+    def _gather_git_gitpython(fields: list[str]) -> dict[str, str]:
+        """Gather git info using gitpython (pip install prellm[git])."""
+        import git as gitmodule
+        result = {}
+        try:
+            repo = gitmodule.Repo(search_parent_directories=True)
+        except (gitmodule.InvalidGitRepositoryError, gitmodule.NoSuchPathError):
+            return result
+
+        for field in fields:
+            try:
+                if field == "branch":
+                    if not repo.head.is_detached:
+                        result[field] = repo.active_branch.name
+                elif field == "last_commit":
+                    result[field] = repo.head.commit.hexsha
+                elif field == "last_commit_msg":
+                    result[field] = repo.head.commit.message.strip()
+                elif field == "short_sha":
+                    result[field] = repo.head.commit.hexsha[:7]
+                elif field == "tag":
+                    tags = sorted(repo.tags, key=lambda t: t.commit.committed_datetime, reverse=True)
+                    if tags:
+                        result[field] = tags[0].name
+                elif field == "remote_url":
+                    if repo.remotes:
+                        result[field] = repo.remotes.origin.url
+            except Exception:
+                pass
+        return result
+
+    @staticmethod
+    def _gather_git_subprocess(fields: list[str]) -> dict[str, str]:
+        """Fallback: gather git info using subprocess calls."""
         result = {}
         git_commands = {
             "branch": ["git", "rev-parse", "--abbrev-ref", "HEAD"],
