@@ -1,0 +1,64 @@
+# PromptGuard — Rules Configuration
+# Policy: strict | lenient | devops
+
+bias_patterns:
+  # General bias patterns (PL + EN)
+  - regex: "(zawsze|always)\\s+\\w+"
+    action: clarify
+    severity: medium
+    description: "Absolute quantifier — may indicate bias"
+  - regex: "(tylko|only|just)\\s+\\w+"
+    action: clarify
+    severity: low
+    description: "Exclusive quantifier — potentially limiting context"
+  - regex: "(głupi|stupid|dumb)\\s+\\w+"
+    action: flag
+    severity: high
+    description: "Derogatory language detected"
+
+  # DevOps-specific patterns
+  - regex: "(deploy|zdeployuj)\\s+(na|to)\\s+(prod|production)"
+    action: clarify
+    severity: critical
+    description: "Production deployment — requires explicit context"
+  - regex: "(delete|drop|remove|usuń)\\s+(database|db|bazę|table|tabela)"
+    action: clarify
+    severity: critical
+    description: "Destructive DB operation — confirmation required"
+  - regex: "(restart|reboot|kill)\\s+(server|service|pod|container)"
+    action: clarify
+    severity: high
+    description: "Service disruption — specify target and impact"
+  - regex: "(migrate|migruj)\\s+.*(?:prod|production)"
+    action: clarify
+    severity: critical
+    description: "Production migration — high-risk operation"
+  - regex: "(scale|skaluj)\\s+(down|up|to\\s+\\d+)"
+    action: clarify
+    severity: high
+    description: "Scaling operation — specify cluster and limits"
+  - regex: "(change|zmień|update)\\s+(config|konfigurację|env|secret)"
+    action: clarify
+    severity: high
+    description: "Configuration change — specify scope and impact"
+
+clarify_template: |
+  [KONTEKST]: Poniższe zapytanie wymaga doprecyzowania.
+  Oryginalne zapytanie: {query}
+  Podaj szczegóły dotyczące: środowiska docelowego, zakresu zmian, wymaganych potwierdzeń.
+
+max_retries: 3
+policy: devops
+
+models:
+  fallback:
+    - "gpt-4o-mini"
+    - "llama3"
+    - "mistral"
+  timeout: 30
+  max_tokens: 2048
+
+context_sources:
+  - env: [CLUSTER, NAMESPACE, GIT_SHA, ENV, APP_VERSION]
+  - git: [branch, short_sha, last_commit_msg]
+  - system: [hostname, os]

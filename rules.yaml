@@ -1,0 +1,18 @@
+bias_patterns:
+- regex: (zawsze|always)\s+\w+
+  action: clarify
+  severity: medium
+  description: Absolute quantifier
+- regex: (tylko|only|just)\s+\w+
+  action: clarify
+  severity: low
+  description: Exclusive quantifier
+clarify_template: '[KONTEKST]: Podaj szczegóły lub alternatywy dla: {query}'
+max_retries: 3
+policy: strict
+models:
+  fallback:
+  - gpt-4o-mini
+  - llama3
+  timeout: 30
+  max_tokens: 2048

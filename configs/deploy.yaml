@@ -1,0 +1,67 @@
+# PromptGuard — Process Chain: Production Deployment
+# Execute with: promptguard process deploy.yaml --env production
+
+process: deploy-production
+description: "Full production deployment pipeline with validation at each step"
+
+context_sources:
+  - env: [CLUSTER, NAMESPACE, GIT_SHA, APP_VERSION]
+  - git: [branch, short_sha, last_commit_msg]
+
+steps:
+  - name: pre-check
+    prompt: >
+      Sprawdź gotowość klastra {CLUSTER} do deployu wersji {GIT_SHA}.
+      Zweryfikuj: dostępność zasobów, stan health-checków, brak aktywnych alertów.
+      Branch: {branch}, ostatni commit: {last_commit_msg}.
+    policy: strict
+    approval: auto
+    timeout: 60
+
+  - name: db-migration
+    prompt: >
+      Wygeneruj i zwaliduj migrację bazy danych dla namespace {NAMESPACE}.
+      Wersja aplikacji: {APP_VERSION}. Upewnij się, że migracja jest reversible.
+    policy: strict
+    approval: manual
+    rollback: true
+    timeout: 300
+    depends_on: [pre-check]
+
+  - name: deploy-canary
+    prompt: >
+      Wykonaj canary deploy (10% traffic) na {CLUSTER}/{NAMESPACE}.
+      Wersja: {GIT_SHA}. Monitoruj error rate i latency przez 5 minut.
+    policy: strict
+    approval: manual
+    rollback: true
+    timeout: 600
+    depends_on: [db-migration]
+
+  - name: deploy-full
+    prompt: >
+      Wykonaj pełny rolling deploy na {CLUSTER}/{NAMESPACE}.
+      Wersja: {GIT_SHA}. Max unavailable: 25%. Rollback jeśli error rate > 1%.
+    policy: strict
+    approval: manual
+    rollback: true
+    timeout: 900
+    depends_on: [deploy-canary]
+
+  - name: post-verify
+    prompt: >
+      Zweryfikuj health-check po deployu wersji {GIT_SHA} na {CLUSTER}.
+      Sprawdź: wszystkie pody ready, brak error logów, metryki w normie.
+    policy: lenient
+    approval: auto
+    timeout: 120
+    depends_on: [deploy-full]
+
+  - name: notify
+    prompt: >
+      Wygeneruj raport podsumowujący deploy wersji {APP_VERSION} na {CLUSTER}/{NAMESPACE}.
+      Uwzględnij: czas trwania, wyniki health-checków, ewentualne problemy.
+    policy: lenient
+    approval: auto
+    timeout: 60
+    depends_on: [post-verify]
