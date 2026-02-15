@@ -23,8 +23,10 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel, Field
+from starlette.middleware.base import BaseHTTPMiddleware
 
 from prellm.core import PreLLM, preprocess_and_execute
+from prellm.env_config import get_env_config, EnvConfig
 from prellm.models import (
     DecompositionStrategy,
     DomainRule,
@@ -36,13 +38,16 @@ from prellm.models import (
 logger = logging.getLogger("prellm.server")
 
 # ============================================================
-# Server config from env vars
+# Server config from env vars (LiteLLM-compatible)
 # ============================================================
 
-SMALL_MODEL = os.getenv("SMALL_MODEL", os.getenv("PRELLM_SMALL_MODEL", "ollama/qwen2.5:3b"))
-LARGE_MODEL = os.getenv("LARGE_MODEL", os.getenv("PRELLM_LARGE_MODEL", "gpt-4o-mini"))
-DEFAULT_STRATEGY = os.getenv("PRELLM_STRATEGY", "classify")
-CONFIG_PATH = os.getenv("PRELLM_CONFIG", None)
+_env = get_env_config()
+
+SMALL_MODEL = _env.small_model
+LARGE_MODEL = _env.large_model
+DEFAULT_STRATEGY = _env.strategy
+CONFIG_PATH = _env.config_path
+MASTER_KEY = _env.master_key
 
 # ============================================================
 # Request / Response models (OpenAI-compatible)
@@ -120,6 +125,37 @@ class HealthResponse(BaseModel):
 
 
 # ============================================================
+# Auth middleware (LITELLM_MASTER_KEY)
+# ============================================================
+
+class AuthMiddleware(BaseHTTPMiddleware):
+    """Bearer token auth using LITELLM_MASTER_KEY. Skips auth if key is not set."""
+
+    OPEN_PATHS = {"/health", "/docs", "/openapi.json", "/redoc"}
+
+    async def dispatch(self, request: Request, call_next):
+        if not MASTER_KEY:
+            return await call_next(request)
+
+        if request.url.path in self.OPEN_PATHS:
+            return await call_next(request)
+
+        auth = request.headers.get("Authorization", "")
+        if auth.startswith("Bearer "):
+            token = auth[7:].strip()
+        else:
+            token = request.headers.get("x-api-key", "")
+
+        if token != MASTER_KEY:
+            return JSONResponse(
+                status_code=401,
+                content={"error": {"message": "Invalid API key", "type": "authentication_error"}},
+            )
+
+        return await call_next(request)
+
+
+# ============================================================
 # FastAPI app
 # ============================================================
 
@@ -129,6 +165,7 @@ app = FastAPI(
     version="0.3.0",
 )
 
+app.add_middleware(AuthMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -374,9 +411,23 @@ def create_app(
     large_model: str | None = None,
     strategy: str | None = None,
     config_path: str | None = None,
+    master_key: str | None = None,
+    dotenv_path: str | None = None,
 ) -> FastAPI:
-    """Factory function to create a configured preLLM API server."""
-    global SMALL_MODEL, LARGE_MODEL, DEFAULT_STRATEGY, CONFIG_PATH
+    """Factory function to create a configured preLLM API server.
+
+    Reads .env file first, then overrides with explicit args.
+    """
+    global SMALL_MODEL, LARGE_MODEL, DEFAULT_STRATEGY, CONFIG_PATH, MASTER_KEY, _env
+
+    if dotenv_path:
+        _env = get_env_config(dotenv_path)
+        SMALL_MODEL = _env.small_model
+        LARGE_MODEL = _env.large_model
+        DEFAULT_STRATEGY = _env.strategy
+        CONFIG_PATH = _env.config_path
+        MASTER_KEY = _env.master_key
+
     if small_model:
         SMALL_MODEL = small_model
     if large_model:
@@ -385,4 +436,6 @@ def create_app(
         DEFAULT_STRATEGY = strategy
     if config_path:
         CONFIG_PATH = config_path
+    if master_key is not None:
+        MASTER_KEY = master_key
     return app

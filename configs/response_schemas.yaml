@@ -1,0 +1,45 @@
+# preLLM — Response Schemas
+# Validates LLM outputs at each pipeline step and final response.
+# Used by ResponseValidator to ensure structured, typed responses.
+
+schemas:
+  classification:
+    required_fields: [intent, confidence]
+    types:
+      intent: string
+      confidence: float
+      domain: string
+    constraints:
+      confidence: {min: 0.0, max: 1.0}
+      intent:
+        enum: [deploy, query, create, delete, scale, migrate, configure, monitor, rollback, other]
+
+  structure_extraction:
+    required_fields: [action]
+    types:
+      action: string
+      target: string
+      environment: string
+      version: string
+      scope: string
+      urgency: string
+
+  split_result:
+    required_fields: [sub_queries]
+    types:
+      sub_queries: "list[string]"
+    constraints:
+      sub_queries: {min_length: 1, max_length: 5}
+
+  enrichment:
+    required_fields: [enriched_query]
+    types:
+      enriched_query: string
+      missing_fields: "list[string]"
+
+  final_response:
+    required_fields: [content]
+    types:
+      content: string
+      tasks: list
+      validation_status: string

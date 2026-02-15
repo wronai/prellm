@@ -1,0 +1,89 @@
+# preLLM — Pipeline Definitions
+# Each pipeline is a sequence of steps (LLM or algorithmic).
+# Steps reference prompts from configs/prompts.yaml by name.
+
+pipelines:
+  classify:
+    description: "Classify intent, match domain rule, apply enrichment"
+    steps:
+      - name: classify
+        prompt: classify
+        output: classification
+      - name: match_rule
+        type: domain_rule_matcher
+        input: classification
+        output: matched_rule
+      - name: enrich_if_needed
+        prompt: enrich
+        condition: "matched_rule.get('action') == 'enrich'"
+        input: [query, classification, matched_rule]
+        output: enriched_query
+
+  structure:
+    description: "Full structural decomposition"
+    steps:
+      - name: classify
+        prompt: classify
+        output: classification
+      - name: extract_fields
+        prompt: structure
+        output: fields
+      - name: check_missing
+        type: field_validator
+        input: [fields, matched_rule]
+        output: missing_fields
+      - name: compose
+        prompt: compose
+        input: [query, classification, fields, missing_fields, context]
+        output: composed_prompt
+
+  split:
+    description: "Split complex query into sub-questions"
+    steps:
+      - name: classify
+        prompt: classify
+        output: classification
+      - name: split
+        prompt: split
+        output: sub_queries
+      - name: compose_splits
+        prompt: compose
+        input: [query, sub_queries, context]
+        output: composed_prompt
+
+  enrich:
+    description: "Enrich query with missing context"
+    steps:
+      - name: classify
+        prompt: classify
+        output: classification
+      - name: enrich
+        prompt: enrich
+        input: [query, classification, context]
+        output: composed_prompt
+
+  passthrough:
+    description: "No preprocessing, forward query as-is"
+    steps: []
+
+  dual_agent_full:
+    description: "Full two-agent pipeline — 4 preprocessing steps"
+    steps:
+      - name: context_analyze
+        prompt: context_analyze
+        input: [user_history, env_data]
+        output: context_enrichment
+      - name: intent_decompose
+        prompt: split
+        input: [query, context_enrichment]
+        output: subtasks
+        config:
+          max_subtasks: 3
+      - name: quality_optimize
+        prompt: compose
+        input: [query, subtasks, context_enrichment]
+        output: meta_prompt
+      - name: format_structure
+        type: yaml_formatter
+        input: meta_prompt
+        output: executor_input

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "prellm"
-version = "0.3.1"
+version = "0.3.2"
 description = "preLLM — One function for small LLM preprocessing before large LLM execution. Like litellm.completion() but with decomposition."
 authors = [
     "Softreck <tom@sapletta.com>",
@@ -22,6 +22,7 @@ python = "^3.10"
 litellm = "^1.40"
 pydantic = "^2.0"
 pyyaml = "^6.0"
+jinja2 = "^3.1"
 typer = {version = "^0.12", extras = ["all"]}
 fastapi = "^0.115"
 uvicorn = {version = "^0.32", extras = ["standard"]}

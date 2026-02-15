@@ -282,43 +282,138 @@ def init(
 def serve(
     host: str = typer.Option("0.0.0.0", "--host", "-H", help="Bind host"),
     port: int = typer.Option(8080, "--port", "-p", help="Bind port"),
-    small: str = typer.Option("ollama/qwen2.5:3b", "--small", "-s", help="Default small LLM"),
-    large: str = typer.Option("gpt-4o-mini", "--large", "-l", help="Default large LLM"),
-    strategy: str = typer.Option("classify", "--strategy", "-S", help="Default strategy"),
+    small: Optional[str] = typer.Option(None, "--small", "-s", help="Override small LLM (default: from .env)"),
+    large: Optional[str] = typer.Option(None, "--large", "-l", help="Override large LLM (default: from .env)"),
+    strategy: Optional[str] = typer.Option(None, "--strategy", "-S", help="Override strategy (default: from .env)"),
     config: Optional[Path] = typer.Option(None, "--config", "-c", help="YAML config file"),
+    env_file: Optional[Path] = typer.Option(None, "--env-file", help="Path to .env file (default: .env)"),
     reload: bool = typer.Option(False, "--reload", help="Auto-reload on code changes (dev mode)"),
 ):
     """Start the OpenAI-compatible API server.
 
-    Example:
-        prellm serve --small ollama/qwen2.5:3b --large gpt-4o-mini --port 8080
+    Reads config from .env file (LiteLLM-compatible). CLI args override .env values.
 
-    Then:
-        curl http://localhost:8080/v1/chat/completions -d '{"model":"prellm:default","messages":[...]}'
+    Example:
+        prellm serve
+        prellm serve --small ollama/qwen2.5:3b --large gpt-4o-mini --port 8080
     """
     import uvicorn
+    from prellm.env_config import get_env_config
     from prellm.server import create_app
 
+    env = get_env_config(str(env_file) if env_file else None)
+
+    effective_small = small or env.small_model
+    effective_large = large or env.large_model
+    effective_strategy = strategy or env.strategy
+    effective_host = host
+    effective_port = port
+
     create_app(
-        small_model=small,
-        large_model=large,
-        strategy=strategy,
-        config_path=str(config) if config else None,
+        small_model=effective_small,
+        large_model=effective_large,
+        strategy=effective_strategy,
+        config_path=str(config) if config else env.config_path,
+        dotenv_path=str(env_file) if env_file else None,
     )
 
+    auth_status = "ON (LITELLM_MASTER_KEY)" if env.master_key else "OFF (no key set)"
+
     typer.echo(f"\n\U0001f9e0 preLLM API Server")
-    typer.echo(f"   http://{host}:{port}")
-    typer.echo(f"   Small: {small} | Large: {large} | Strategy: {strategy}")
+    typer.echo(f"   http://{effective_host}:{effective_port}")
+    typer.echo(f"   Small: {effective_small} | Large: {effective_large}")
+    typer.echo(f"   Strategy: {effective_strategy} | Auth: {auth_status}")
     typer.echo(f"   Endpoints: /v1/chat/completions, /v1/batch, /v1/models, /health")
     typer.echo(f"{'='*60}\n")
 
     uvicorn.run(
         "prellm.server:app",
-        host=host,
-        port=port,
+        host=effective_host,
+        port=effective_port,
         reload=reload,
-        log_level="info",
+        log_level=env.log_level,
     )
+
+
+@app.command()
+def doctor(
+    env_file: Optional[Path] = typer.Option(None, "--env-file", help="Path to .env file"),
+    live: bool = typer.Option(False, "--live", help="Test live connectivity to providers"),
+):
+    """Check configuration and provider connectivity.
+
+    Validates .env config, API keys, and optionally tests live connections.
+
+    Example:
+        prellm doctor
+        prellm doctor --live
+    """
+    from prellm.env_config import get_env_config, check_providers
+
+    env = get_env_config(str(env_file) if env_file else None)
+
+    typer.echo(f"\n\U0001f9e0 preLLM Doctor")
+    typer.echo(f"{'='*60}")
+
+    # Config
+    typer.echo(f"\n\U0001f4cb Configuration:")
+    typer.echo(f"   Small LLM:  {env.small_model}")
+    typer.echo(f"   Large LLM:  {env.large_model}")
+    typer.echo(f"   Strategy:   {env.strategy}")
+    typer.echo(f"   Server:     {env.host}:{env.port}")
+    typer.echo(f"   Auth:       {'ON' if env.master_key else 'OFF (no LITELLM_MASTER_KEY)'}")
+    if env.config_path:
+        typer.echo(f"   Config:     {env.config_path}")
+    if env.fallbacks:
+        typer.echo(f"   Fallbacks:  {', '.join(env.fallbacks)}")
+    if env.monthly_budget:
+        typer.echo(f"   Budget:     ${env.monthly_budget:.2f}/month")
+
+    # Providers
+    typer.echo(f"\n\U0001f50c Providers:")
+
+    if live:
+        import asyncio
+        from prellm.env_config import check_providers_live
+        results = asyncio.run(check_providers_live(env))
+    else:
+        results = check_providers(env)
+
+    for name, info in results.items():
+        status = info["status"]
+        if status in ("ok", "configured"):
+            icon = "\u2713"
+            color = ""
+        elif status == "no_key":
+            icon = "\u2717"
+            color = ""
+        else:
+            icon = "!"
+            color = ""
+        typer.echo(f"   {icon} {name.upper():12s} {info['detail']}")
+        if "models" in info:
+            typer.echo(f"     Models: {', '.join(info['models'][:5])}")
+
+    # .env file check
+    typer.echo(f"\n\U0001f4c4 Files:")
+    env_path = Path(str(env_file)) if env_file else Path(".env")
+    if env_path.is_file():
+        typer.echo(f"   \u2713 {env_path} (loaded)")
+    else:
+        typer.echo(f"   \u2717 {env_path} (not found \u2014 run: cp .env.example .env)")
+
+    example_path = Path(".env.example")
+    if example_path.is_file():
+        typer.echo(f"   \u2713 .env.example (available)")
+    else:
+        typer.echo(f"   \u2717 .env.example (not found)")
+
+    config_yaml = Path("configs/prellm_config.yaml")
+    if config_yaml.is_file():
+        typer.echo(f"   \u2713 {config_yaml}")
+
+    typer.echo(f"\n{'='*60}")
+    typer.echo(f"\u2705 Doctor complete. Use --live to test connectivity.\n")
 
 
 async def _run_guard(guard, query: str, model: str):

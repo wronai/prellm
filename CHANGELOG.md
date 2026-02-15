@@ -1,3 +1,38 @@
+## [0.3.2] - 2026-02-15
+
+### Summary
+
+fix(config): CLI interface improvements
+
+### Docs
+
+- docs: update flow-graphs.md
+
+### Test
+
+- update tests/test_env_config.py
+- update tests/test_pipeline.py
+- update tests/test_prompt_registry.py
+
+### Build
+
+- update pyproject.toml
+
+### Other
+
+- update .env.example
+- config: update pipelines.yaml
+- config: update prompts.yaml
+- config: update response_schemas.yaml
+- config: update docker-compose.yaml
+- scripts: update cli_examples.sh
+- scripts: update curl_api.sh
+- update examples/python_sdk.py
+- update prellm/cli.py
+- update prellm/env_config.py
+- ... and 5 more
+
+
 ## [0.3.1] - 2026-02-15
 
 ### Summary

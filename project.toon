@@ -1,23 +1,30 @@
-# prellm | 23f 5566L | python:22/javascript:1
+# prellm | 30f 7543L | python:29/javascript:1
 # Keys: M=modules, D=details, i=imports, c=classes, f=functions, m=methods
-M[23]:
-  prellm/cli.py,282
-  prellm/server.py,284
+M[30]:
+  examples/python_sdk.py,163
+  prellm/env_config.py,145
+  prellm/cli.py,357
+  prellm/server.py,330
   prellm/__init__.py,48
   prellm/query_decomposer.py,231
+  prellm/prompt_registry.py,136
   prellm/models.py,198
   prellm/core.py,389
   prellm/llm_provider.py,110
+  prellm/pipeline.py,290
   tests/test_one_function.py,307
   tests/test_edge_cases.py,78
   tests/test_promptguard.py,159
   tests/test_server.py,246
   tests/test_decomposer.py,187
+  tests/test_env_config.py,244
   tests/__init__.py,0
   tests/test_context.py,44
   tests/test_v2_architecture.py,519
   tests/test_models.py,172
   tests/test_integration.py,194
+  tests/test_prompt_registry.py,119
+  tests/test_pipeline.py,293
   htmlcov/coverage_html_cb_dd2e7eb5.js,555
   prellm/chains/__init__.py,0
   prellm/chains/process_chain.py,194
@@ -25,20 +32,39 @@ M[23]:
   prellm/analyzers/__init__.py,0
   prellm/analyzers/context_engine.py,75
 D:
+  examples/python_sdk.py:
+    i: asyncio
+    e: example_one_function,example_domain_rules,example_sync,example_class_based,example_openai_sdk,example_batch,example_strategies,main
+    example_one_function()
+    example_domain_rules()
+    example_sync()
+    example_class_based()
+    example_openai_sdk()
+    example_batch()
+    example_strategies()
+    main()
+  prellm/env_config.py:
+    i: logging,os,dataclasses.{dataclass,field},pathlib.Path,typing.Any
+    e: PROVIDER_KEY_MAP,EnvConfig,load_dotenv_if_available,get_env_config,check_providers,check_providers_live
+    EnvConfig:   # Resolved environment configuration.
+    load_dotenv_if_available(path:Any=None)->None
+    get_env_config(dotenv_path:Any=None)->EnvConfig
+    check_providers(env:Any=None)->dict[str, dict[str, Any]]
+    check_providers_live(env:Any=None)->dict[str, dict[str, Any]]
   prellm/cli.py:
     i: asyncio,json,sys,typer,pathlib.Path,typing.Optional
-    e: query,run,process,analyze,decompose,init,serve
+    e: query,run,process,analyze,decompose,init,serve,doctor
     query(prompt:str=typer.Argument(...; help='The prompt/query to preprocess and execute');small:str=typer.Option('ollama/qwen2.5:3b'; '--small'; '-s'; help='Small LLM for preprocessing');large:str=typer.Option('gpt-4o-mini'; '--large'; '-l'; help='Large LLM for execution');strategy:str=typer.Option('classify'; '--strategy'; '-S'; help='Strategy: classify|structure|split|enrich|passthrough');context:Optional[str]=typer.Option(None; '--context'; '-C'; help="User context tag (e.g. 'gdansk_embedded_python')");config:Optional[Path]=typer.Option(None; '--config'; '-c'; help='Optional YAML config file');...+1)
     run(query:str=typer.Argument(...; help='The prompt/query to process');config:Path=typer.Option('rules.yaml'; '--config'; '-c'; help='Path to YAML config');model:str=typer.Option('gpt-4o-mini'; '--model'; '-m'; help='LLM model to use');dry_run:bool=typer.Option(False; '--dry-run'; '-d'; help="Analyze only; don't call LLM");json_output:bool=typer.Option(False; '--json'; '-j'; help='Output as JSON'))
     process(config:Path=typer.Argument(...; help='Path to process chain YAML');guard_config:Path=typer.Option('rules.yaml'; '--guard-config'; '-g'; help='Path to guard YAML config');dry_run:bool=typer.Option(False; '--dry-run'; '-d'; help='Analyze steps without calling LLM');json_output:bool=typer.Option(False; '--json'; '-j'; help='Output as JSON');env:Optional[str]=typer.Option(None; '--env'; '-e'; help='Environment override (e.g.; production)'))
     analyze(query:str=typer.Argument(...; help='Query to analyze for bias/ambiguity');config:Path=typer.Option('rules.yaml'; '--config'; '-c'; help='Path to YAML config'))
     decompose(query:str=typer.Argument(...; help='The prompt/query to decompose');config:Path=typer.Option('configs/prellm_config.yaml'; '--config'; '-c'; help='Path to preLLM v0.2 YAML config');strategy:str=typer.Option('classify'; '--strategy'; '-s'; help='Decomposition strategy: classify|structure|split|enrich|passthrough');json_output:bool=typer.Option(False; '--json'; '-j'; help='Output as JSON'))
     init(output:Path=typer.Option('rules.yaml'; '--output'; '-o'; help='Output path for config');devops:bool=typer.Option(False; '--devops'; help='Include DevOps-specific patterns');v2:bool=typer.Option(False; '--v2'; help='Generate preLLM v0.2 config instead of v0.1'))
-    serve(host:str=typer.Option('0.0.0.0'; '--host'; '-H'; help='Bind host');port:int=typer.Option(8080; '--port'; '-p'; help='Bind port');small:str=typer.Option('ollama/qwen2.5:3b'; '--small'; '-s'; help='Default small LLM');large:str=typer.Option('gpt-4o-mini'; '--large'; '-l'; help='Default large LLM');strategy:str=typer.Option('classify'; '--strategy'; '-S'; help='Default strategy');config:Optional[Path]=typer.Option(None; '--config'; '-c'; help='YAML config file');...+1)
-    _run_guard(guard;query:str;model:str)
+    serve(host:str=typer.Option('0.0.0.0'; '--host'; '-H'; help='Bind host');port:int=typer.Option(8080; '--port'; '-p'; help='Bind port');small:Optional[str]=typer.Option(None; '--small'; '-s'; help='Override small LLM (default: from .env)');large:Optional[str]=typer.Option(None; '--large'; '-l'; help='Override large LLM (default: from .env)');strategy:Optional[str]=typer.Option(None; '--strategy'; '-S'; help='Override strategy (default: from .env)');config:Optional[Path]=typer.Option(None; '--config'; '-c'; help='YAML config file');...+1)
+    doctor(env_file:Optional[Path]=typer.Option(None; '--env-file'; help='Path to .env file');live:bool=typer.Option(False; '--live'; help='Test live connectivity to providers'))
   prellm/server.py:
     i: asyncio,json,logging,os,time,uuid,fastapi.{FastAPI,HTTPException},typing.{Any,AsyncGenerator}
-    e: SMALL_MODEL,LARGE_MODEL,DEFAULT_STRATEGY,CONFIG_PATH,ChatMessage,PreLLMExtras,ChatCompletionRequest,ChatCompletionChoice
+    e: SMALL_MODEL,LARGE_MODEL,DEFAULT_STRATEGY,CONFIG_PATH,MASTER_KEY,ChatMessage,PreLLMExtras,ChatCompletionRequest
     ChatMessage: 
     PreLLMExtras:   # preLLM-specific extensions in the req...
     ChatCompletionRequest: 
@@ -51,11 +77,19 @@ D:
     chat_completions(req:ChatCompletionRequest)
     _stream_response(query:str;small:str;large:str;strategy:str;extras:PreLLMExtras)->AsyncGenerator[str, None]
     batch_process(items:list[BatchItem])
-    create_app(small_model:Any=None;large_model:Any=None;strategy:Any=None;config_path:Any=None)->FastAPI
+    create_app(small_model:Any=None;large_model:Any=None;strategy:Any=None;config_path:Any=None;master_key:Any=None;dotenv_path:Any=None)->FastAPI
   prellm/query_decomposer.py:
     i: logging,prellm.llm_provider.LLMProvider,prellm.models,typing.Any
     e: QueryDecomposer
     QueryDecomposer: __init__(3),decompose(3),_classify(1),_structure(1),_split(1)  # Decomposes user queries using a small...
+  prellm/prompt_registry.py:
+    i: logging,yaml,functools.lru_cache,jinja2.{BaseLoader,Environment,TemplateSyntaxError,UndefinedError,_StrictUndefined},pathlib.Path,typing.Any
+    e: _DEFAULT_PROMPTS_PATH,PromptNotFoundError,PromptRenderError,PromptEntry,PromptRegistry
+    PromptNotFoundError:   # Raised when a prompt name is not foun...
+    PromptRenderError:   # Raised when a prompt template fails t...
+    PromptEntry: __init__(4),__repr__(0)  # Single prompt entry with template, ma...
+    PromptRegistry: __init__(1),_ensure_loaded(0),_load(0),get(1),get_entry(1)  # Loads prompts from YAML, caches, vali...
+    _StrictUndefined:   # Custom undefined that allows `default...
   prellm/models.py:
     i: enum,datetime,pydantic.{BaseModel,Field},typing.Any
     e: Policy,ApprovalMode,StepStatus,DecompositionStrategy,BiasPattern,ModelConfig,GuardConfig,AnalysisResult
@@ -75,6 +109,14 @@ D:
     i: json,logging,prellm.models.LLMProviderConfig,typing.Any
     e: LLMProvider
     LLMProvider: __init__(1),complete(3),complete_json(2),_parse_json(1)  # Unified LLM caller with retry and fal...
+  prellm/pipeline.py:
+    i: logging,yaml,pathlib.Path,prellm.llm_provider.LLMProvider,prellm.prompt_registry.PromptRegistry,pydantic.{BaseModel,Field},typing.{Any,Callable}
+    e: _DEFAULT_PIPELINES_PATH,PipelineStep,PipelineConfig,StepExecutionResult,PipelineResult,PromptPipeline
+    PipelineStep:   # Configuration for a single pipeline s...
+    PipelineConfig:   # Configuration for a complete pipeline.
+    StepExecutionResult:   # Result of executing a single pipeline...
+    PipelineResult:   # Result of executing a full pipeline.
+    PromptPipeline: __init__(4),from_yaml(5),execute(2),_execute_llm_step(2),_execute_algo_step(2)  # Generic pipeline — executes a sequenc...
   tests/test_one_function.py:
     i: pytest,prellm.core.{preprocess_and_execute,preprocess_and_execute_sync},prellm.models.{DecompositionStrategy,DomainRule,PreLLMResponse},unittest.mock.{AsyncMock,MagicMock,patch}
     e: TestPreprocessAndExecute,TestPreprocessAndExecuteSync,TestImportFromPackage
@@ -111,6 +153,15 @@ D:
     e: TestLLMProvider,TestQueryDecomposer
     TestLLMProvider: test_complete_returns_content(0),test_complete_with_system_prompt(0),test_complete_json_parses(0),test_complete_json_handles_markdown_fence(0),test_complete_json_returns_empty_on_bad_json(0)
     TestQueryDecomposer: _make_decomposer(1),test_passthrough_strategy(0),test_classify_strategy(0),test_structure_strategy(0),test_split_strategy(0)
+  tests/test_env_config.py:
+    i: os,tempfile,pytest,prellm.env_config.{EnvConfig,check_providers,get_env_config,load_dotenv_if_available},unittest.mock.{AsyncMock,MagicMock,patch}
+    e: TestEnvConfigDefaults,TestLoadDotenv,TestGetEnvConfig,TestCheckProviders,TestAuthMiddleware
+    TestEnvConfigDefaults: test_default_config(0),test_provider_key_map_has_all_providers(0)
+    TestLoadDotenv: test_load_env_file(1),test_load_env_does_not_override_existing(1),test_load_env_strips_quotes(1),test_load_nonexistent_file(0)
+    TestGetEnvConfig: test_reads_from_env(0),test_reads_from_dotenv_file(1),test_litellm_compat_env_vars(0),test_small_model_fallback_to_old_env(0),test_empty_master_key_is_none(0)
+    TestCheckProviders: test_check_with_keys(0),test_check_without_keys(0)
+    TestAuthMiddleware: test_no_auth_when_no_master_key(0),test_auth_required_when_master_key_set(0),test_auth_with_bearer_token(0),test_auth_with_x_api_key(0),test_wrong_key_rejected(0)  # Test Bearer token auth in the API ser...
+    _mock_resp(content:str)->MagicMock
   tests/test_context.py:
     i: pytest,prellm.analyzers.context_engine.ContextEngine
     e: TestContextEngine
@@ -138,8 +189,30 @@ D:
     TestAnalyzeOnly: test_production_deploy_detected(0),test_db_delete_detected(0),test_safe_query_passes(0),test_short_devops_query_flagged(0),test_scale_operation_detected(0)
     TestProcessChainDryRun: _make_chain(1),test_simple_chain_dry_run(0),test_chain_with_manual_approval_pauses(0),test_chain_with_approval_callback(0),test_chain_dependency_failure(0)
     TestDeployConfig: test_deploy_yaml_loads(0)
+  tests/test_prompt_registry.py:
+    i: tempfile,pytest,yaml,pathlib.Path,prellm.prompt_registry.{PromptNotFoundError,PromptRegistry,PromptRenderError}
+    e: sample_prompts_yaml,registry,test_prompt_registry_loads_yaml,test_prompt_registry_get_with_variables,test_prompt_registry_get_with_default,test_prompt_registry_get_conditional,test_prompt_registry_missing_prompt_raises,test_prompt_registry_validate_all_required
+    sample_prompts_yaml(tmp_path:Path)->Path
+    registry(sample_prompts_yaml:Path)->PromptRegistry
+    test_prompt_registry_loads_yaml(registry:PromptRegistry)
+    test_prompt_registry_get_with_variables(registry:PromptRegistry)
+    test_prompt_registry_get_with_default(registry:PromptRegistry)
+    test_prompt_registry_get_conditional(registry:PromptRegistry)
+    test_prompt_registry_missing_prompt_raises(registry:PromptRegistry)
+    test_prompt_registry_validate_all_required(registry:PromptRegistry)
+  tests/test_pipeline.py:
+    i: pytest,yaml,pathlib.Path,prellm.llm_provider.LLMProvider,prellm.models.LLMProviderConfig,prellm.pipeline.{PipelineConfig,PipelineResult,PipelineStep},unittest.mock.{AsyncMock,MagicMock}
+    e: sample_prompts_yaml,sample_pipelines_yaml,registry,mock_llm,test_pipeline_sequential_execution,test_pipeline_conditional_step_skip,test_pipeline_conditional_step_executes,test_pipeline_algo_step_execution
+    sample_prompts_yaml(tmp_path:Path)->Path
+    sample_pipelines_yaml(tmp_path:Path)->Path
+    registry(sample_prompts_yaml:Path)->PromptRegistry
+    mock_llm()->LLMProvider
+    _make_pipeline(registry:PromptRegistry;mock_llm:LLMProvider;steps:list[dict];name:str='test')->PromptPipeline
+    test_pipeline_sequential_execution(registry:PromptRegistry;mock_llm:LLMProvider)
+    test_pipeline_conditional_step_skip(registry:PromptRegistry;mock_llm:LLMProvider)
+    test_pipeline_conditional_step_executes(registry:PromptRegistry;mock_llm:LLMProvider)
   htmlcov/coverage_html_cb_dd2e7eb5.js:
-    e: debounce,on_click,getCellValue,sortColumn,checkVisible,rowComparator
+    e: debounce,on_click,checkVisible,sortColumn,rowComparator,getCellValue
     debounce(callback;wait)
     checkVisible(element)
     on_click(sel;fn)

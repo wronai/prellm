@@ -1,23 +1,30 @@
 project: prellm
-generated: "2026-02-15T20:00:15.124467"
-modules[23]{path,lang,items}:
-  prellm/cli.py,python,8
-  prellm/server.py,python,8
+generated: "2026-02-15T20:15:22.739735"
+modules[30]{path,lang,items}:
+  examples/python_sdk.py,python,8
+  prellm/env_config.py,python,4
+  prellm/cli.py,python,9
+  prellm/server.py,python,9
   prellm/__init__.py,python,0
   prellm/query_decomposer.py,python,9
+  prellm/prompt_registry.py,python,11
   prellm/models.py,python,0
   prellm/core.py,python,14
   prellm/llm_provider.py,python,4
+  prellm/pipeline.py,python,12
   tests/test_one_function.py,python,20
   tests/test_edge_cases.py,python,17
   tests/test_promptguard.py,python,25
   tests/test_server.py,python,24
   tests/test_decomposer.py,python,14
+  tests/test_env_config.py,python,21
   tests/__init__.py,python,0
   tests/test_context.py,python,7
   tests/test_v2_architecture.py,python,43
   tests/test_models.py,python,21
   tests/test_integration.py,python,22
+  tests/test_prompt_registry.py,python,14
+  tests/test_pipeline.py,python,16
   htmlcov/coverage_html_cb_dd2e7eb5.js,javascript,6
   prellm/chains/__init__.py,python,0
   prellm/chains/process_chain.py,python,6
@@ -26,26 +33,44 @@ modules[23]{path,lang,items}:
   prellm/analyzers/context_engine.py,python,6
 
 function_details:
-  prellm/cli.py:
+  examples/python_sdk.py:
     functions[8]{name,kind,sig,loc,async,lines,cc,does}:
+      example_one_function,function,(),16-45,true,30,4,The simplest way to use preLLM — like litellm.completion().
+      example_domain_rules,function,(),52-75,true,24,2,Inline domain rules for safety checks.
+      example_sync,function,(),82-91,false,10,1,Synchronous wrapper — no async needed.
+      example_class_based,function,(),98-123,true,26,1,More control with the PreLLM class.
+      example_openai_sdk,function,(),130-158,true,29,2,Use preLLM as an OpenAI drop-in replacement.
+      example_batch,function,(),165-181,true,17,3,Batch multiple queries via the API.
+      example_strategies,function,(),188-211,true,24,8,Demonstrate all 5 decomposition strategies.
+      main,function,(),218-233,true,16,1,main
+  prellm/env_config.py:
+    functions[4]{name,kind,sig,loc,async,lines,cc,does}:
+      load_dotenv_if_available,function,"(path:Any=None) -> None",68-85,false,18,12,Load .env file if it exists.
+      get_env_config,function,"(dotenv_path:Any=None) -> EnvConfig",88-128,false,41,9,Read all config from environment variables (LiteLLM-compatible).
+      check_providers,function,"(env:Any=None) -> dict[str, dict[str, Any]]",131-162,false,32,5,Check which providers are configured and reachable.
+      check_providers_live,function,"(env:Any=None) -> dict[str, dict[str, Any]]",165-195,true,31,7,Check providers with live connectivity tests.
+  prellm/cli.py:
+    functions[9]{name,kind,sig,loc,async,lines,cc,does}:
       query,function,"(prompt:str=typer.Argument(..., help='The prompt/query to preprocess and execute'), small:str=typer.Option('ollama/qwen2.5:3b', '--small', '-s', help='Small LLM for preprocessing'), large:str=typer.Option('gpt-4o-mini', '--large', '-l', help='Large LLM for execution'), strategy:str=typer.Option('classify', '--strategy', '-S', help='Strategy: classify|structure|split|enrich|passthrough'), context:Optional[str]=typer.Option(None, '--context', '-C', help=\"User context tag (e.g. 'gdansk_embedded_python')\"), config:Optional[Path]=typer.Option(None, '--config', '-c', help='Optional YAML config file'), json_output:bool=typer.Option(False, '--json', '-j', help='Output as JSON'))",26-64,false,39,9,"Preprocess a query with small LLM, then execute with large LLM."
       run,function,"(query:str=typer.Argument(..., help='The prompt/query to process'), config:Path=typer.Option('rules.yaml', '--config', '-c', help='Path to YAML config'), model:str=typer.Option('gpt-4o-mini', '--model', '-m', help='LLM model to use'), dry_run:bool=typer.Option(False, '--dry-run', '-d', help=\"Analyze only, don't call LLM\"), json_output:bool=typer.Option(False, '--json', '-j', help='Output as JSON'))",68-104,false,37,7,"[v0.1 compat] Run a single query through the old Prellm pipeline."
       process,function,"(config:Path=typer.Argument(..., help='Path to process chain YAML'), guard_config:Path=typer.Option('rules.yaml', '--guard-config', '-g', help='Path to guard YAML config'), dry_run:bool=typer.Option(False, '--dry-run', '-d', help='Analyze steps without calling LLM'), json_output:bool=typer.Option(False, '--json', '-j', help='Output as JSON'), env:Optional[str]=typer.Option(None, '--env', '-e', help='Environment override (e.g., production)'))",108-144,false,37,6,Execute a DevOps process chain.
       analyze,function,"(query:str=typer.Argument(..., help='Query to analyze for bias/ambiguity'), config:Path=typer.Option('rules.yaml', '--config', '-c', help='Path to YAML config'))",148-166,false,19,5,Analyze a query without calling any LLM (bias detection + ambiguity check).
       decompose,function,"(query:str=typer.Argument(..., help='The prompt/query to decompose'), config:Path=typer.Option('configs/prellm_config.yaml', '--config', '-c', help='Path to preLLM v0.2 YAML config'), strategy:str=typer.Option('classify', '--strategy', '-s', help='Decomposition strategy: classify|structure|split|enrich|passthrough'), json_output:bool=typer.Option(False, '--json', '-j', help='Output as JSON'))",170-206,false,37,7,"[v0.2] Decompose a query using small LLM without calling the large model."
       init,function,"(output:Path=typer.Option('rules.yaml', '--output', '-o', help='Output path for config'), devops:bool=typer.Option(False, '--devops', help='Include DevOps-specific patterns'), v2:bool=typer.Option(False, '--v2', help='Generate preLLM v0.2 config instead of v0.1'))",210-278,false,69,7,Generate a starter config file (v0.1 rules.yaml or v0.2 prellm_config.yaml).
-      serve,function,"(host:str=typer.Option('0.0.0.0', '--host', '-H', help='Bind host'), port:int=typer.Option(8080, '--port', '-p', help='Bind port'), small:str=typer.Option('ollama/qwen2.5:3b', '--small', '-s', help='Default small LLM'), large:str=typer.Option('gpt-4o-mini', '--large', '-l', help='Default large LLM'), strategy:str=typer.Option('classify', '--strategy', '-S', help='Default strategy'), config:Optional[Path]=typer.Option(None, '--config', '-c', help='YAML config file'), reload:bool=typer.Option(False, '--reload', help='Auto-reload on code changes (dev mode)'))",282-321,false,40,2,Start the OpenAI-compatible API server.
-      _run_guard,function,"(guard, query:str, model:str)",324-325,true,2,1,starts guard
+      serve,function,"(host:str=typer.Option('0.0.0.0', '--host', '-H', help='Bind host'), port:int=typer.Option(8080, '--port', '-p', help='Bind port'), small:Optional[str]=typer.Option(None, '--small', '-s', help='Override small LLM (default: from .env)'), large:Optional[str]=typer.Option(None, '--large', '-l', help='Override large LLM (default: from .env)'), strategy:Optional[str]=typer.Option(None, '--strategy', '-S', help='Override strategy (default: from .env)'), config:Optional[Path]=typer.Option(None, '--config', '-c', help='YAML config file'), env_file:Optional[Path]=typer.Option(None, '--env-file', help='Path to .env file (default: .env)'), reload:bool=typer.Option(False, '--reload', help='Auto-reload on code changes (dev mode)'))",282-335,false,54,8,Start the OpenAI-compatible API server.
+      doctor,function,"(env_file:Optional[Path]=typer.Option(None, '--env-file', help='Path to .env file'), live:bool=typer.Option(False, '--live', help='Test live connectivity to providers'))",339-416,false,78,15,Check configuration and provider connectivity.
+      _run_guard,function,"(guard, query:str, model:str)",419-420,true,2,1,starts guard
   prellm/server.py:
-    functions[8]{name,kind,sig,loc,async,lines,cc,does}:
-      _parse_model_pair,function,"(model_str:str) -> tuple[str, str]",140-159,false,20,9,"Parse 'prellm:qwen→claude' or 'prellm:small→large' into (small, large) model str..."
-      _build_prellm_meta,function,"(result:PreLLMResponse, strategy:str) -> PreLLMMeta",162-177,false,16,3,Build preLLM metadata from a PreLLMResponse.
-      health,function,() -> HealthResponse,185-191,true,7,1,health
-      list_models,function,(),195-203,true,9,1,List available model pairs.
-      chat_completions,function,"(req:ChatCompletionRequest)",207-274,true,68,11,OpenAI-compatible chat completions with preLLM preprocessing.
-      _stream_response,function,"(query:str, small:str, large:str, strategy:str, extras:PreLLMExtras) -> AsyncGenerator[str, None]",277-330,true,54,4,SSE streaming response with stage progress.
-      batch_process,function,"(items:list[BatchItem])",334-357,true,24,3,Process multiple queries in parallel.
-      create_app,function,"(small_model:Any=None, large_model:Any=None, strategy:Any=None, config_path:Any=None) -> FastAPI",360-376,false,17,5,Factory function to create a configured preLLM API server.
+    functions[9]{name,kind,sig,loc,async,lines,cc,does}:
+      _parse_model_pair,function,"(model_str:str) -> tuple[str, str]",177-208,false,32,10,"Parse 'prellm:qwen→claude' or 'prellm:small→large' into (small, large) model str..."
+      _build_prellm_meta,function,"(result:PreLLMResponse, strategy:str) -> PreLLMMeta",211-226,false,16,3,Build preLLM metadata from a PreLLMResponse.
+      health,function,() -> HealthResponse,234-240,true,7,1,health
+      list_models,function,(),244-252,true,9,1,List available model pairs.
+      chat_completions,function,"(req:ChatCompletionRequest)",256-323,true,68,11,OpenAI-compatible chat completions with preLLM preprocessing.
+      _stream_response,function,"(query:str, small:str, large:str, strategy:str, extras:PreLLMExtras) -> AsyncGenerator[str, None]",326-379,true,54,4,SSE streaming response with stage progress.
+      batch_process,function,"(items:list[BatchItem])",383-406,true,24,3,Process multiple queries in parallel.
+      create_app,function,"(small_model:Any=None, large_model:Any=None, strategy:Any=None, config_path:Any=None, master_key:Any=None, dotenv_path:Any=None) -> FastAPI",409-441,false,33,7,Factory function to create a configured preLLM API server.
+      AuthMiddleware.dispatch,method,"(request:Request, call_next)",136-155,true,20,5,sends
   prellm/query_decomposer.py:
     functions[9]{name,kind,sig,loc,async,lines,cc,does}:
       QueryDecomposer.__init__,method,"(small_llm:LLMProvider, prompts:Any=None, domain_rules:Any=None)",45-53,false,9,3,creates
@@ -57,6 +82,19 @@ function_details:
       QueryDecomposer._compose,method,"(query:str, result:DecompositionResult, context:Any) -> str",191-236,true,46,9,Compose the final prompt for the large LLM.
       QueryDecomposer._match_domain_rule,method,"(query:str, classification:ClassificationResult) -> DomainRule | None",238-265,false,28,8,Find the best matching domain rule for the query.
       QueryDecomposer._find_missing_fields,method,"(query:str, rule:DomainRule, context:Any) -> list[str]",268-283,false,16,5,Determine which required fields are missing from the query and context.
+  prellm/prompt_registry.py:
+    functions[11]{name,kind,sig,loc,async,lines,cc,does}:
+      PromptEntry.__init__,method,"(name:str, system_template:str, max_tokens:int=512, temperature:float=0.1)",35-39,false,5,1,creates
+      PromptEntry.__repr__,method,() -> str,41-42,false,2,1,repr
+      PromptRegistry.__init__,method,"(prompts_path:Any=None)",54-58,false,5,2,creates
+      PromptRegistry._ensure_loaded,method,() -> None,60-62,false,3,2,ensure loaded
+      PromptRegistry._load,method,() -> None,64-87,false,24,6,Load prompts from the YAML file.
+      PromptRegistry.get,method,"(prompt_name:str) -> str",89-108,false,20,2,Get a rendered prompt by name with Jinja2 variable substitution.
+      PromptRegistry.get_entry,method,"(name:str) -> PromptEntry",110-126,false,17,2,Get the full PromptEntry (template + max_tokens + temperature).
+      PromptRegistry.list_prompts,method,"() -> list[str]",128-131,false,4,1,List all available prompt names.
+      PromptRegistry.validate,method,"() -> list[str]",133-154,false,22,5,Validate that all prompts have non-empty templates.
+      PromptRegistry.register,method,"(name:str, system_template:str, max_tokens:int=512, temperature:float=0.1) -> None",156-164,false,9,1,Register a prompt programmatically (useful for testing or dynamic prompts).
+      PromptRegistry._render,method,"(template_str:str, variables:dict[str,Any]) -> str",166-174,false,9,3,Render a Jinja2 template string with variables.
   prellm/core.py:
     functions[14]{name,kind,sig,loc,async,lines,cc,does}:
       preprocess_and_execute,function,"(query:str, small_llm:str='ollama/qwen2.5:3b', large_llm:str='anthropic/claude-sonnet-4-20250514', strategy:Any='classify', user_context:Any=None, config_path:Any=None, domain_rules:Any=None) -> PreLLMResponse",48-126,true,79,11,One function to preprocess and execute — like litellm.completion() but with smal...
@@ -79,6 +117,20 @@ function_details:
       LLMProvider.complete,method,"(user_message:str, system_prompt:str='', response_format:Any=None) -> str",29-87,true,59,9,Send a completion request with retry/fallback.
       LLMProvider.complete_json,method,"(user_message:str, system_prompt:str='') -> dict[str, Any]",89-106,true,18,1,Complete and parse response as JSON.
       LLMProvider._parse_json,method,"(text:str) -> dict[str, Any]",109-141,false,33,10,Best-effort JSON extraction from LLM output.
+  prellm/pipeline.py:
+    functions[12]{name,kind,sig,loc,async,lines,cc,does}:
+      PromptPipeline.__init__,method,"(config:PipelineConfig, registry:PromptRegistry, small_llm:LLMProvider, validators:Any=None)",87-103,false,17,2,creates
+      PromptPipeline.from_yaml,method,"(pipelines_path:Any, pipeline_name:str, registry:Any=None, small_llm:Any=None, validators:Any=None) -> PromptPipeline",106-167,false,62,6,Load a named pipeline from a YAML file.
+      PromptPipeline.execute,method,"(query:str, context:Any=None) -> PipelineResult",169-237,true,69,9,"Execute pipeline step by step, collecting intermediate results."
+      PromptPipeline._execute_llm_step,method,"(step:PipelineStep, state:dict[str,Any]) -> Any",239-261,true,23,1,Execute an LLM step — call small_llm with prompt from registry.
+      PromptPipeline._execute_algo_step,method,"(step:PipelineStep, state:dict[str,Any]) -> Any",263-271,false,9,3,Execute an algorithmic (non-LLM) step.
+      PromptPipeline._gather_inputs,method,"(step:PipelineStep, state:dict[str,Any]) -> dict[str, Any]",273-284,false,12,4,Gather input values from state for a step.
+      PromptPipeline._build_user_message,method,"(step:PipelineStep, state:dict[str,Any]) -> str",286-297,false,12,5,Build user message string from step inputs.
+      PromptPipeline._evaluate_condition,method,"(condition:str, state:dict[str,Any]) -> bool",299-310,false,12,2,Safely evaluate a condition string against state.
+      PromptPipeline.register_algo_handler,method,"(name:str, handler:Callable[Ellipsis,Any]) -> None",312-314,false,3,1,Register a custom algorithmic step handler.
+      PromptPipeline._algo_domain_rule_matcher,method,"(inputs:dict[str,Any], state:dict[str,Any], config:dict[str,Any]) -> dict[str, Any]",321-343,false,23,9,Match classification against domain rules in context.
+      PromptPipeline._algo_field_validator,method,"(inputs:dict[str,Any], state:dict[str,Any], config:dict[str,Any]) -> list[str]",346-359,false,14,5,Validate extracted fields against required fields from matched rule.
+      PromptPipeline._algo_yaml_formatter,method,"(inputs:dict[str,Any], state:dict[str,Any], config:dict[str,Any]) -> dict[str, Any]",362-377,false,16,4,Format pipeline state into structured executor input.
   tests/test_one_function.py:
     functions[20]{name,kind,sig,loc,async,lines,cc,does}:
       _mock_litellm_response,function,"(content:str) -> MagicMock",16-20,false,5,1,mock litellm response
@@ -189,6 +241,29 @@ function_details:
       TestQueryDecomposer.test_split_strategy,method,(),183-196,true,14,1,checks split strategy
       TestQueryDecomposer.test_enrich_strategy,method,(),199-217,true,19,1,checks enrich strategy
       TestQueryDecomposer.test_missing_fields_from_domain_rules,method,(),220-237,true,18,1,checks missing fields from domain rules
+  tests/test_env_config.py:
+    functions[21]{name,kind,sig,loc,async,lines,cc,does}:
+      _mock_resp,function,"(content:str) -> MagicMock",310-314,false,5,1,mock resp
+      TestEnvConfigDefaults.test_default_config,method,(),20-29,false,10,1,checks default config
+      TestEnvConfigDefaults.test_provider_key_map_has_all_providers,method,(),31-37,false,7,1,checks provider key map has all providers
+      TestLoadDotenv.test_load_env_file,method,(tmp_path),41-65,false,25,3,checks load env file
+      TestLoadDotenv.test_load_env_does_not_override_existing,method,(tmp_path),67-75,false,9,1,checks load env does not override existing
+      TestLoadDotenv.test_load_env_strips_quotes,method,(tmp_path),77-93,false,17,3,checks load env strips quotes
+      TestLoadDotenv.test_load_nonexistent_file,method,(),95-97,false,3,1,checks load nonexistent file
+      TestGetEnvConfig.test_reads_from_env,method,(),101-125,false,25,1,checks reads from env
+      TestGetEnvConfig.test_reads_from_dotenv_file,method,(tmp_path),127-143,false,17,3,checks reads from dotenv file
+      TestGetEnvConfig.test_litellm_compat_env_vars,method,(),145-157,false,13,1,LiteLLM env vars (OPENAI_API_KEY etc.) are detected in providers.
+      TestGetEnvConfig.test_small_model_fallback_to_old_env,method,(),159-166,false,8,1,SMALL_MODEL env var (old name) still works.
+      TestGetEnvConfig.test_empty_master_key_is_none,method,(),168-171,false,4,1,checks empty master key is none
+      TestGetEnvConfig.test_ollama_base_url,method,(),173-176,false,4,1,checks ollama base url
+      TestCheckProviders.test_check_with_keys,method,(),180-191,false,12,1,checks check with keys
+      TestCheckProviders.test_check_without_keys,method,(),193-202,false,10,2,checks check without keys
+      TestAuthMiddleware.test_no_auth_when_no_master_key,method,(),208-226,false,19,1,checks no auth when no master key
+      TestAuthMiddleware.test_auth_required_when_master_key_set,method,(),228-245,false,18,1,checks auth required when master key set
+      TestAuthMiddleware.test_auth_with_bearer_token,method,(),247-267,false,21,1,checks auth with bearer token
+      TestAuthMiddleware.test_auth_with_x_api_key,method,(),269-288,false,20,1,checks auth with x api key
+      TestAuthMiddleware.test_wrong_key_rejected,method,(),290-302,false,13,1,checks wrong key rejected
+      TestAuthMiddleware.teardown_method,method,(),304-307,false,4,1,Reset master key after each test.
   tests/test_context.py:
     functions[7]{name,kind,sig,loc,async,lines,cc,does}:
       TestContextEngine.test_env_context,method,(monkeypatch),10-16,false,7,1,checks env context
@@ -290,6 +365,40 @@ function_details:
       TestProcessChainDryRun.test_chain_timing,method,(),198-205,true,8,1,checks chain timing
       TestProcessChainDryRun.test_chain_audit_trail,method,(),208-222,true,15,1,checks chain audit trail
       TestDeployConfig.test_deploy_yaml_loads,method,(),228-239,false,12,2,checks deploy yaml loads
+  tests/test_prompt_registry.py:
+    functions[14]{name,kind,sig,loc,async,lines,cc,does}:
+      sample_prompts_yaml,function,"(tmp_path:Path) -> Path",15-53,false,39,1,Create a temporary prompts.yaml for testing.
+      registry,function,"(sample_prompts_yaml:Path) -> PromptRegistry",57-58,false,2,1,registry
+      test_prompt_registry_loads_yaml,function,"(registry:PromptRegistry)",61-69,false,9,1,Registry loads all prompts from YAML file.
+      test_prompt_registry_get_with_variables,function,"(registry:PromptRegistry)",72-76,false,5,1,Registry renders Jinja2 variables in prompts.
+      test_prompt_registry_get_with_default,function,"(registry:PromptRegistry)",79-82,false,4,1,Registry uses Jinja2 default filter when variable not provided.
+      test_prompt_registry_get_conditional,function,"(registry:PromptRegistry)",85-91,false,7,1,Registry handles Jinja2 conditionals.
+      test_prompt_registry_missing_prompt_raises,function,"(registry:PromptRegistry)",94-97,false,4,1,Registry raises PromptNotFoundError for missing prompts.
+      test_prompt_registry_validate_all_required,function,"(registry:PromptRegistry)",100-103,false,4,1,Registry validates that all required prompts exist.
+      test_prompt_registry_validate_missing_required,function,"(tmp_path:Path)",106-114,false,9,2,Registry reports missing required prompts.
+      test_prompt_registry_get_entry,function,"(registry:PromptRegistry)",117-123,false,7,1,Registry returns full PromptEntry with metadata.
+      test_prompt_registry_caching,function,"(registry:PromptRegistry)",126-135,false,10,1,Registry loads YAML only once (lazy loading).
+      test_prompt_registry_register_programmatic,function,"(registry:PromptRegistry)",138-143,false,6,1,Registry supports programmatic prompt registration.
+      test_prompt_registry_nonexistent_file,function,(),146-149,false,4,1,Registry handles missing YAML file gracefully.
+      test_prompt_registry_default_path,function,(),152-157,false,6,1,Registry uses default configs/prompts.yaml path.
+  tests/test_pipeline.py:
+    functions[16]{name,kind,sig,loc,async,lines,cc,does}:
+      sample_prompts_yaml,function,"(tmp_path:Path) -> Path",23-61,false,39,1,sample prompts yaml
+      sample_pipelines_yaml,function,"(tmp_path:Path) -> Path",65-120,false,56,1,sample pipelines yaml
+      registry,function,"(sample_prompts_yaml:Path) -> PromptRegistry",124-125,false,2,1,registry
+      mock_llm,function,() -> LLMProvider,129-138,false,10,1,Create a mock LLMProvider that returns predictable JSON.
+      _make_pipeline,function,"(registry:PromptRegistry, mock_llm:LLMProvider, steps:list[dict], name:str='test') -> PromptPipeline",141-151,false,11,2,creates pipeline
+      test_pipeline_sequential_execution,function,"(registry:PromptRegistry, mock_llm:LLMProvider)",155-169,true,15,1,"Pipeline executes steps sequentially, propagating state."
+      test_pipeline_conditional_step_skip,function,"(registry:PromptRegistry, mock_llm:LLMProvider)",173-192,true,20,1,Pipeline skips steps whose condition evaluates to False.
+      test_pipeline_conditional_step_executes,function,"(registry:PromptRegistry, mock_llm:LLMProvider)",196-215,true,20,1,Pipeline executes steps whose condition evaluates to True.
+      test_pipeline_algo_step_execution,function,"(registry:PromptRegistry, mock_llm:LLMProvider)",219-234,true,16,1,Pipeline executes algorithmic (non-LLM) steps.
+      test_pipeline_llm_step_execution,function,"(registry:PromptRegistry, mock_llm:LLMProvider)",238-248,true,11,2,Pipeline LLM steps call complete_json on small_llm.
+      test_pipeline_state_propagation,function,"(registry:PromptRegistry, mock_llm:LLMProvider)",252-272,true,21,1,State from earlier steps is available to later steps.
+      test_pipeline_from_yaml_config,function,"(sample_pipelines_yaml:Path, registry:PromptRegistry, mock_llm:LLMProvider)",276-291,true,16,1,Pipeline loads correctly from YAML file.
+      test_pipeline_from_yaml_missing_pipeline,function,"(sample_pipelines_yaml:Path)",294-300,false,7,1,Loading a non-existent pipeline raises KeyError.
+      test_pipeline_missing_prompt_error,function,"(mock_llm:LLMProvider)",304-313,true,10,2,Pipeline with a prompt not in registry fails gracefully.
+      test_pipeline_custom_validator,function,"(registry:PromptRegistry, mock_llm:LLMProvider)",317-333,true,17,1,Pipeline supports custom algorithmic step handlers.
+      test_pipeline_empty_passthrough,function,"(registry:PromptRegistry, mock_llm:LLMProvider)",337-345,true,9,1,Empty pipeline (passthrough) returns state with just query and context.
   htmlcov/coverage_html_cb_dd2e7eb5.js:
     functions[6]{name,kind,sig,loc,async,lines,cc,does}:
       debounce,function,"(callback, wait)",11-19,false,9,1,debounce
