@@ -32,6 +32,16 @@ prellm query "Deploy app" --pipeline dual_agent_full
 docker run prellm/prellm query "Deploy app" --small ollama/qwen2.5:3b --large gpt-4o-mini
 ```
 
+### Interactive Configuration (repo)
+
+```bash
+make install-dev
+make config         # guided wizard + diagnostics
+source .env
+prellm doctor --live
+make examples       # runs all example scripts (real-time)
+```
+
 ## How It Works
 
 ```text
@@ -173,6 +183,16 @@ result = await preprocess_and_execute(
 )
 ```
 
+### OpenRouter (multi-provider + vision)
+
+```python
+result = await preprocess_and_execute(
+    query="Analyze this UI screenshot",
+    small_llm="ollama/qwen2.5:3b",
+    large_llm="openrouter/qwen/qwen3-vl-32b-instruct",
+)
+```
+
 ### Azure OpenAI
 
 ```python
@@ -231,9 +251,13 @@ ANTHROPIC_API_KEY=sk-ant-...
 GROQ_API_KEY=gsk_...
 
 # preLLM-specific (optional)
-PRELLM_SMALL_MODEL=ollama/qwen2.5:3b
-PRELLM_LARGE_MODEL=anthropic/claude-sonnet-4-20250514
+PRELLM_SMALL_DEFAULT=ollama/qwen2.5:3b
+PRELLM_LARGE_DEFAULT=anthropic/claude-sonnet-4-20250514
 PRELLM_STRATEGY=classify
+
+# Legacy names still supported
+SMALL_MODEL=ollama/qwen2.5:3b
+LARGE_MODEL=gpt-4o-mini
 ```
 
 ### LiteLLM Proxy Integration
@@ -537,29 +561,32 @@ preprocess_and_execute(query, small_llm, large_llm, strategy= | pipeline=)
 
 ## Examples
 
-Ready-to-run examples with tests in `examples/`:
+Ready-to-run examples in `examples/`:
 
-| Example | Directory | Domain Config | Tests |
-|---|---|---|---|
-| **K8s Debugging** | `examples/k8s/` | `configs/domains/devops_k8s.yaml` | 7 |
-| **Polish Leasing** | `examples/leasing/` | `configs/domains/polish_finance.yaml` | 8 |
-| **Embedded/IoT** | `examples/embedded/` | `configs/domains/embedded.yaml` | 8 |
+| Example | File | Config |
+|---|---|---|
+| **Quick Start** | `examples/quick_start.py` | default env (no config) |
+| **K8s Debugging** | `examples/k8s_debug.py` | `configs/domains/devops_k8s.yaml` |
+| **Polish Leasing** | `examples/polish_leasing.py` | `configs/domains/polish_finance.yaml` |
+| **Embedded/IoT** | `examples/embedded_refactor.py` | `configs/domains/embedded.yaml` |
+| **Providers** | `examples/providers.py` | env keys per provider |
+| **Python SDK** | `examples/python_sdk.py` | env keys per provider |
+| **CLI + API** | `examples/cli_examples.sh`, `examples/curl_api.sh` | server running |
 
 ### Run Examples
 
 ```bash
-# Run example (requires Ollama or API keys)
-python examples/k8s/main.py
-python examples/leasing/main.py
-python examples/embedded/main.py
+# Run all examples (real-time output)
+make examples
 
-# Run example tests (fully mocked, no LLM needed)
-pytest examples/k8s/test_k8s.py -v
-pytest examples/leasing/test_leasing.py -v
-pytest examples/embedded/test_embedded.py -v
+# Run single example
+python examples/quick_start.py
+python examples/k8s_debug.py
+python examples/polish_leasing.py
 
-# Run ALL tests (core + examples)
-pytest
+# CLI + curl demos (server must be running)
+bash examples/cli_examples.sh
+bash examples/curl_api.sh
 ```
 
 ### K8s Debugging

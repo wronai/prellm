@@ -2,6 +2,15 @@
 
 Mermaid diagrams showing the preLLM preprocessing pipeline for each use case.
 
+## Configuration & Diagnostics
+
+```bash
+make config         # interactive wizard + diagnostics
+source .env
+prellm doctor --live
+make examples       # real-time demo scripts
+```
+
 ## Core Pipeline
 
 ```mermaid
