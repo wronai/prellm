@@ -162,10 +162,21 @@ class PreprocessorAgent:
         for key in ("composed_prompt", "executor_input", "meta_prompt", "enriched_query", "enriched"):
             value = state.get(key)
             if value:
+                composed = ""
                 if isinstance(value, str):
-                    return value
-                if isinstance(value, dict):
-                    return value.get("composed_prompt", str(value))
+                    composed = value
+                elif isinstance(value, dict):
+                    composed = value.get("composed_prompt", "")
+
+                if composed:
+                    # Ensure original query is present — prevent hallucination drift
+                    query_words = set(query.lower().split())
+                    composed_words = set(composed.lower().split())
+                    overlap = len(query_words & composed_words) / max(len(query_words), 1)
+                    if overlap >= 0.3:
+                        return composed
+                    # Low overlap = likely hallucination, prefix with original query
+                    return f"{query}\n\n{composed}"
 
         # Fallback: return original query
         return state.get("query", query)

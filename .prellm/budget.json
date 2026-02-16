@@ -1,6 +1,6 @@
 {
   "2026-02": {
-    "total_cost": 0.010687,
+    "total_cost": 0.013066000000000001,
     "entries": [
       {
         "timestamp": "2026-02-16T09:39:16.112178",
@@ -92,6 +92,20 @@
         "prompt_tokens": 108,
         "completion_tokens": 21,
         "cost": 0.0
+      },
+      {
+        "timestamp": "2026-02-16T12:08:58.652654",
+        "model": "ollama/qwen:7b",
+        "prompt_tokens": 4096,
+        "completion_tokens": 101,
+        "cost": 0.0
+      },
+      {
+        "timestamp": "2026-02-16T12:09:04.116354",
+        "model": "openrouter/google/gemini-3-flash-preview",
+        "prompt_tokens": 216,
+        "completion_tokens": 757,
+        "cost": 0.002379
       }
     ]
   }

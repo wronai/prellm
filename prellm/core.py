@@ -290,12 +290,15 @@ async def _execute_v3_pipeline(
         sensitive_filter=sensitive_filter,
     )
 
-    # 2. Run preprocessing (small LLM)
+    # 2. Build compact pipeline context for small LLM (no raw blobs)
+    pipeline_context = _build_pipeline_context(extra_context)
+
+    # 2b. Run preprocessing (small LLM) with compact context only
     prep_result, prep_duration_ms = await _run_preprocessing(
-        preprocessor, query, extra_context, pipeline
+        preprocessor, query, pipeline_context, pipeline
     )
 
-    # 3. Build system_prompt from preprocessing context for the large LLM
+    # 3. Build system_prompt from preprocessing + FULL context for the large LLM
     system_prompt = _build_executor_system_prompt(prep_result, extra_context)
 
     # 4. Run execution with sanitization (large LLM)
@@ -433,6 +436,24 @@ def _prepare_context(
             logger.warning(f"Failed to initialize CodebaseIndexer: {e}")
 
     return extra_context, sensitive_filter, user_memory, codebase_indexer
+
+
+def _build_pipeline_context(extra_context: dict[str, Any]) -> dict[str, Any]:
+    """Build compact context for small LLM pipeline — strips raw blobs.
+
+    The small LLM only needs:
+    - context_schema (compact summary of environment)
+    - domain_rules (if any)
+    - user_context (if any)
+    - folder_compressed (toon format, if any)
+
+    Raw shell_context and runtime_context are kept only in extra_context
+    for _build_executor_system_prompt (large LLM).
+    """
+    # Keys that are too large / not useful for the small LLM pipeline
+    _LARGE_BLOB_KEYS = {"shell_context", "runtime_context"}
+
+    return {k: v for k, v in extra_context.items() if k not in _LARGE_BLOB_KEYS}
 
 
 async def _run_preprocessing(

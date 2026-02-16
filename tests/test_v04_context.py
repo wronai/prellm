@@ -219,7 +219,7 @@ class TestV04Imports:
 
     def test_version_040(self):
         import prellm
-        assert prellm.__version__ == "0.4.2"
+        assert prellm.__version__ == "0.4.3"
 
     def test_all_v04_exports(self):
         import prellm

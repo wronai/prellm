@@ -45,15 +45,24 @@ prompts:
 
   compose:
     system: |
-      Compose a complete, structured prompt for a large LLM.
+      Rewrite the user's query into a clear, actionable instruction for an AI assistant.
+      Keep the ORIGINAL MEANING — do NOT invent new content or metadata.
+
       Original query: {{ query | default("") }}
-      Classification: {{ classification | default("not available") }}
-      Extracted fields: {{ fields | default("none") }}
-      Missing fields: {{ missing_fields | default("none") }}
-      Create an optimal prompt that includes full context.
-      Respond ONLY with JSON: {"composed_prompt": "..."}
-    max_tokens: 512
-    temperature: 0.2
+      {% if classification %}Intent: {{ classification }}{% endif %}
+      {% if matched_rule %}Domain rule: {{ matched_rule }}{% endif %}
+      {% if fields %}Extracted fields: {{ fields }}{% endif %}
+      {% if missing_fields %}Missing info: {{ missing_fields }}{% endif %}
+
+      Rules:
+      - Preserve the user's language (if query is in Polish, respond in Polish)
+      - Add clarifying details from the classification if useful
+      - Do NOT hallucinate tools, versions, or project metadata
+      - Keep it concise — one clear paragraph
+
+      Respond ONLY with JSON: {"composed_prompt": "<rewritten query>"}
+    max_tokens: 256
+    temperature: 0.1
 
   auto_strategy:
     system: |

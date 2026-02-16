@@ -1,3 +1,24 @@
+## [0.4.4] - 2026-02-16
+
+### Summary
+
+feat(tests): configuration management system
+
+### Test
+
+- update tests/test_one_function.py
+- update tests/test_server.py
+- update tests/test_v04_context.py
+
+### Other
+
+- update .prellm/budget.json
+- update ".prellm/trace_20260216_120904_Zdeployuj_apk\304\231_na_prod.md"
+- config: update prompts.yaml
+- update prellm/agents/preprocessor.py
+- update prellm/core.py
+
+
 ## [0.4.3] - 2026-02-16
 
 ### Summary
