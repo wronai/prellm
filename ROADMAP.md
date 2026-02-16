@@ -82,15 +82,16 @@ Cost: $0.015 + $0.52 = $0.535
 
 ## 12-Month Roadmap
 
-### Month 1–3: MVP (target: 10k ⭐)
+### Month 1–3: MVP ✅
 - [x] `pip install prellm`
 - [x] `preprocess_and_execute(query, small_llm, large_llm)`
 - [x] 5 decomposition strategies (classify, structure, split, enrich, passthrough)
 - [x] YAML-driven domain rules + prompts
 - [x] Pydantic v2 validated responses
 - [x] 100+ model providers via LiteLLM (Ollama, OpenAI, Anthropic, Groq, Mistral, Azure, Bedrock, Gemini, Together, DeepSeek)
-- [ ] GitHub CI: ruff + mypy + pytest + 100% coverage
+- [x] GitHub CI: ruff + pytest + coverage (`.github/workflows/ci.yml`)
 - [ ] PyPI stable release
+- [ ] mypy strict + 100% coverage
 
 ### Month 3–4: Two-Agent Architecture v0.3 ✅
 - [x] **PreprocessorAgent** (small LLM ≤24B) + **ExecutorAgent** (large LLM)
@@ -101,17 +102,30 @@ Cost: $0.015 + $0.52 = $0.535
 - [x] Unified `preprocess_and_execute()` — `strategy=` (v0.2) or `pipeline=` (v0.3)
 - [x] 6 built-in pipelines: classify, structure, split, enrich, dual_agent_full, passthrough
 - [x] Per-domain default configs: devops, coding, business, embedded
-- [x] 219+ tests (65 new for v0.3 architecture)
+- [x] 329+ tests (v0.3 architecture + trace + budget + context)
 - [x] LiteLLM integration guide + provider examples
 - [x] OpenAI SDK-compatible server with pipeline support
 
-### Month 4–6: Proxy Server (target: 30k ⭐)
+### Month 4–5: Observability & DevEx ✅ (NEW)
+- [x] **Execution Trace** — `--trace` flag generates markdown decision path (.prellm/)
+- [x] **Budget Tracking** — `BudgetTracker` with per-request cost recording + monthly limits
+- [x] **`prellm budget`** CLI — view spend, reset, per-model breakdown
+- [x] **`prellm doctor`** CLI — check config, providers, files
+- [x] **`prellm config`** CLI — set/get/list/show/init-env config management
+- [x] **`prellm models`** CLI — browse model pairs + OpenRouter catalog
+- [x] **SensitiveDataFilter** — recursive context sanitization before large LLM
+- [x] **nfo structured logging** — `@log_call` / `@catch` decorators across pipeline
+- [x] **FolderCompressor** — .toon format project compression for LLM context
+
+### Month 5–7: Proxy Server & Docker
 - [x] FastAPI proxy server (OpenAI-compatible `/v1/chat/completions`)
 - [x] Streaming SSE support with stage progress
-- [ ] Docker 1-liner: `docker run -p 8080:8080 prellm/prellm`
-- [ ] Load testing + stable Docker tags
+- [x] Docker image builds and runs (`docker build -t prellm .`)
+- [x] Docker test sandbox (`Dockerfile.test` + `docker-compose.test.yml`)
+- [x] `docker-compose.yaml` with Ollama + preLLM + auto model pull
+- [ ] Docker Hub: published `prellm/prellm` image with stable tags
+- [ ] Load testing benchmarks
 - [ ] ChromaDB user context memory (upgrade from SQLite MVP)
-- [ ] Budget tracking / spend limits
 
 ### Month 7–12: Enterprise (target: 100k+ ⭐)
 - [ ] Kubernetes operator
@@ -120,22 +134,38 @@ Cost: $0.015 + $0.52 = $0.535
 - [ ] LangChain + LlamaIndex + Haystack integrations
 - [ ] 1-click Vercel/Netlify deploy
 
-## Docker Deployment (Current)
+## Docker Deployment
 
 ```bash
-docker run -p 8080:8080 prellm/prellm \
-  --small-models ollama/qwen2.5:3b \
-  --large-models anthropic/claude-4.6,openai/gpt-4o-mini \
-  --strategy classify
-```
+# Build and run
+docker build -t prellm .
+docker run -p 8080:8080 prellm serve
 
-## Docker Deployment (Future — OpenAI-compatible proxy)
+# Query mode
+docker run --rm prellm query "Deploy app" --small ollama/qwen2.5:3b --large gpt-4o-mini
+
+# Full stack with Ollama
+docker-compose up -d
+```
 
 ```bash
 # OpenAI-compatible API
 curl http://localhost:8080/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{"model": "prellm:qwen→claude", "messages": [{"role": "user", "content": "Deploy app"}]}'
+```
+
+## Docker Test Sandbox
+
+```bash
+# Run full test suite in Docker
+docker-compose -f docker-compose.test.yml run --rm test
+
+# Lint check in Docker
+docker-compose -f docker-compose.test.yml run --rm lint
+
+# Verify production image builds
+docker-compose -f docker-compose.test.yml run --rm build-check
 ```
 
 ## Comparison with LiteLLM

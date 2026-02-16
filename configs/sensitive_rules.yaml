@@ -1,0 +1,34 @@
+# preLLM — Sensitive Data Classification Rules
+# Used by SensitiveDataFilter to decide what gets blocked/masked/passed.
+
+sensitive_keys:
+  blocked:
+    - "API_KEY"
+    - "SECRET"
+    - "TOKEN"
+    - "PASSWORD"
+    - "PRIVATE_KEY"
+    - "CREDENTIAL"
+    - "AUTH_KEY"
+  masked:
+    - "DATABASE_URL"
+    - "REDIS_URL"
+    - "SMTP_"
+    - "MONGO_URI"
+  safe:
+    - "LANG"
+    - "TERM"
+    - "SHELL"
+    - "HOME"
+    - "USER"
+    - "PWD"
+    - "PATH"
+    - "EDITOR"
+    - "HOSTNAME"
+
+sensitive_value_patterns:
+  - "sk-[a-zA-Z0-9]{20,}"        # OpenAI
+  - "sk-ant-[a-zA-Z0-9]{20,}"    # Anthropic
+  - "ghp_[a-zA-Z0-9]{36}"        # GitHub PAT
+  - "gsk_[a-zA-Z0-9]{20,}"       # Groq
+  - "sk-or-v1-[a-zA-Z0-9]{20,}"  # OpenRouter

@@ -66,6 +66,33 @@ pipelines:
     description: "No preprocessing, forward query as-is"
     steps: []
 
+  context_aware:
+    description: "Full context collection + auto strategy + persistent memory"
+    steps:
+      - name: collect_runtime
+        type: runtime_collector
+        output: runtime_context
+      - name: inject_session
+        type: session_injector
+        input: [query, runtime_context]
+        output: session_context
+      - name: classify_with_context
+        prompt: auto_strategy
+        input: [query, runtime_context, session_context]
+        output: selected_strategy
+      - name: decompose
+        prompt: classify
+        input: [query, runtime_context, session_context]
+        output: classification
+      - name: compose
+        prompt: compose
+        input: [query, classification, runtime_context, session_context]
+        output: composed_prompt
+      - name: sanitize
+        type: sensitive_filter
+        input: [composed_prompt]
+        output: sanitized_prompt
+
   dual_agent_full:
     description: "Full two-agent pipeline — 4 preprocessing steps"
     steps:
@@ -87,3 +114,44 @@ pipelines:
         type: yaml_formatter
         input: meta_prompt
         output: executor_input
+
+  auto:
+    description: "Auto-select strategy using small LLM with context schema"
+    steps:
+      - name: classify
+        prompt: classify
+        output: classification
+      - name: match_rule
+        type: domain_rule_matcher
+        input: classification
+        output: matched_rule
+      - name: compose
+        prompt: compose
+        input: [query, classification, matched_rule, context]
+        output: composed_prompt
+
+  full_context_aware:
+    description: "Full context collection + auto strategy + sanitized execution"
+    steps:
+      - name: gather_shell
+        type: shell_context_collector
+        output: shell_context
+      - name: compress_folder
+        type: folder_compressor
+        output: compressed_folder
+      - name: generate_schema
+        type: context_schema_generator
+        input: [shell_context, compressed_folder]
+        output: context_schema
+      - name: classify
+        prompt: classify
+        input: [query, context_schema]
+        output: classification
+      - name: compose
+        prompt: compose
+        input: [query, classification, context_schema]
+        output: composed_prompt
+      - name: sanitize
+        type: sensitive_filter
+        input: [composed_prompt]
+        output: sanitized_prompt

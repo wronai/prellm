@@ -99,6 +99,12 @@ class PromptPipeline:
             "domain_rule_matcher": self._algo_domain_rule_matcher,
             "field_validator": self._algo_field_validator,
             "yaml_formatter": self._algo_yaml_formatter,
+            "runtime_collector": self._algo_runtime_collector,
+            "sensitive_filter": self._algo_sensitive_filter,
+            "session_injector": self._algo_session_injector,
+            "shell_context_collector": self._algo_shell_context_collector,
+            "folder_compressor": self._algo_folder_compressor,
+            "context_schema_generator": self._algo_context_schema_generator,
         }
         if validators:
             self._algo_handlers.update(validators)
@@ -377,3 +383,101 @@ class PromptPipeline:
                 if k not in ("query", "context")
             },
         }
+
+    @staticmethod
+    def _algo_runtime_collector(
+        inputs: dict[str, Any], state: dict[str, Any], config: dict[str, Any]
+    ) -> dict[str, Any]:
+        """Collect RuntimeContext and add to state."""
+        try:
+            from prellm.analyzers.context_engine import ContextEngine
+            engine = ContextEngine()
+            runtime = engine.gather_runtime()
+            return runtime.model_dump()
+        except Exception as e:
+            logger.warning(f"Runtime collection failed: {e}")
+            return {}
+
+    @staticmethod
+    def _algo_sensitive_filter(
+        inputs: dict[str, Any], state: dict[str, Any], config: dict[str, Any]
+    ) -> str:
+        """Filter state through SensitiveDataFilter before output."""
+        try:
+            from prellm.context.sensitive_filter import SensitiveDataFilter
+            sf = SensitiveDataFilter()
+            # Filter the composed prompt text
+            text = ""
+            for key in ("composed_prompt", "sanitized_prompt", "query"):
+                val = inputs.get(key) or state.get(key)
+                if val and isinstance(val, str):
+                    text = val
+                    break
+            if not text:
+                text = str(inputs) if inputs else state.get("query", "")
+            return sf.sanitize_text(text)
+        except Exception as e:
+            logger.warning(f"Sensitive filtering failed: {e}")
+            return inputs.get("composed_prompt", state.get("query", ""))
+
+    @staticmethod
+    def _algo_session_injector(
+        inputs: dict[str, Any], state: dict[str, Any], config: dict[str, Any]
+    ) -> str:
+        """Inject relevant context from UserMemory (RAG-style)."""
+        try:
+            import asyncio
+            memory_path = state.get("context", {}).get("memory_path")
+            if not memory_path:
+                return ""
+            from prellm.context.user_memory import UserMemory
+            memory = UserMemory(path=memory_path)
+            query = state.get("query", "")
+            # Run async in sync context
+            loop = asyncio.new_event_loop()
+            try:
+                result = loop.run_until_complete(memory.auto_inject_context(query))
+            finally:
+                loop.close()
+                memory.close()
+            return result
+        except Exception as e:
+            logger.warning(f"Session injection failed: {e}")
+            return ""
+
+    @staticmethod
+    def _algo_shell_context_collector(
+        inputs: dict[str, Any], state: dict[str, Any], config: dict[str, Any]
+    ) -> dict[str, Any]:
+        """Collect shell context as an algo step."""
+        from prellm.context.shell_collector import ShellContextCollector
+        collector = ShellContextCollector()
+        ctx = collector.collect_all()
+        return ctx.model_dump()
+
+    @staticmethod
+    def _algo_folder_compressor(
+        inputs: dict[str, Any], state: dict[str, Any], config: dict[str, Any]
+    ) -> dict[str, Any]:
+        """Compress folder as an algo step."""
+        from prellm.context.folder_compressor import FolderCompressor
+        codebase_path = state.get("context", {}).get("codebase_path", ".")
+        compressor = FolderCompressor()
+        compressed = compressor.compress(codebase_path)
+        return compressed.model_dump()
+
+    @staticmethod
+    def _algo_context_schema_generator(
+        inputs: dict[str, Any], state: dict[str, Any], config: dict[str, Any]
+    ) -> dict[str, Any]:
+        """Generate context schema as an algo step."""
+        from prellm.context.schema_generator import ContextSchemaGenerator
+        from prellm.models import ShellContext, CompressedFolder
+        shell_data = inputs.get("shell_context")
+        folder_data = inputs.get("compressed_folder")
+        shell_ctx = ShellContext(**shell_data) if isinstance(shell_data, dict) else None
+        folder_ctx = CompressedFolder(**folder_data) if isinstance(folder_data, dict) else None
+        gen = ContextSchemaGenerator()
+        schema = gen.generate(shell_context=shell_ctx, folder_compressed=folder_ctx)
+        return schema.model_dump()
+

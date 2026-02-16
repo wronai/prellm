@@ -108,6 +108,57 @@ class CompressedFolder(BaseModel):
 
 
 # ============================================================
+# v0.4 — Runtime Context (unified snapshot for persistent context)
+# ============================================================
+
+class RuntimeContext(BaseModel):
+    """Full runtime snapshot — env, process, locale, network, git, system.
+
+    Combines ShellContext data with sensitivity filtering stats and token estimation.
+    Used by the context-aware pipeline to auto-inject environment into small-LLM prompts.
+    """
+    env_safe: dict[str, str] = Field(default_factory=dict)
+    process: dict[str, Any] = Field(default_factory=dict)
+    locale: dict[str, str] = Field(default_factory=dict)
+    network: dict[str, str] = Field(default_factory=dict)
+    git: dict[str, str] | None = None
+    system: dict[str, str] = Field(default_factory=dict)
+    collected_at: str = ""
+    sensitive_blocked_count: int = 0
+    token_estimate: int = 0
+
+
+class SessionSnapshot(BaseModel):
+    """Exportable session snapshot — enables persistent context across restarts.
+
+    Equivalent to LM Studio 'save session' / AnythingLLM Git sync.
+    """
+    session_id: str = ""
+    interactions: list[dict[str, Any]] = Field(default_factory=list)
+    preferences: dict[str, str] = Field(default_factory=dict)
+    runtime_context: RuntimeContext | None = None
+    codebase_summary: str | None = None
+    created_at: str = ""
+    exported_at: str = ""
+
+    def to_file(self, path: Any) -> None:
+        """Export snapshot to JSON file."""
+        import json
+        from pathlib import Path as _Path
+        p = _Path(path)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(self.model_dump_json(indent=2), encoding="utf-8")
+
+    @classmethod
+    def from_file(cls, path: Any) -> "SessionSnapshot":
+        """Import snapshot from JSON file."""
+        import json
+        from pathlib import Path as _Path
+        raw = _Path(path).read_text(encoding="utf-8")
+        return cls.model_validate_json(raw)
+
+
+# ============================================================
 # Enums
 # ============================================================
 

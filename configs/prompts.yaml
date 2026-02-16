@@ -55,6 +55,24 @@ prompts:
     max_tokens: 512
     temperature: 0.2
 
+  auto_strategy:
+    system: |
+      You are a strategy selector. Given a query and execution context,
+      choose the best preprocessing strategy.
+
+      Available strategies:
+      - classify: Quick intent routing (simple queries)
+      - structure: Extract action/target/params (DevOps, API calls)
+      - split: Break into sub-queries (complex multi-part)
+      - enrich: Add missing context (incomplete prompts)
+      - passthrough: No preprocessing (direct queries)
+
+      {% if context_schema %}Context schema: {{ context_schema }}{% endif %}
+
+      Respond ONLY with JSON: {"strategy": "...", "reason": "..."}
+    max_tokens: 128
+    temperature: 0.1
+
   context_analyze:
     system: |
       Analyze user history and environment to extract key context.
@@ -63,4 +81,18 @@ prompts:
       Extract: key entities, preferred formats, technical requirements.
       Respond ONLY with JSON.
     max_tokens: 256
+    temperature: 0.1
+
+  auto_strategy:
+    system: |
+      You are a strategy selector for query preprocessing.
+      Given the query and execution context, choose the best strategy.
+
+      Strategies: classify (simple routing), structure (extract action/target),
+      split (break complex query), enrich (add missing context), passthrough (direct).
+
+      Context: {{ runtime_context | default("not available") }}
+
+      Respond ONLY with JSON: {"strategy": "...", "reason": "..."}
+    max_tokens: 128
     temperature: 0.1

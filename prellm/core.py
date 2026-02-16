@@ -60,7 +60,7 @@ async def preprocess_and_execute(
     query: str,
     small_llm: str = "ollama/qwen2.5:3b",
     large_llm: str = "anthropic/claude-sonnet-4-20250514",
-    strategy: str | DecompositionStrategy = "classify",
+    strategy: str | DecompositionStrategy = "auto",
     user_context: str | dict[str, str] | None = None,
     config_path: str | Path | None = None,
     domain_rules: list[dict[str, Any]] | None = None,
@@ -71,21 +71,24 @@ async def preprocess_and_execute(
     memory_path: str | Path | None = None,
     codebase_path: str | Path | None = None,
     collect_env: bool = False,
+    collect_runtime: bool = True,
+    session_path: str | Path | None = None,
     compress_folder: bool = False,
-    sanitize: bool = False,
+    sanitize: bool = True,
+    sensitive_rules: str | Path | None = None,
     **kwargs: Any,
 ) -> PreLLMResponse:
     """One function to preprocess and execute — like litellm.completion() but with small LLM decomposition.
 
-    Always uses the v0.3 two-agent pipeline internally. The `strategy` parameter maps
-    directly to a pipeline name (classify, structure, split, enrich, passthrough).
-    The `pipeline` parameter overrides `strategy` for custom pipelines (e.g. "dual_agent_full").
+    v0.4: automatic persistent context layer for small LLMs. Collects env, compresses codebase,
+    persists session, and injects everything into the small-LLM without manual pre-prompts.
+    Sensitive data never reaches the large-LLM.
 
     Args:
         query: The raw user query / prompt.
         small_llm: Model string for the small preprocessing LLM (e.g. "ollama/qwen2.5:3b").
         large_llm: Model string for the large executor LLM (e.g. "anthropic/claude-sonnet-4-20250514").
-        strategy: Decomposition strategy — "classify", "structure", "split", "enrich", or "passthrough".
+        strategy: Decomposition strategy — "auto" (default), "classify", "structure", "split", "enrich", "passthrough".
         user_context: Extra context as a string tag (e.g. "gdansk_embedded_python") or dict.
         config_path: Optional YAML config file for domain rules, prompts, etc.
         domain_rules: Optional inline domain rules as list of dicts.
@@ -93,20 +96,31 @@ async def preprocess_and_execute(
         prompts_path: Path to prompts.yaml.
         pipelines_path: Path to pipelines.yaml.
         schemas_path: Path to response_schemas.yaml.
+        memory_path: Path to UserMemory database.
+        codebase_path: Folder to compress for context injection.
+        collect_env: Collect env vars (legacy, use collect_runtime instead).
+        collect_runtime: Collect full runtime context (env, process, locale, network, git, system).
+        session_path: Path to session persistence SQLite DB.
+        compress_folder: Compress codebase folder into .toon representation.
+        sanitize: Filter sensitive data before large-LLM (default: True).
+        sensitive_rules: Custom YAML rules for sensitive data classification.
         **kwargs: Extra kwargs passed to the large LLM call (max_tokens, temperature, etc.).
 
     Returns:
         PreLLMResponse with content, decomposition details, model info.
 
     Usage:
-        # Strategy-based (maps to pipeline name)
-        result = await preprocess_and_execute("Deploy app", strategy="structure")
-
-        # Explicit pipeline name
-        result = await preprocess_and_execute("Deploy app", pipeline="dual_agent_full")
-
-    Zero-config:
+        # Zero-config with auto strategy:
         result = await preprocess_and_execute("Refaktoryzuj kod")
+
+        # Bielik with full persistent context:
+        result = await preprocess_and_execute(
+            "Zoptymalizuj monitoring ESP32",
+            small_llm="ollama/bielik:7b",
+            large_llm="openrouter/google/gemini-3-flash-preview",
+            session_path=".prellm/sessions.db",
+            codebase_path=".",
+        )
     """
     # Resolve pipeline name: pipeline param overrides strategy
     pipeline_name = pipeline or (strategy.value if isinstance(strategy, DecompositionStrategy) else strategy)
@@ -153,11 +167,12 @@ async def preprocess_and_execute(
         prompts_path=prompts_path,
         pipelines_path=pipelines_path,
         schemas_path=schemas_path,
-        memory_path=memory_path,
+        memory_path=memory_path or (str(session_path) if session_path else None),
         codebase_path=codebase_path,
-        collect_env=collect_env,
-        compress_folder=compress_folder,
+        collect_env=collect_env or collect_runtime,
+        compress_folder=compress_folder or bool(codebase_path),
         sanitize=sanitize,
+        sensitive_rules=sensitive_rules,
         **kwargs,
     )
 
@@ -220,9 +235,14 @@ async def _execute_v3_pipeline(
     collect_env: bool = False,
     compress_folder: bool = False,
     sanitize: bool = False,
+    sensitive_rules: str | Path | None = None,
     **kwargs: Any,
 ) -> PreLLMResponse:
-    """Two-agent execution path — PreprocessorAgent + ExecutorAgent + PromptPipeline."""
+    """Two-agent execution path — PreprocessorAgent + ExecutorAgent + PromptPipeline.
+
+    v0.4 refactor: split into _prepare_context, _run_preprocessing, _run_execution_with_sanitize,
+    _persist_session to reduce cyclomatic complexity.
+    """
     max_tokens = kwargs.pop("max_tokens", 2048)
     temperature = kwargs.pop("temperature", 0.7)
 
@@ -242,78 +262,17 @@ async def _execute_v3_pipeline(
         small_llm=small_provider,
     )
 
-    # Build context
-    extra_context: dict[str, Any] = {}
-    if isinstance(user_context, str) and user_context:
-        extra_context["user_context"] = user_context
-    elif isinstance(user_context, dict):
-        extra_context.update(user_context)
-
-    # Inject domain rules into context for pipeline algo steps
-    if domain_rules:
-        extra_context["domain_rules"] = domain_rules
-
-    # --- NEW: Collect shell context ---
-    shell_ctx = None
-    if collect_env:
-        try:
-            from prellm.context.shell_collector import ShellContextCollector
-            shell_ctx = ShellContextCollector().collect_all()
-            extra_context["shell_context"] = shell_ctx.model_dump_json()
-        except Exception as e:
-            logger.warning(f"Shell context collection failed: {e}")
-
-    # --- NEW: Compress folder ---
-    compressed = None
-    if compress_folder and codebase_path:
-        try:
-            from prellm.context.folder_compressor import FolderCompressor
-            compressed = FolderCompressor().compress(codebase_path)
-            extra_context["folder_compressed"] = compressed.toon_output
-        except Exception as e:
-            logger.warning(f"Folder compression failed: {e}")
-
-    # --- NEW: Generate context schema ---
-    env_schema = None
-    if collect_env or compress_folder:
-        try:
-            from prellm.context.schema_generator import ContextSchemaGenerator
-            env_schema = ContextSchemaGenerator().generate(
-                shell_context=shell_ctx,
-                folder_compressed=compressed,
-            )
-            extra_context["context_schema"] = env_schema.model_dump_json()
-        except Exception as e:
-            logger.warning(f"Context schema generation failed: {e}")
-
-    # --- NEW: Build sensitive filter ---
-    sensitive_filter = None
-    if sanitize:
-        try:
-            from prellm.context.sensitive_filter import SensitiveDataFilter
-            sensitive_filter = SensitiveDataFilter()
-            # Filter the extra_context dict
-            filtered = sensitive_filter.filter_context_for_large_llm(extra_context)
-            extra_context = filtered
-        except Exception as e:
-            logger.warning(f"Sensitive filtering failed: {e}")
-
-    # Build optional context enrichment
-    user_memory = None
-    if memory_path:
-        try:
-            from prellm.context.user_memory import UserMemory
-            user_memory = UserMemory(path=memory_path)
-        except Exception as e:
-            logger.warning(f"Failed to initialize UserMemory: {e}")
-
-    codebase_indexer = None
-    if codebase_path:
-        try:
-            from prellm.context.codebase_indexer import CodebaseIndexer
-            codebase_indexer = CodebaseIndexer()
-        except Exception as e:
-            logger.warning(f"Failed to initialize CodebaseIndexer: {e}")
+    # 1. Prepare context (env, codebase, memory, sensitive filter)
+    extra_context, sensitive_filter, user_memory, codebase_indexer = _prepare_context(
+        user_context=user_context,
+        domain_rules=domain_rules,
+        collect_env=collect_env,
+        compress_folder=compress_folder,
+        codebase_path=codebase_path,
+        sanitize=sanitize,
+        sensitive_rules=sensitive_rules,
+        memory_path=memory_path,
+    )
 
     # Build agents
     preprocessor = PreprocessorAgent(
@@ -331,58 +290,24 @@ async def _execute_v3_pipeline(
         sensitive_filter=sensitive_filter,
     )
 
-    # 1. Preprocess
+    # 2. Run preprocessing (small LLM)
+    prep_result, prep_duration_ms = await _run_preprocessing(
+        preprocessor, query, extra_context, pipeline
+    )
+
+    # 3. Run execution with sanitization (large LLM)
+    exec_result, exec_duration_ms = await _run_execution(
+        executor, prep_result.executor_input, **kwargs
+    )
+
+    # 4. Persist session if memory available
+    await _persist_session(user_memory, query, exec_result)
+
+    # 5. Build response
     trace = get_current_trace()
-    _t0 = time.time()
-    prep_result = await preprocessor.preprocess(
-        query=query,
-        user_context=extra_context or None,
-        pipeline_name=pipeline,
-    )
-    _t1 = time.time()
+    _record_trace(trace, pipeline, small_llm, large_llm, query, extra_context,
+                  prep_result, exec_result, prep_duration_ms, exec_duration_ms)
 
-    if trace:
-        # Record individual pipeline steps from preprocessor
-        if prep_result.decomposition and prep_result.decomposition.steps_executed:
-            for ps in prep_result.decomposition.steps_executed:
-                trace.step(
-                    name=f"Pipeline: {ps.step_name}",
-                    step_type="pipeline_step" if ps.step_type == "algo" else "llm_call",
-                    description=f"{ps.step_type} step in '{pipeline}' pipeline",
-                    outputs={ps.output_key: ps.output_value} if ps.output_key else {},
-                    status="skipped" if ps.skipped else ("error" if ps.error else "ok"),
-                    error=ps.error,
-                )
-        trace.step(
-            name="PreprocessorAgent.preprocess()",
-            step_type="agent",
-            description=f"Small LLM ({small_llm}) preprocessed query using '{pipeline}' strategy.",
-            inputs={"query": query, "pipeline": pipeline, "user_context": extra_context},
-            outputs={"executor_input": prep_result.executor_input},
-            duration_ms=(_t1 - _t0) * 1000,
-        )
-
-    # 2. Execute
-    _t2 = time.time()
-    exec_result = await executor.execute(
-        executor_input=prep_result.executor_input,
-        **kwargs,
-    )
-    _t3 = time.time()
-
-    if trace:
-        content_preview = (exec_result.content or "")[:300]
-        trace.step(
-            name="ExecutorAgent.execute()",
-            step_type="llm_call",
-            description=f"Large LLM ({large_llm}) generated final response.",
-            inputs={"executor_input": prep_result.executor_input[:300]},
-            outputs={"content_preview": content_preview, "model": exec_result.model_used},
-            duration_ms=(_t3 - _t2) * 1000,
-            metadata={"retries": exec_result.retries},
-        )
-
-    # 3. Build backward-compatible DecompositionResult from pipeline state
     decomposition_result = _build_decomposition_result(query, pipeline, prep_result)
 
     response = PreLLMResponse(
@@ -410,6 +335,205 @@ async def _execute_v3_pipeline(
         )
 
     return response
+
+
+def _prepare_context(
+    user_context: str | dict[str, str] | None,
+    domain_rules: list[dict[str, Any]] | None,
+    collect_env: bool,
+    compress_folder: bool,
+    codebase_path: str | Path | None,
+    sanitize: bool,
+    sensitive_rules: str | Path | None,
+    memory_path: str | Path | None,
+) -> tuple[dict[str, Any], Any, Any, Any]:
+    """Gather all context: env, codebase, schema, sensitive filter, memory, indexer.
+
+    Returns (extra_context, sensitive_filter, user_memory, codebase_indexer).
+    """
+    extra_context: dict[str, Any] = {}
+    if isinstance(user_context, str) and user_context:
+        extra_context["user_context"] = user_context
+    elif isinstance(user_context, dict):
+        extra_context.update(user_context)
+
+    if domain_rules:
+        extra_context["domain_rules"] = domain_rules
+
+    # Collect shell context + runtime context
+    shell_ctx = None
+    if collect_env:
+        try:
+            from prellm.context.shell_collector import ShellContextCollector
+            shell_ctx = ShellContextCollector().collect_all()
+            extra_context["shell_context"] = shell_ctx.model_dump_json()
+        except Exception as e:
+            logger.warning(f"Shell context collection failed: {e}")
+
+        # Also collect RuntimeContext
+        try:
+            runtime_ctx = ContextEngine().gather_runtime()
+            extra_context["runtime_context"] = runtime_ctx.model_dump()
+        except Exception as e:
+            logger.warning(f"RuntimeContext collection failed: {e}")
+
+    # Compress folder
+    compressed = None
+    if compress_folder and codebase_path:
+        try:
+            from prellm.context.folder_compressor import FolderCompressor
+            compressed = FolderCompressor().compress(codebase_path)
+            extra_context["folder_compressed"] = compressed.toon_output
+        except Exception as e:
+            logger.warning(f"Folder compression failed: {e}")
+
+    # Generate context schema
+    if collect_env or compress_folder:
+        try:
+            from prellm.context.schema_generator import ContextSchemaGenerator
+            env_schema = ContextSchemaGenerator().generate(
+                shell_context=shell_ctx,
+                folder_compressed=compressed,
+            )
+            extra_context["context_schema"] = env_schema.model_dump_json()
+        except Exception as e:
+            logger.warning(f"Context schema generation failed: {e}")
+
+    # Build sensitive filter
+    sensitive_filter = None
+    if sanitize:
+        try:
+            from prellm.context.sensitive_filter import SensitiveDataFilter
+            sensitive_filter = SensitiveDataFilter(
+                rules_path=sensitive_rules if sensitive_rules else None,
+            )
+            filtered = sensitive_filter.filter_context_for_large_llm(extra_context)
+            extra_context = filtered
+        except Exception as e:
+            logger.warning(f"Sensitive filtering failed: {e}")
+
+    # Build optional context enrichment
+    user_memory = None
+    if memory_path:
+        try:
+            from prellm.context.user_memory import UserMemory
+            user_memory = UserMemory(path=memory_path)
+        except Exception as e:
+            logger.warning(f"Failed to initialize UserMemory: {e}")
+
+    codebase_indexer = None
+    if codebase_path:
+        try:
+            from prellm.context.codebase_indexer import CodebaseIndexer
+            codebase_indexer = CodebaseIndexer()
+        except Exception as e:
+            logger.warning(f"Failed to initialize CodebaseIndexer: {e}")
+
+    return extra_context, sensitive_filter, user_memory, codebase_indexer
+
+
+async def _run_preprocessing(
+    preprocessor: PreprocessorAgent,
+    query: str,
+    extra_context: dict[str, Any],
+    pipeline: str,
+) -> tuple[Any, float]:
+    """Run the small-LLM preprocessing step. Returns (prep_result, duration_ms)."""
+    _t0 = time.time()
+    prep_result = await preprocessor.preprocess(
+        query=query,
+        user_context=extra_context or None,
+        pipeline_name=pipeline,
+    )
+    duration_ms = (time.time() - _t0) * 1000
+    return prep_result, duration_ms
+
+
+async def _run_execution(
+    executor: ExecutorAgent,
+    executor_input: str,
+    **kwargs: Any,
+) -> tuple[Any, float]:
+    """Run the large-LLM execution step. Returns (exec_result, duration_ms)."""
+    _t0 = time.time()
+    exec_result = await executor.execute(
+        executor_input=executor_input,
+        **kwargs,
+    )
+    duration_ms = (time.time() - _t0) * 1000
+    return exec_result, duration_ms
+
+
+async def _persist_session(
+    user_memory: Any,
+    query: str,
+    exec_result: Any,
+) -> None:
+    """Persist interaction to UserMemory if available."""
+    if not user_memory:
+        return
+    try:
+        content = exec_result.content or ""
+        await user_memory.add_interaction(
+            query=query,
+            response_summary=content[:500],
+            metadata={"model": exec_result.model_used},
+        )
+        # Auto-learn preferences from interaction
+        await user_memory.learn_preference_from_interaction(query, content)
+    except Exception as e:
+        logger.warning(f"Session persistence failed: {e}")
+
+
+def _record_trace(
+    trace: Any,
+    pipeline: str,
+    small_llm: str,
+    large_llm: str,
+    query: str,
+    extra_context: dict[str, Any],
+    prep_result: Any,
+    exec_result: Any,
+    prep_duration_ms: float,
+    exec_duration_ms: float,
+) -> None:
+    """Record preprocessing and execution steps to trace."""
+    if not trace:
+        return
+
+    # Record individual pipeline steps from preprocessor
+    if prep_result.decomposition and prep_result.decomposition.steps_executed:
+        for ps in prep_result.decomposition.steps_executed:
+            step_type = "context_collection" if ps.step_type == "algo" and ps.step_name in (
+                "collect_runtime", "inject_session", "sanitize"
+            ) else ("pipeline_step" if ps.step_type == "algo" else "llm_call")
+            trace.step(
+                name=f"Pipeline: {ps.step_name}",
+                step_type=step_type,
+                description=f"{ps.step_type} step in '{pipeline}' pipeline",
+                outputs={ps.output_key: ps.output_value} if ps.output_key else {},
+                status="skipped" if ps.skipped else ("error" if ps.error else "ok"),
+                error=ps.error,
+            )
+    trace.step(
+        name="PreprocessorAgent.preprocess()",
+        step_type="agent",
+        description=f"Small LLM ({small_llm}) preprocessed query using '{pipeline}' strategy.",
+        inputs={"query": query, "pipeline": pipeline, "user_context": extra_context},
+        outputs={"executor_input": prep_result.executor_input},
+        duration_ms=prep_duration_ms,
+    )
+
+    content_preview = (exec_result.content or "")[:300]
+    trace.step(
+        name="ExecutorAgent.execute()",
+        step_type="llm_call",
+        description=f"Large LLM ({large_llm}) generated final response.",
+        inputs={"executor_input": prep_result.executor_input[:300]},
+        outputs={"content_preview": content_preview, "model": exec_result.model_used},
+        duration_ms=exec_duration_ms,
+        metadata={"retries": exec_result.retries},
+    )
 
 
 def _build_decomposition_result(

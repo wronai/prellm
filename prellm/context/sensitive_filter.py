@@ -192,25 +192,43 @@ class SensitiveDataFilter:
         if isinstance(data, dict):
             result = {}
             for key, value in data.items():
-                key_level = self.classify_key(str(key))
-                if key_level == SensitivityLevel.BLOCKED:
-                    continue
-                val_str = str(value) if not isinstance(value, (dict, list)) else ""
-                if val_str and self.classify_value(val_str) == SensitivityLevel.BLOCKED:
-                    continue
-                if key_level == SensitivityLevel.MASKED:
-                    if isinstance(value, str):
-                        result[key] = self._mask_value(value)
-                    else:
-                        result[key] = self._filter_recursive(value)
+                str_key = str(key)
+                # Only apply key-based classification to env-var-style keys (ALL_CAPS)
+                if self._looks_like_env_var(str_key):
+                    key_level = self.classify_key(str_key)
+                    if key_level == SensitivityLevel.BLOCKED:
+                        continue
+                    val_str = str(value) if not isinstance(value, (dict, list)) else ""
+                    if val_str and self.classify_value(val_str) == SensitivityLevel.BLOCKED:
+                        continue
+                    if key_level == SensitivityLevel.MASKED:
+                        if isinstance(value, str):
+                            result[key] = self._mask_value(value)
+                        else:
+                            result[key] = self._filter_recursive(value)
+                        continue
                 else:
-                    result[key] = self._filter_recursive(value)
+                    # For non-env-var keys, sanitize value rather than dropping key
+                    val_str = str(value) if not isinstance(value, (dict, list)) else ""
+                    if val_str and self.classify_value(val_str) == SensitivityLevel.BLOCKED:
+                        if isinstance(value, str):
+                            result[key] = self.sanitize_text(value)
+                            continue
+                        continue
+                result[key] = self._filter_recursive(value)
             return result
         elif isinstance(data, list):
             return [self._filter_recursive(item) for item in data]
         elif isinstance(data, str):
             return self.sanitize_text(data)
         return data
+
+    @staticmethod
+    def _looks_like_env_var(key: str) -> bool:
+        """Check if a key looks like an environment variable name (ALL_CAPS with underscores)."""
+        if not key:
+            return False
+        return key == key.upper() and key.replace("_", "").isalnum()
 
     @staticmethod
     def _mask_value(value: str) -> str:

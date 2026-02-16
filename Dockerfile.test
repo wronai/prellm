@@ -4,14 +4,14 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends git && \
     rm -rf /var/lib/apt/lists/*
 
-RUN pip install --no-cache-dir poetry
-
-COPY pyproject.toml poetry.lock* README.md ./
+COPY pyproject.toml README.md ./
 COPY prellm/ prellm/
 COPY configs/ configs/
 COPY tests/ tests/
 
-RUN poetry config virtualenvs.create false && \
-    poetry install --no-interaction
+# Install package + dev dependencies
+RUN pip install --no-cache-dir . && \
+    pip install --no-cache-dir "typer[all]>=0.15" && \
+    pip install --no-cache-dir pytest pytest-asyncio pytest-mock pytest-cov ruff httpx
 
 CMD ["python", "-m", "pytest", "tests/", "-v"]

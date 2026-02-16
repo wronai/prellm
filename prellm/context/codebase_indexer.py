@@ -355,3 +355,64 @@ class CodebaseIndexer:
             lines.append(f"  {s.kind} {s.name} @ {s.file_path}:{s.line_start} — {s.signature}")
 
         return "\n".join(lines)
+
+    def get_compressed_context(
+        self, root: str | Path, query: str, max_tokens: int = 2048
+    ) -> str:
+        """Full pipeline: index → compress → filter by query relevance.
+
+        Returns text ready for injection into small-LLM prompt.
+        Guarantees output fits within max_tokens estimate.
+        """
+        from prellm.context.folder_compressor import FolderCompressor
+
+        compressor = FolderCompressor(indexer=self)
+        compressed = compressor.compress(root)
+
+        # Start with summary (cheapest)
+        parts: list[str] = []
+        token_count = 0
+
+        # Module summaries filtered by query relevance
+        query_lower = query.lower()
+        relevant_summaries: list[str] = []
+        other_summaries: list[str] = []
+
+        for mod, summary in compressed.module_summaries.items():
+            line = f"  {mod}: {summary}"
+            if any(w in mod.lower() or w in summary.lower() for w in query_lower.split()):
+                relevant_summaries.append(line)
+            else:
+                other_summaries.append(line)
+
+        header = f"[Project: {compressed.total_modules} modules, {compressed.total_functions} functions]"
+        parts.append(header)
+        token_count += self.estimate_tokens(header)
+
+        # Add relevant summaries first
+        for line in relevant_summaries + other_summaries:
+            est = self.estimate_tokens(line)
+            if token_count + est > max_tokens:
+                break
+            parts.append(line)
+            token_count += est
+
+        # Add dependency graph if space allows
+        if compressed.dependency_graph and token_count < max_tokens * 0.8:
+            dep_header = "\n[Dependencies]"
+            parts.append(dep_header)
+            token_count += self.estimate_tokens(dep_header)
+            for mod, deps in compressed.dependency_graph.items():
+                line = f"  {mod} → {', '.join(deps)}"
+                est = self.estimate_tokens(line)
+                if token_count + est > max_tokens:
+                    break
+                parts.append(line)
+                token_count += est
+
+        return "\n".join(parts)
+
+    @staticmethod
+    def estimate_tokens(text: str) -> int:
+        """Estimate token count (~4 chars/token) with margin."""
+        return len(text) // 4 + 1

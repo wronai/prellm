@@ -1,3 +1,42 @@
+## [0.4.1] - 2026-02-16
+
+### Summary
+
+refactor(tests): CLI interface improvements
+
+### Docs
+
+- docs: update ROADMAP.md
+
+### Test
+
+- update tests/test_folder_compressor.py
+- update tests/test_full_context_pipeline.py
+- update tests/test_one_function.py
+- update tests/test_schema_generator.py
+- update tests/test_sensitive_filter.py
+- update tests/test_server.py
+- update tests/test_shell_collector.py
+
+### Build
+
+- update pyproject.toml
+
+### Other
+
+- update Dockerfile.test
+- config: update pipelines.yaml
+- config: update prompts.yaml
+- config: update sensitive_rules.yaml
+- update prellm/__init__.py
+- update prellm/analyzers/context_engine.py
+- update prellm/cli.py
+- update prellm/context/codebase_indexer.py
+- update prellm/context/folder_compressor.py
+- update prellm/context/sensitive_filter.py
+- ... and 4 more
+
+
 ## [0.3.15] - 2026-02-16
 
 ### Summary

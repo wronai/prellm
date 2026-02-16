@@ -95,14 +95,19 @@ class FolderCompressor:
 
     def to_dependency_graph(self, index: CodebaseIndex) -> dict[str, list[str]]:
         """Build module → list of imported internal modules."""
-        # Collect all module paths for internal detection
+        # Collect all module paths and top-level package names for internal detection
         project_name = Path(index.root).name
         internal_modules: set[str] = set()
+        top_level_packages: set[str] = set()
         for fi in index.files:
             rel = _relative_path(fi.path, index.root)
             mod = _path_to_module(rel)
             if mod:
                 internal_modules.add(mod)
+                top_level_packages.add(mod.split(".")[0])
+
+        # Try matching imports against root dir name AND all top-level packages
+        candidate_names = {project_name} | top_level_packages
 
         graph: dict[str, list[str]] = {}
         for fi in index.files:
@@ -113,9 +118,11 @@ class FolderCompressor:
 
             deps: list[str] = []
             for imp in fi.imports:
-                imported_mod = _extract_module_from_import(imp, project_name)
-                if imported_mod and imported_mod in internal_modules and imported_mod != mod:
-                    deps.append(imported_mod)
+                for name in candidate_names:
+                    imported_mod = _extract_module_from_import(imp, name)
+                    if imported_mod and imported_mod in internal_modules and imported_mod != mod:
+                        deps.append(imported_mod)
+                        break
 
             if deps:
                 graph[mod] = sorted(set(deps))
