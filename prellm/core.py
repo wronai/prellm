@@ -311,7 +311,7 @@ async def _execute_v3_pipeline(
 
     # 6. Build response
     trace = get_current_trace()
-    _record_trace(trace, pipeline, small_llm, large_llm, query, extra_context,
+    _record_trace(trace, pipeline, small_llm, large_llm, query, pipeline_context,
                   prep_result, exec_result, prep_duration_ms, exec_duration_ms)
 
     decomposition_result = _build_decomposition_result(query, pipeline, prep_result)
@@ -620,13 +620,12 @@ def _record_trace(
         duration_ms=prep_duration_ms,
     )
 
-    content_preview = (exec_result.content or "")[:300]
     trace.step(
         name="ExecutorAgent.execute()",
         step_type="llm_call",
         description=f"Large LLM ({large_llm}) generated final response.",
-        inputs={"executor_input": prep_result.executor_input[:300]},
-        outputs={"content_preview": content_preview, "model": exec_result.model_used},
+        inputs={"executor_input": prep_result.executor_input},
+        outputs={"content_preview": exec_result.content or "", "model": exec_result.model_used},
         duration_ms=exec_duration_ms,
         metadata={"retries": exec_result.retries},
     )

@@ -210,7 +210,7 @@ class TestImportFromPackage:
 
     def test_version(self):
         import prellm
-        assert prellm.__version__ == "0.4.3"
+        assert prellm.__version__ == "0.4.4"
 
     def test_all_exports(self):
         import prellm

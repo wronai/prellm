@@ -1,3 +1,29 @@
+## [0.4.5] - 2026-02-16
+
+### Summary
+
+refactor(tests): configuration management system
+
+### Test
+
+- update tests/test_one_function.py
+- update tests/test_server.py
+- update tests/test_trace.py
+- update tests/test_v04_context.py
+
+### Other
+
+- update .prellm/budget.json
+- update ".prellm/trace_20260216_121925_Zdeployuj_apk\304\231_na_prod.md"
+- update ".prellm/trace_20260216_130144_Zdeployuj_apk\304\231_na_prod.md"
+- update ".prellm/trace_20260216_130755_Zdeployuj_apk\304\231_na_prod.md"
+- update prellm/core.py
+- update prellm/llm_provider.py
+- update prellm/trace.py
+- update project.functions.toon
+- update project.toon
+
+
 ## [0.4.4] - 2026-02-16
 
 ### Summary

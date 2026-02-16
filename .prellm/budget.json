@@ -1,6 +1,6 @@
 {
   "2026-02": {
-    "total_cost": 0.013066000000000001,
+    "total_cost": 0.0243085,
     "entries": [
       {
         "timestamp": "2026-02-16T09:39:16.112178",
@@ -106,6 +106,69 @@
         "prompt_tokens": 216,
         "completion_tokens": 757,
         "cost": 0.002379
+      },
+      {
+        "timestamp": "2026-02-16T12:19:08.699915",
+        "model": "ollama/qwen:7b",
+        "prompt_tokens": 108,
+        "completion_tokens": 21,
+        "cost": 0.0
+      },
+      {
+        "timestamp": "2026-02-16T12:19:17.401150",
+        "model": "ollama/qwen:7b",
+        "prompt_tokens": 343,
+        "completion_tokens": 129,
+        "cost": 0.0
+      },
+      {
+        "timestamp": "2026-02-16T12:19:25.911255",
+        "model": "openrouter/google/gemini-3-flash-preview",
+        "prompt_tokens": 223,
+        "completion_tokens": 1140,
+        "cost": 0.0035315000000000004
+      },
+      {
+        "timestamp": "2026-02-16T13:01:23.352930",
+        "model": "ollama/qwen:7b",
+        "prompt_tokens": 108,
+        "completion_tokens": 21,
+        "cost": 0.0
+      },
+      {
+        "timestamp": "2026-02-16T13:01:32.609302",
+        "model": "ollama/qwen:7b",
+        "prompt_tokens": 343,
+        "completion_tokens": 129,
+        "cost": 0.0
+      },
+      {
+        "timestamp": "2026-02-16T13:01:44.925788",
+        "model": "openrouter/google/gemini-3-flash-preview",
+        "prompt_tokens": 223,
+        "completion_tokens": 1319,
+        "cost": 0.0040685
+      },
+      {
+        "timestamp": "2026-02-16T13:07:38.039880",
+        "model": "ollama/qwen:7b",
+        "prompt_tokens": 108,
+        "completion_tokens": 21,
+        "cost": 0.0
+      },
+      {
+        "timestamp": "2026-02-16T13:07:45.319986",
+        "model": "ollama/qwen:7b",
+        "prompt_tokens": 343,
+        "completion_tokens": 129,
+        "cost": 0.0
+      },
+      {
+        "timestamp": "2026-02-16T13:07:55.788315",
+        "model": "openrouter/google/gemini-3-flash-preview",
+        "prompt_tokens": 223,
+        "completion_tokens": 1177,
+        "cost": 0.0036425000000000003
       }
     ]
   }

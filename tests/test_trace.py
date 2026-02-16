@@ -104,18 +104,36 @@ class TestTraceRecorder:
         rec = TraceRecorder()
         rec.start(query="Hello world", small_llm="s", large_llm="l", strategy="classify")
         rec.step(name="Config", step_type="config")
-        rec.step(name="Classify", step_type="llm_call", duration_ms=100,
-                 outputs={"intent": "greeting"})
-        rec.set_result(content="Hi there!", model_used="l")
+        rec.step(name="Pipeline: classify", step_type="llm_call", duration_ms=100,
+                 outputs={"classification": {"intent": "greeting", "confidence": 0.9}})
+        rec.step(name="PreprocessorAgent.preprocess()", step_type="agent",
+                 duration_ms=200, outputs={"executor_input": "Hello world enriched"})
+        rec.step(name="ExecutorAgent.execute()", step_type="llm_call",
+                 duration_ms=500, outputs={"content_preview": "Hi there!", "model": "l"})
+        rec.set_result(content="Hi there!", model_used="l", small_model_used="s", retries=0)
         rec.stop()
 
         out = rec.to_stdout()
 
+        # Header
         assert "preLLM Trace" in out
         assert "Hello world" in out
+        assert "Strategy: classify" in out
+        # Decision tree nodes
+        assert "👤 USER" in out
+        assert "🤖 Small LLM: s" in out
+        assert "🧠 Large LLM: l" in out
+        assert "📋 RESULT" in out
+        # Pipeline sub-steps
+        assert "classify" in out
+        # Timing breakdown
+        assert "Timing Breakdown" in out
+        assert "200ms" in out
+        assert "500ms" in out
+        # Step log
+        assert "Step Log" in out
         assert "Config" in out
-        assert "Classify" in out
-        assert "100ms" in out
+        # Full response
         assert "Hi there!" in out
 
     def test_save_creates_file(self, tmp_path: Path):
@@ -178,8 +196,8 @@ class TestMarkdownEdgeCases:
     def test_long_content_truncated(self):
         rec = TraceRecorder()
         rec.start(query="test")
-        # Need enough keys to exceed 2000 chars in JSON after sanitization
-        big_outputs = {f"key_{i}": "x" * 200 for i in range(20)}
+        # Need enough keys to exceed 50000 chars in JSON after sanitization
+        big_outputs = {f"key_{i}": "x" * 5000 for i in range(20)}
         rec.step(name="Big output", outputs=big_outputs)
         rec.stop()
 
@@ -205,7 +223,7 @@ class TestMarkdownEdgeCases:
         rec.stop()
 
         md = rec.to_markdown()
-        assert "..." in md  # Should be truncated at 500 chars
+        assert long_content in md  # Full content preserved in markdown
         assert f"({len(long_content)} chars)" in md
 
     def test_error_step_in_markdown(self):

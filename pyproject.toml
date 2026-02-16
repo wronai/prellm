@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "prellm"
-version = "0.4.4"
+version = "0.4.5"
 description = "preLLM — One function for small LLM preprocessing before large LLM execution. Like litellm.completion() but with decomposition."
 authors = [
     "Softreck <tom@sapletta.com>",

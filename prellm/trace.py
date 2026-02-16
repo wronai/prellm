@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import time
 from contextvars import ContextVar
 from dataclasses import dataclass, field
@@ -195,11 +196,10 @@ class TraceRecorder:
             lines.append(f"")
             content = self.result_summary.get("content", "")
             if content:
-                preview = content[:500] + ("..." if len(content) > 500 else "")
                 lines.append(f"**Response** ({len(content)} chars):")
                 lines.append(f"")
                 lines.append(f"```")
-                lines.append(preview)
+                lines.append(content)
                 lines.append(f"```")
                 lines.append(f"")
             for key, val in self.result_summary.items():
@@ -222,46 +222,173 @@ class TraceRecorder:
         return "\n".join(lines)
 
     def to_stdout(self) -> str:
-        """Generate compact terminal-friendly trace output."""
+        """Generate rich terminal trace with decision tree visualization."""
+        W = min(shutil.get_terminal_size(fallback=(100, 24)).columns, 120)
         lines: list[str] = []
-        lines.append(f"")
-        lines.append(f"═══ preLLM Trace ═══")
-        lines.append(f"Query: {self.query}")
-        if self.config:
-            small = self.config.get("small_llm", "?")
-            large = self.config.get("large_llm", "?")
-            strategy = self.config.get("strategy", "?")
-            lines.append(f"Pipeline: {small} → {large} | strategy={strategy}")
-        lines.append(f"")
+
+        small = self.config.get("small_llm", "?")
+        large = self.config.get("large_llm", "?")
+        strategy = self.config.get("strategy", "?")
+        total_ms = self.total_duration_ms
+
+        # ── Header ────────────────────────────────────────────────────────
+        lines.append("")
+        lines.append(f"{'═' * W}")
+        lines.append(f"  🧠 preLLM Trace")
+        lines.append(f"{'─' * W}")
+        lines.append(f"  Query:    {self.query}")
+        lines.append(f"  Strategy: {strategy}")
+        lines.append(f"  Models:   {small} (small) → {large} (large)")
+        lines.append(f"{'═' * W}")
+
+        # ── Decision Tree ─────────────────────────────────────────────────
+        lines.append("")
+        lines.append(f"  📊 Decision Tree")
+        lines.append(f"  {'─' * (W - 4)}")
+        lines.append("")
+
+        # Collect data from steps for the tree
+        classification = None
+        matched_rule = None
+        composed_prompt = None
+        executor_input = None
+        final_content = self.result_summary.get("content", "")
+        prep_ms = 0.0
+        exec_ms = 0.0
+
+        pipeline_steps: list[TraceStep] = []
+        for s in self.steps:
+            if s.step_type == "config":
+                continue
+            if s.name.startswith("Pipeline:"):
+                pipeline_steps.append(s)
+                out = s.outputs
+                if "classification" in out:
+                    classification = out["classification"]
+                if "matched_rule" in out:
+                    matched_rule = out["matched_rule"]
+                if "composed_prompt" in out:
+                    composed_prompt = out["composed_prompt"]
+            elif s.step_type == "agent":
+                prep_ms = s.duration_ms
+                executor_input = s.outputs.get("executor_input", "")
+            elif s.name.startswith("ExecutorAgent"):
+                exec_ms = s.duration_ms
+
+        # USER node
+        lines.append(f"  👤 USER")
+        lines.append(f"  │")
+        lines.append(f"  │  \"{self.query}\"")
+        lines.append(f"  │")
+        lines.append(f"  ▼")
+
+        # Small LLM node
+        lines.append(f"  🤖 Small LLM: {small}")
+        lines.append(f"  │  Strategy: {strategy} | Time: {prep_ms:.0f}ms")
+        lines.append(f"  │")
+
+        # Show pipeline sub-steps
+        for i, ps in enumerate(pipeline_steps):
+            is_last = (i == len(pipeline_steps) - 1)
+            icon = _step_icon(ps.status)
+            step_name = ps.name.replace("Pipeline: ", "")
+            connector = "└" if is_last else "├"
+            cont = " " if is_last else "│"
+
+            lines.append(f"  │  {connector}── {icon} {step_name}")
+
+            # Show key output for this sub-step
+            for key, val in ps.outputs.items():
+                val_str = _format_tree_value(val)
+                lines.append(f"  │  {cont}   {key}: {val_str}")
+
+            if ps.error:
+                lines.append(f"  │  {cont}   ✗ {ps.error}")
+
+        lines.append(f"  │")
+
+        # Show query transformation
+        if composed_prompt:
+            prompt_text = _extract_prompt_text(composed_prompt)
+            if prompt_text and prompt_text != self.query:
+                lines.append(f"  │  📝 Composed prompt:")
+                for pline in _wrap_text(prompt_text, W - 10):
+                    lines.append(f"  │     {pline}")
+                lines.append(f"  │")
+
+        lines.append(f"  ▼")
+
+        # Large LLM node
+        lines.append(f"  🧠 Large LLM: {large}")
+        lines.append(f"  │  Time: {exec_ms:.0f}ms")
+        lines.append(f"  │")
+        lines.append(f"  ▼")
+
+        # Result node
+        lines.append(f"  📋 RESULT")
+        lines.append(f"  {'─' * (W - 4)}")
+
+        # ── Full Response ─────────────────────────────────────────────────
+        lines.append("")
+        if final_content:
+            lines.append(f"  📄 Response ({len(final_content)} chars):")
+            lines.append(f"  {'─' * (W - 4)}")
+            # Show full content with proper indentation
+            for cline in final_content.split("\n"):
+                lines.append(f"  {cline}")
+            lines.append(f"  {'─' * (W - 4)}")
+        lines.append("")
+
+        # ── Timing Breakdown ──────────────────────────────────────────────
+        lines.append(f"  ⏱  Timing Breakdown")
+        lines.append(f"  {'─' * (W - 4)}")
+
+        timing_entries = []
+        if prep_ms > 0:
+            timing_entries.append(("Small LLM (preprocess)", prep_ms))
+        if exec_ms > 0:
+            timing_entries.append(("Large LLM (execute)", exec_ms))
+        overhead = total_ms - prep_ms - exec_ms
+        if overhead > 50:
+            timing_entries.append(("Overhead (context/io)", overhead))
+
+        # Use max of wall-clock and sum-of-steps as denominator (steps may exceed wall-clock
+        # if recorded independently)
+        sum_ms = sum(ms for _, ms in timing_entries)
+        denom = max(total_ms, sum_ms, 1)
+        bar_width = min(max(W - 55, 10), 40)
+
+        for label, ms in timing_entries:
+            pct = (ms / denom * 100)
+            filled = max(0, min(bar_width, int(bar_width * ms / denom)))
+            bar = "#" * filled + "." * (bar_width - filled)
+            lines.append(f"  {label:<28s} [{bar}] {ms:>7.0f}ms ({pct:4.1f}%)")
+
+        lines.append(f"  {'─' * (W - 4)}")
+        lines.append(f"  {'Total:':<28s} {'':>{bar_width + 2}s} {total_ms:>7.0f}ms")
+
+        # ── Step Log ──────────────────────────────────────────────────────
+        lines.append("")
+        lines.append(f"  📝 Step Log")
+        lines.append(f"  {'─' * (W - 4)}")
 
         for i, s in enumerate(self.steps, 1):
             icon = _step_icon(s.status)
             dur = f" ({s.duration_ms:.0f}ms)" if s.duration_ms > 0 else ""
-            lines.append(f"  {i}. {icon} {s.name}{dur}")
-            if s.description:
-                lines.append(f"     {s.description}")
-            # Show key outputs inline
-            if s.outputs:
-                for key, val in s.outputs.items():
-                    val_str = _compact_value(val)
-                    lines.append(f"     → {key}: {val_str}")
+            type_tag = f"[{s.step_type}]"
+            lines.append(f"  {i:>2}. {icon} {s.name}{dur}  {type_tag}")
             if s.error:
-                lines.append(f"     ✗ {s.error}")
+                lines.append(f"      ✗ {s.error}")
 
-        lines.append(f"")
-        if self.result_summary:
-            content = self.result_summary.get("content", "")
-            if content:
-                preview = content[:200].replace("\n", " ")
-                if len(content) > 200:
-                    preview += "..."
-                lines.append(f"  Result: {preview}")
-            model = self.result_summary.get("model_used", "")
-            if model:
-                lines.append(f"  Model: {model}")
-        lines.append(f"  Total: {self.total_duration_ms:.0f}ms")
-        lines.append(f"═══════════════════")
-        lines.append(f"")
+        # ── Footer ────────────────────────────────────────────────────────
+        lines.append("")
+        model = self.result_summary.get("model_used", "")
+        small_model = self.result_summary.get("small_model_used", "")
+        retries = self.result_summary.get("retries", 0)
+        lines.append(f"{'═' * W}")
+        lines.append(f"  Small: {small_model} | Large: {model} | Retries: {retries} | Total: {total_ms:.0f}ms")
+        lines.append(f"{'═' * W}")
+        lines.append("")
         return "\n".join(lines)
 
     def save(self, output_dir: Path | str | None = None) -> Path:
@@ -291,7 +418,7 @@ def _step_icon(status: str) -> str:
     return {"ok": "✅", "error": "❌", "skipped": "⏭️"}.get(status, "🔄")
 
 
-def _safe_json(obj: Any, max_len: int = 2000) -> str:
+def _safe_json(obj: Any, max_len: int = 50000) -> str:
     """Serialize to JSON with truncation for large values."""
     try:
         text = json.dumps(_sanitize(obj), indent=2, ensure_ascii=False, default=str)
@@ -309,7 +436,7 @@ def _sanitize(obj: Any, depth: int = 0) -> Any:
     if obj is None or isinstance(obj, (bool, int, float)):
         return obj
     if isinstance(obj, str):
-        return obj[:1000] if len(obj) > 1000 else obj
+        return obj[:10000] if len(obj) > 10000 else obj
     if isinstance(obj, Path):
         return str(obj)
     if isinstance(obj, dict):
@@ -320,11 +447,11 @@ def _sanitize(obj: Any, depth: int = 0) -> Any:
         try:
             return _sanitize(obj.model_dump(), depth + 1)
         except Exception:
-            return str(obj)[:500]
-    return str(obj)[:500]
+            return str(obj)[:5000]
+    return str(obj)[:5000]
 
 
-def _compact_value(val: Any, max_len: int = 120) -> str:
+def _compact_value(val: Any, max_len: int = 500) -> str:
     """Compact value for terminal output."""
     if isinstance(val, dict):
         try:
@@ -339,3 +466,44 @@ def _compact_value(val: Any, max_len: int = 120) -> str:
     if len(s) > max_len:
         return s[:max_len] + "..."
     return s
+
+
+def _format_tree_value(val: Any) -> str:
+    """Format a value for display in the decision tree — no truncation."""
+    if isinstance(val, dict):
+        try:
+            return json.dumps(val, ensure_ascii=False, default=str)
+        except (TypeError, ValueError):
+            return str(val)
+    elif isinstance(val, str):
+        return val.replace("\n", " ")
+    return str(val)
+
+
+def _extract_prompt_text(composed: Any) -> str:
+    """Extract the prompt text from a composed_prompt output (dict or str)."""
+    if isinstance(composed, dict):
+        return str(composed.get("composed_prompt", composed))
+    return str(composed)
+
+
+def _wrap_text(text: str, width: int) -> list[str]:
+    """Word-wrap text to fit within a given width."""
+    if width < 20:
+        width = 20
+    words = text.replace("\n", " ").split()
+    result_lines: list[str] = []
+    current: list[str] = []
+    current_len = 0
+    for word in words:
+        if current_len + len(word) + (1 if current else 0) > width:
+            if current:
+                result_lines.append(" ".join(current))
+            current = [word]
+            current_len = len(word)
+        else:
+            current.append(word)
+            current_len += len(word) + (1 if len(current) > 1 else 0)
+    if current:
+        result_lines.append(" ".join(current))
+    return result_lines or [""]

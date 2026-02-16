@@ -17,7 +17,7 @@ from prellm.models import LLMProviderConfig
 
 # Suppress Pydantic serialization warnings from litellm response objects
 # (Message/Choices/StreamingChoices field count mismatches during @log_call serialization)
-warnings.filterwarnings("ignore", message=".*PydanticSerializationUnexpectedValue.*")
+warnings.filterwarnings("ignore", category=UserWarning, module="pydantic")
 
 logger = logging.getLogger("prellm.llm_provider")
 
