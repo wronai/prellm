@@ -1,5 +1,5 @@
 # Prellm Makefile
-.PHONY: help install install-dev test lint format clean build publish run demo init bump-patch check-bumpver check-build check-twine examples config
+.PHONY: help install install-dev fix-venv test lint format clean build publish run demo init bump-patch check-bumpver check-build check-twine examples config doctor serve query
 
 # Check for Poetry availability
 POETRY := $(shell command -v poetry 2>/dev/null)
@@ -29,30 +29,55 @@ help:
 	@echo "  install      Install production dependencies"
 	@echo "  install-dev  Install development dependencies"
 	@echo "  config       Interactive LLM configuration wizard"
+	@echo "  doctor       Check configuration and provider connectivity"
+	@echo "  serve        Start the preLLM API server"
+	@echo "  query        Run a test query (usage: make query Q='hello world')"
 	@echo "  test         Run tests"
+	@echo "  test-cov     Run tests with coverage"
 	@echo "  examples     Run all example scripts (real-time demos)"
 	@echo "  lint         Run linting (ruff)"
 	@echo "  format       Format code (ruff)"
 	@echo "  clean        Clean build artifacts"
 	@echo "  build        Build package"
 	@echo "  publish      Publish to PyPI"
-	@echo "  run          Run CLI example"
 	@echo "  demo         Run demo with sample config"
 	@echo "  init         Generate starter config"
 	@echo ""
 
 # Installation
-install:
+install: fix-venv
 	@if [ -z "$(POETRY)" ]; then \
 		$(PIP) install -e .; \
 	else \
+		poetry lock 2>/dev/null || true; \
 		poetry install --only main; \
 	fi
 
-install-dev:
+# Fix broken venv (recreates if pip is broken)
+fix-venv:
+	@if [ -z "$(POETRY)" ]; then \
+		if [ -d "venv" ]; then \
+			echo "$(YELLOW)Checking venv health...$(NC)"; \
+			if ! venv/bin/python --version >/dev/null 2>&1 || ! venv/bin/pip --version >/dev/null 2>&1; then \
+				echo "$(RED)Broken venv detected. Recreating...$(NC)"; \
+				rm -rf venv; \
+				python3 -m venv venv; \
+				. venv/bin/activate && python -m pip install --upgrade pip; \
+				echo "$(GREEN)Venv recreated!$(NC)"; \
+			fi; \
+		else \
+			echo "$(YELLOW)Creating venv...$(NC)"; \
+			python3 -m venv venv; \
+			. venv/bin/activate && python -m pip install --upgrade pip; \
+			echo "$(GREEN)Venv created!$(NC)"; \
+		fi; \
+	fi
+
+install-dev: fix-venv
 	@if [ -z "$(POETRY)" ]; then \
 		$(PIP) install -e ".[dev]"; \
 	else \
+		poetry lock 2>/dev/null || true; \
 		poetry install; \
 	fi
 
@@ -149,6 +174,22 @@ examples:
 	$(PYTHON) examples/python_sdk.py || echo "$(RED)Skipped: LLM providers not configured$(NC)"
 	@echo ""
 	@echo "$(GREEN)Examples completed!$(NC)"
+
+doctor:
+	$(RUN) prellm doctor
+
+doctor-live:
+	$(RUN) prellm doctor --live
+
+serve:
+	$(RUN) prellm serve
+
+query:
+	@if [ -z "$(Q)" ]; then \
+		$(RUN) prellm query "Hello world" --json; \
+	else \
+		$(RUN) prellm query "$(Q)" --json; \
+	fi
 
 config:
 	@echo "$(BLUE)========================================$(NC)"

@@ -20,6 +20,7 @@ import uuid
 from typing import Any, AsyncGenerator
 
 from fastapi import FastAPI, HTTPException, Request
+from nfo.decorators import log_call
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel, Field

@@ -19,11 +19,13 @@ The old `prellm` class is kept for backward compatibility with v0.1 code.
 from __future__ import annotations
 
 import logging
+import time
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 import yaml
+from nfo.decorators import catch, log_call
 
 from prellm.analyzers.context_engine import ContextEngine
 from prellm.llm_provider import LLMProvider
@@ -44,6 +46,7 @@ from prellm.agents.preprocessor import PreprocessorAgent
 from prellm.pipeline import PromptPipeline
 from prellm.prompt_registry import PromptRegistry
 from prellm.validators import ResponseValidator
+from prellm.trace import get_current_trace
 
 logger = logging.getLogger("prellm")
 
@@ -52,6 +55,7 @@ logger = logging.getLogger("prellm")
 # 1-function API — like litellm.completion() but with preprocessing
 # ============================================================
 
+@catch
 async def preprocess_and_execute(
     query: str,
     small_llm: str = "ollama/qwen2.5:3b",
@@ -118,6 +122,24 @@ async def preprocess_and_execute(
         if config.domain_rules and not domain_rules:
             domain_rules = [r.model_dump() for r in config.domain_rules]
 
+    logger.info(f"preLLM pipeline: {small_llm} \u2192 {large_llm} | strategy={pipeline_name}")
+
+    # Record trace config
+    trace = get_current_trace()
+    if trace:
+        trace.step(
+            name="Configuration",
+            step_type="config",
+            description="Resolved models, strategy, and pipeline parameters.",
+            outputs={
+                "small_llm": small_llm,
+                "large_llm": large_llm,
+                "strategy": pipeline_name,
+                "config_path": str(config_path) if config_path else None,
+                "user_context": user_context,
+            },
+        )
+
     return await _execute_v3_pipeline(
         query=query,
         small_llm=small_llm,
@@ -176,6 +198,7 @@ def preprocess_and_execute_sync(
 # v0.3 — Two-agent execution (internal, called by preprocess_and_execute)
 # ============================================================
 
+@log_call
 async def _execute_v3_pipeline(
     query: str,
     small_llm: str,
@@ -254,22 +277,60 @@ async def _execute_v3_pipeline(
     )
 
     # 1. Preprocess
+    trace = get_current_trace()
+    _t0 = time.time()
     prep_result = await preprocessor.preprocess(
         query=query,
         user_context=extra_context or None,
         pipeline_name=pipeline,
     )
+    _t1 = time.time()
+
+    if trace:
+        # Record individual pipeline steps from preprocessor
+        if prep_result.decomposition and prep_result.decomposition.steps_executed:
+            for ps in prep_result.decomposition.steps_executed:
+                trace.step(
+                    name=f"Pipeline: {ps.step_name}",
+                    step_type="pipeline_step" if ps.step_type == "algo" else "llm_call",
+                    description=f"{ps.step_type} step in '{pipeline}' pipeline",
+                    outputs={ps.output_key: ps.output_value} if ps.output_key else {},
+                    status="skipped" if ps.skipped else ("error" if ps.error else "ok"),
+                    error=ps.error,
+                )
+        trace.step(
+            name="PreprocessorAgent.preprocess()",
+            step_type="agent",
+            description=f"Small LLM ({small_llm}) preprocessed query using '{pipeline}' strategy.",
+            inputs={"query": query, "pipeline": pipeline, "user_context": extra_context},
+            outputs={"executor_input": prep_result.executor_input},
+            duration_ms=(_t1 - _t0) * 1000,
+        )
 
     # 2. Execute
+    _t2 = time.time()
     exec_result = await executor.execute(
         executor_input=prep_result.executor_input,
         **kwargs,
     )
+    _t3 = time.time()
+
+    if trace:
+        content_preview = (exec_result.content or "")[:300]
+        trace.step(
+            name="ExecutorAgent.execute()",
+            step_type="llm_call",
+            description=f"Large LLM ({large_llm}) generated final response.",
+            inputs={"executor_input": prep_result.executor_input[:300]},
+            outputs={"content_preview": content_preview, "model": exec_result.model_used},
+            duration_ms=(_t3 - _t2) * 1000,
+            metadata={"retries": exec_result.retries},
+        )
 
     # 3. Build backward-compatible DecompositionResult from pipeline state
     decomposition_result = _build_decomposition_result(query, pipeline, prep_result)
 
-    return PreLLMResponse(
+    response = PreLLMResponse(
         content=exec_result.content or "No response from any model.",
         decomposition=decomposition_result,
         model_used=exec_result.model_used,
@@ -278,6 +339,22 @@ async def _execute_v3_pipeline(
         clarified=bool(decomposition_result and decomposition_result.missing_fields),
         needs_more_context=bool(decomposition_result and decomposition_result.missing_fields) and not exec_result.content,
     )
+
+    if trace:
+        trace.set_result(
+            content=response.content,
+            model_used=response.model_used,
+            small_model_used=response.small_model_used,
+            retries=response.retries,
+            strategy=pipeline,
+            classification=(
+                decomposition_result.classification.model_dump()
+                if decomposition_result and decomposition_result.classification
+                else None
+            ),
+        )
+
+    return response
 
 
 def _build_decomposition_result(

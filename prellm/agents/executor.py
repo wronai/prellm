@@ -14,6 +14,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from nfo.decorators import log_call
 from pydantic import BaseModel, Field
 
 from prellm.llm_provider import LLMProvider
@@ -53,6 +54,7 @@ class ExecutorAgent:
         self.response_validator = response_validator
         self.response_schema_name = response_schema_name
 
+    @log_call
     async def execute(
         self,
         executor_input: str,

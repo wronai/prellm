@@ -1,0 +1,62 @@
+version: '3.8'
+
+# ─────────────────────────────────────────────
+# preLLM — Docker Test Sandbox
+# ─────────────────────────────────────────────
+# Usage:
+#   docker-compose -f docker-compose.test.yml run --rm test
+#   docker-compose -f docker-compose.test.yml run --rm lint
+#   docker-compose -f docker-compose.test.yml run --rm build-check
+
+services:
+  # ─────────────────────────────────────────────
+  # Run full test suite
+  # ─────────────────────────────────────────────
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    command: python -m pytest tests/ -v --cov=prellm --cov-report=term
+    volumes:
+      - .:/app
+    working_dir: /app
+
+  # ─────────────────────────────────────────────
+  # Lint check
+  # ─────────────────────────────────────────────
+  lint:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    command: ruff check .
+    volumes:
+      - .:/app
+    working_dir: /app
+
+  # ─────────────────────────────────────────────
+  # Build check — verify production image builds
+  # ─────────────────────────────────────────────
+  build-check:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["--help"]
+
+  # ─────────────────────────────────────────────
+  # Server smoke test
+  # ─────────────────────────────────────────────
+  server-smoke:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "18080:8080"
+    environment:
+      - SMALL_MODEL=ollama/qwen2.5:3b
+      - LARGE_MODEL=gpt-4o-mini
+    command: ["serve", "--host", "0.0.0.0", "--port", "8080"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 3

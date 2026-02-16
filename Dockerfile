@@ -4,14 +4,11 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends git curl && \
     rm -rf /var/lib/apt/lists/*
 
+# Install dependencies first (cached layer)
 COPY pyproject.toml README.md ./
 COPY prellm/ prellm/
-RUN pip install --no-cache-dir poetry && \
-    poetry config virtualenvs.create false && \
-    poetry install --only main --no-interaction && \
-    pip uninstall -y poetry
-
 COPY configs/ configs/
+RUN pip install --no-cache-dir .
 
 # Environment variables for server mode
 ENV SMALL_MODEL="ollama/qwen2.5:3b"

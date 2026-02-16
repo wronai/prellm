@@ -10,6 +10,8 @@ import json
 import logging
 from typing import Any
 
+from nfo.decorators import log_call
+
 from prellm.models import LLMProviderConfig
 
 logger = logging.getLogger("prellm.llm_provider")
@@ -25,7 +27,16 @@ class LLMProvider:
 
     def __init__(self, config: LLMProviderConfig):
         self.config = config
+        self._budget_tracker = None
 
+    def _get_budget(self):
+        """Lazy-load budget tracker if configured."""
+        if self._budget_tracker is None:
+            from prellm.budget import get_budget_tracker
+            self._budget_tracker = get_budget_tracker()
+        return self._budget_tracker
+
+    @log_call
     async def complete(
         self,
         user_message: str,
@@ -55,6 +66,11 @@ class LLMProvider:
             m for m in self.config.fallback if m != self.config.model
         ]
 
+        # Budget check before making any calls
+        budget = self._get_budget()
+        if budget and budget.monthly_limit is not None:
+            budget.check(model=models_to_try[0])
+
         last_error: Exception | None = None
 
         for model in models_to_try:
@@ -75,6 +91,10 @@ class LLMProvider:
                     resp = await litellm.acompletion(**completion_kwargs)
                     content = resp.choices[0].message.content or ""
 
+                    # Record cost
+                    if budget and budget.monthly_limit is not None:
+                        budget.record_from_response(resp, model=model)
+
                     logger.debug(f"LLM response from {model} (attempt {attempt + 1}): {content[:100]}...")
                     return content
 
@@ -86,6 +106,7 @@ class LLMProvider:
             f"All models failed after retries. Last error: {last_error}"
         )
 
+    @log_call
     async def complete_json(
         self,
         user_message: str,

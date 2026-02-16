@@ -1,0 +1,63 @@
+{
+  "2026-02": {
+    "total_cost": 0.0065605,
+    "entries": [
+      {
+        "timestamp": "2026-02-16T09:39:16.112178",
+        "model": "ollama/qwen:7b",
+        "prompt_tokens": 108,
+        "completion_tokens": 21,
+        "cost": 0.0
+      },
+      {
+        "timestamp": "2026-02-16T09:40:46.807698",
+        "model": "openrouter/meta-llama/llama-3.3-70b-instruct",
+        "prompt_tokens": 18,
+        "completion_tokens": 819,
+        "cost": 0.0
+      },
+      {
+        "timestamp": "2026-02-16T09:41:21.824122",
+        "model": "ollama/qwen:7b",
+        "prompt_tokens": 108,
+        "completion_tokens": 21,
+        "cost": 0.0
+      },
+      {
+        "timestamp": "2026-02-16T09:41:28.447151",
+        "model": "openrouter/google/gemini-3-flash-preview",
+        "prompt_tokens": 7,
+        "completion_tokens": 550,
+        "cost": 0.0016535
+      },
+      {
+        "timestamp": "2026-02-16T09:43:31.965921",
+        "model": "ollama/qwen:7b",
+        "prompt_tokens": 108,
+        "completion_tokens": 21,
+        "cost": 0.0
+      },
+      {
+        "timestamp": "2026-02-16T09:43:38.814624",
+        "model": "openrouter/google/gemini-3-flash-preview",
+        "prompt_tokens": 8,
+        "completion_tokens": 888,
+        "cost": 0.0026680000000000002
+      },
+      {
+        "timestamp": "2026-02-16T10:15:56.285069",
+        "model": "ollama/qwen:7b",
+        "prompt_tokens": 108,
+        "completion_tokens": 21,
+        "cost": 0.0
+      },
+      {
+        "timestamp": "2026-02-16T10:16:02.847007",
+        "model": "openrouter/google/gemini-3-flash-preview",
+        "prompt_tokens": 8,
+        "completion_tokens": 745,
+        "cost": 0.002239
+      }
+    ]
+  }
+}

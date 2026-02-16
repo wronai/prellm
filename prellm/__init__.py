@@ -42,6 +42,15 @@ from prellm.chains.process_chain import ProcessChain
 from prellm.analyzers.context_engine import ContextEngine
 from prellm.context.user_memory import UserMemory
 
+# Logging
+from prellm.logging_setup import setup_logging, get_logger
+
+# Trace
+from prellm.trace import TraceRecorder, get_current_trace
+
+# Budget
+from prellm.budget import BudgetTracker, BudgetExceededError, get_budget_tracker
+
 __all__ = [
     # 1-function API (primary)
     "preprocess_and_execute",
@@ -73,4 +82,14 @@ __all__ = [
     "ProcessChain",
     "ContextEngine",
     "UserMemory",
+    # Logging
+    "setup_logging",
+    "get_logger",
+    # Trace
+    "TraceRecorder",
+    "get_current_trace",
+    # Budget
+    "BudgetTracker",
+    "BudgetExceededError",
+    "get_budget_tracker",
 ]

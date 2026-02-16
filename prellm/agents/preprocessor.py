@@ -14,6 +14,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from nfo.decorators import log_call
 from pydantic import BaseModel, Field
 
 from prellm.analyzers.context_engine import ContextEngine
@@ -91,6 +92,7 @@ class PreprocessorAgent:
             except Exception as e:
                 logger.warning(f"Failed to index codebase at {codebase_path}: {e}")
 
+    @log_call
     async def preprocess(
         self,
         query: str,

@@ -1,3 +1,41 @@
+## [0.3.14] - 2026-02-16
+
+### Summary
+
+fix(docs): CLI interface improvements
+
+### Docs
+
+- docs: update prellm-tasks-env-context-collection.md
+
+### Test
+
+- update tests/test_budget.py
+- update tests/test_trace.py
+
+### Build
+
+- update pyproject.toml
+
+### Ci
+
+- config: update ci.yml
+
+### Other
+
+- update .prellm/budget.json
+- update ".prellm/trace_20260216_092605_Zdeployuj_apk\304\231_na_prod.md"
+- update ".prellm/trace_20260216_094046_Zdeployuj_apk\304\231_na_prod.md"
+- update ".prellm/trace_20260216_094128_Zdeployuj_apk\304\231_na_prod.md"
+- update ".prellm/trace_20260216_094338_Zdeployuj_apk\304\231_na_prod.md"
+- update ".prellm/trace_20260216_101602_Zdeployuj_apk\304\231_na_prod.md"
+- update Dockerfile.test
+- build: update Makefile
+- config: update docker-compose.test.yml
+- update prellm/__init__.py
+- ... and 16 more
+
+
 ## [0.3.13] - 2026-02-16
 
 ### Summary

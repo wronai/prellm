@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 import yaml
+from nfo.decorators import log_call
 from pydantic import BaseModel, Field
 
 from prellm.llm_provider import LLMProvider
@@ -166,6 +167,7 @@ class PromptPipeline:
             validators=validators,
         )
 
+    @log_call
     async def execute(
         self,
         query: str,

@@ -22,37 +22,83 @@ app = typer.Typer(
 )
 
 
+def _init_logging() -> None:
+    """Initialize nfo logging from .env config (called once per CLI invocation)."""
+    from prellm.env_config import get_env_config
+    from prellm.logging_setup import setup_logging
+
+    env = get_env_config()
+    setup_logging(level=env.log_level)
+
+
 @app.command()
 def query(
     prompt: str = typer.Argument(..., help="The prompt/query to preprocess and execute"),
-    small: str = typer.Option("ollama/qwen2.5:3b", "--small", "-s", help="Small LLM for preprocessing"),
-    large: str = typer.Option("gpt-4o-mini", "--large", "-l", help="Large LLM for execution"),
-    strategy: str = typer.Option("classify", "--strategy", "-S", help="Strategy: classify|structure|split|enrich|passthrough"),
+    small: Optional[str] = typer.Option(None, "--small", "-s", help="Small LLM for preprocessing (default: from .env)"),
+    large: Optional[str] = typer.Option(None, "--large", "-l", help="Large LLM for execution (default: from .env)"),
+    strategy: Optional[str] = typer.Option(None, "--strategy", "-S", help="Strategy: classify|structure|split|enrich|passthrough (default: from .env)"),
     context: Optional[str] = typer.Option(None, "--context", "-C", help="User context tag (e.g. 'gdansk_embedded_python')"),
     config: Optional[Path] = typer.Option(None, "--config", "-c", help="Optional YAML config file"),
     memory: Optional[Path] = typer.Option(None, "--memory", "-m", help="Path to UserMemory database"),
     codebase: Optional[Path] = typer.Option(None, "--codebase", help="Path to codebase root for context indexing"),
     json_output: bool = typer.Option(False, "--json", "-j", help="Output as JSON"),
+    trace: bool = typer.Option(False, "--trace", "-t", help="Generate markdown execution trace (.prellm/)"),
+    trace_dir: Optional[Path] = typer.Option(None, "--trace-dir", help="Trace output directory (default: .prellm)"),
+    env_file: Optional[Path] = typer.Option(None, "--env-file", help="Path to .env file (default: .env)"),
 ):
     """Preprocess a query with small LLM, then execute with large LLM."""
     from prellm.core import preprocess_and_execute
+    from prellm.env_config import get_env_config
+    from prellm.trace import TraceRecorder
+    from prellm.budget import get_budget_tracker
+
+    _init_logging()
+
+    env = get_env_config(str(env_file) if env_file else None)
+    effective_small = small or env.small_model
+    effective_large = large or env.large_model
+    effective_strategy = strategy or env.strategy
+
+    # Initialize budget tracker if configured
+    if env.monthly_budget:
+        get_budget_tracker(monthly_limit=env.monthly_budget)
+
+    # Start trace if requested
+    recorder = None
+    if trace:
+        recorder = TraceRecorder(output_dir=Path(trace_dir) if trace_dir else Path(".prellm"))
+        recorder.start(
+            query=prompt,
+            small_llm=effective_small,
+            large_llm=effective_large,
+            strategy=effective_strategy,
+        )
 
     result = asyncio.run(preprocess_and_execute(
         query=prompt,
-        small_llm=small,
-        large_llm=large,
-        strategy=strategy,
+        small_llm=effective_small,
+        large_llm=effective_large,
+        strategy=effective_strategy,
         user_context=context,
         config_path=str(config) if config else None,
         memory_path=str(memory) if memory else None,
         codebase_path=str(codebase) if codebase else None,
     ))
 
+    # Stop trace and output
+    if recorder:
+        recorder.stop()
+        # Print compact trace to stdout
+        typer.echo(recorder.to_stdout())
+        # Save full markdown trace
+        filepath = recorder.save()
+        typer.echo(f"📄 Trace saved: {filepath}")
+
     if json_output:
         typer.echo(result.model_dump_json(indent=2))
     else:
         typer.echo(f"\n{'='*60}")
-        typer.echo(f"\U0001f9e0 preLLM [{small} \u2192 {large}]")
+        typer.echo(f"\U0001f9e0 preLLM [{effective_small} \u2192 {effective_large}]")
         typer.echo(f"{'='*60}")
         if result.decomposition and result.decomposition.classification:
             c = result.decomposition.classification
@@ -206,6 +252,7 @@ def serve(
     from prellm.server import create_app
 
     env = get_env_config(str(env_file) if env_file else None)
+    _init_logging()
 
     effective_small = small or env.small_model
     effective_large = large or env.large_model
@@ -559,6 +606,63 @@ PRELLM_STRATEGY=classify
 
     typer.echo(f"\u2705 Created {path}")
     typer.echo(f"   Edit the file to add your API keys.")
+
+
+# ============================================================
+# Budget
+# ============================================================
+
+@app.command()
+def budget(
+    reset: bool = typer.Option(False, "--reset", help="Reset current month's budget"),
+    json_output: bool = typer.Option(False, "--json", "-j", help="Output as JSON"),
+):
+    """Show LLM API spend tracking and budget status.
+
+    Example:
+        prellm budget
+        prellm budget --json
+        prellm budget --reset
+    """
+    from prellm.budget import get_budget_tracker
+    from prellm.env_config import get_env_config
+
+    env = get_env_config()
+    tracker = get_budget_tracker(monthly_limit=env.monthly_budget)
+
+    if reset:
+        tracker.reset()
+        typer.echo("✅ Budget reset for current month.")
+        return
+
+    summary = tracker.summary()
+
+    if json_output:
+        typer.echo(json.dumps(summary, indent=2, default=str))
+        return
+
+    typer.echo(f"\n💰 preLLM Budget")
+    typer.echo(f"{'='*60}")
+    typer.echo(f"   Month:      {summary['month']}")
+    typer.echo(f"   Spent:      ${summary['total_cost']:.4f}")
+    if summary['monthly_limit'] is not None:
+        typer.echo(f"   Limit:      ${summary['monthly_limit']:.2f}")
+        typer.echo(f"   Remaining:  ${summary['remaining']:.4f}")
+        pct = (summary['total_cost'] / summary['monthly_limit'] * 100) if summary['monthly_limit'] > 0 else 0
+        bar_len = 30
+        filled = int(bar_len * min(pct, 100) / 100)
+        bar = "█" * filled + "░" * (bar_len - filled)
+        typer.echo(f"   Usage:      [{bar}] {pct:.1f}%")
+    else:
+        typer.echo(f"   Limit:      not set (PRELLM_MONTHLY_BUDGET)")
+    typer.echo(f"   Requests:   {summary['requests']}")
+
+    if summary['by_model']:
+        typer.echo(f"\n   By model:")
+        for model, cost in sorted(summary['by_model'].items(), key=lambda x: -x[1]):
+            typer.echo(f"     {model}: ${cost:.4f}")
+
+    typer.echo(f"\n{'='*60}")
 
 
 # ============================================================

@@ -14,6 +14,100 @@ from pydantic import BaseModel, Field
 
 
 # ============================================================
+# Sensitivity levels (Task 2)
+# ============================================================
+
+class SensitivityLevel(str, enum.Enum):
+    SAFE = "safe"
+    MASKED = "masked"
+    BLOCKED = "blocked"
+
+
+# ============================================================
+# Shell Context models (Task 1)
+# ============================================================
+
+class ProcessInfo(BaseModel):
+    pid: int = 0
+    cwd: str = ""
+    user: str = ""
+    parent_pid: int | None = None
+    tty: str = ""
+
+
+class LocaleInfo(BaseModel):
+    lang: str = ""
+    lc_all: str = ""
+    timezone: str = ""
+    encoding: str = ""
+
+
+class ShellInfo(BaseModel):
+    shell: str = ""
+    term: str = ""
+    columns: int = 0
+    lines: int = 0
+
+
+class NetworkContext(BaseModel):
+    hostname: str = ""
+    local_ip: str = ""
+    dns_suffix: str = ""
+
+
+class ShellContext(BaseModel):
+    env_vars: dict[str, str] = Field(default_factory=dict)
+    process: ProcessInfo = Field(default_factory=ProcessInfo)
+    locale: LocaleInfo = Field(default_factory=LocaleInfo)
+    shell: ShellInfo = Field(default_factory=ShellInfo)
+    network: NetworkContext = Field(default_factory=NetworkContext)
+    collected_at: datetime = Field(default_factory=datetime.utcnow)
+    collection_duration_ms: float = 0.0
+
+
+# ============================================================
+# Context Schema model (Task 4)
+# ============================================================
+
+class ContextSchema(BaseModel):
+    execution_env: str = "cli"
+    platform: str = ""
+    project_type: str | None = None
+    project_summary: str | None = None
+    available_tools: list[str] = Field(default_factory=list)
+    locale: str = ""
+    timezone: str = ""
+    user_history_summary: str | None = None
+    sensitive_fields_blocked: int = 0
+    schema_token_cost: int = 0
+
+
+# ============================================================
+# Filter report model (Task 2)
+# ============================================================
+
+class FilterReport(BaseModel):
+    blocked_keys: list[str] = Field(default_factory=list)
+    masked_keys: list[str] = Field(default_factory=list)
+    safe_keys: list[str] = Field(default_factory=list)
+    total_processed: int = 0
+
+
+# ============================================================
+# Compressed folder model (Task 3)
+# ============================================================
+
+class CompressedFolder(BaseModel):
+    root: str = ""
+    toon_output: str = ""
+    dependency_graph: dict[str, list[str]] = Field(default_factory=dict)
+    module_summaries: dict[str, str] = Field(default_factory=dict)
+    total_modules: int = 0
+    total_functions: int = 0
+    estimated_tokens: int = 0
+
+
+# ============================================================
 # Enums
 # ============================================================
 
@@ -40,6 +134,7 @@ class StepStatus(str, enum.Enum):
 
 class DecompositionStrategy(str, enum.Enum):
     """Strategy for how the small LLM preprocesses a query."""
+    AUTO = "auto"
     CLASSIFY = "classify"
     STRUCTURE = "structure"
     SPLIT = "split"

@@ -5,9 +5,10 @@ import os
 import re
 import secrets
 import socket
+import subprocess
 import sys
-import urllib.request
 import urllib.error
+import urllib.request
 from datetime import datetime
 from pathlib import Path
 
@@ -64,20 +65,34 @@ def ask_yn(question: str, default: bool = False) -> bool:
 
 
 def ask_choice(question: str, options: list, default: int = 0) -> str:
-    """Ask user to choose from options."""
+    """Ask user to choose from options.
+
+    Options can be strings or (label, value) tuples.
+    """
     print(f"\n{question}")
-    for i, opt in enumerate(options, 1):
+    labels = []
+    values = []
+    for opt in options:
+        if isinstance(opt, tuple):
+            label, value = opt
+        else:
+            label = opt
+            value = opt
+        labels.append(label)
+        values.append(value)
+
+    for i, label in enumerate(labels, 1):
         marker = " (default)" if i - 1 == default else ""
-        print(f"  {i}. {opt}{marker}")
+        print(f"  {i}. {label}{marker}")
 
     while True:
         response = input("Choice [1-{}]: ".format(len(options))).strip()
         if not response:
-            return options[default]
+            return values[default]
         try:
             idx = int(response) - 1
             if 0 <= idx < len(options):
-                return options[idx]
+                return values[idx]
         except ValueError:
             pass
         print("  (invalid choice)")
@@ -87,29 +102,102 @@ def ask_choice(question: str, options: list, default: int = 0) -> str:
 # Diagnostics
 # ============================================================
 
-def check_ollama(base_url: str) -> bool:
+def check_ollama(base_url: str) -> list[str] | None:
     """Check if Ollama is reachable and list available models."""
     print()
     print(f"  Checking Ollama at {base_url} ...")
+    models = fetch_ollama_models(base_url)
+    if models is None:
+        fail(f"Ollama not reachable at {base_url}")
+        info("Start with: ollama serve")
+        return None
+    if models:
+        ok(f"Ollama running — {len(models)} models: {', '.join(models[:5])}")
+    else:
+        warn("Ollama running but no models pulled. Run: ollama pull qwen2.5:3b")
+    return models
+
+
+def fetch_ollama_models(base_url: str) -> list[str] | None:
+    """Return list of installed Ollama models (raw names) or None if unreachable."""
     try:
         req = urllib.request.Request(f"{base_url}/api/tags", method="GET")
         with urllib.request.urlopen(req, timeout=5) as resp:
             import json
+
             data = json.loads(resp.read())
-            models = [m.get("name", "?") for m in data.get("models", [])]
-            if models:
-                ok(f"Ollama running — {len(models)} models: {', '.join(models[:5])}")
-                return True
-            else:
-                warn("Ollama running but no models pulled. Run: ollama pull qwen2.5:3b")
-                return True
+            return [m.get("name", "").strip() for m in data.get("models", []) if m.get("name")]
     except urllib.error.URLError:
-        fail(f"Ollama not reachable at {base_url}")
-        info("Start with: ollama serve")
+        return None
+    except Exception:
+        return None
+
+
+def to_ollama_full(name: str) -> str:
+    return name if name.startswith("ollama/") else f"ollama/{name}"
+
+
+def strip_ollama_prefix(name: str) -> str:
+    return name[len("ollama/") :] if name.startswith("ollama/") else name
+
+
+def build_ollama_options(installed_raw: list[str], recommended: list[str]) -> list[tuple[str, str]]:
+    options: list[tuple[str, str]] = []
+    seen: set[str] = set()
+
+    for model in installed_raw:
+        full = to_ollama_full(model)
+        options.append((f"{full} (installed)", full))
+        seen.add(full)
+
+    for model in recommended:
+        full = to_ollama_full(model)
+        if full not in seen:
+            options.append((f"{full} (not installed)", full))
+            seen.add(full)
+
+    options.append(("other (specify)", "other"))
+    return options
+
+
+def option_index_for_value(options: list[tuple[str, str]], value: str, default: int = 0) -> int:
+    for idx, opt in enumerate(options):
+        if opt[1] == value:
+            return idx
+    return default
+
+
+def install_ollama_model(raw: str) -> bool:
+    """Attempt to install an Ollama model via CLI."""
+    try:
+        result = subprocess.run(["ollama", "pull", raw], check=False)
+    except FileNotFoundError:
+        fail("Ollama CLI not found in PATH")
         return False
-    except Exception as e:
-        fail(f"Ollama check failed: {e}")
-        return False
+
+    if result.returncode == 0:
+        ok(f"Installed: {raw}")
+        return True
+    fail(f"Failed to install: {raw}")
+    return False
+
+
+def validate_ollama_model(base_url: str, model: str, installed_raw: list[str], reachable: bool) -> bool:
+    if not model.startswith("ollama/") or not reachable:
+        if model.startswith("ollama/") and not reachable:
+            warn("Ollama not reachable; skipping model validation")
+        return True
+    raw = strip_ollama_prefix(model)
+    if raw in installed_raw:
+        ok(f"Ollama model installed: {model}")
+        return True
+    warn(f"Ollama model not installed: {model}")
+    info(f"Install with: ollama pull {raw}")
+    if ask_yn("Install now with `ollama pull`?", default=False):
+        if install_ollama_model(raw):
+            installed_raw.append(raw)
+            return True
+    return ask_yn("Continue anyway?", default=True)
 
 
 def check_api_key_format(provider: str, key: str) -> bool:
@@ -175,26 +263,31 @@ def main():
     print("The small model runs locally for fast query preprocessing.")
     print()
 
-    small_models = [
-        "ollama/qwen2.5:3b",
-        "ollama/phi3:latest",
-        "ollama/llama3.2:3b",
-        "ollama/gemma:2b",
-        "ollama/tinyllama:latest",
-        "other (specify)",
+    ollama_base = ask("Ollama API base URL", "http://localhost:11434")
+    config["OLLAMA_API_BASE"] = ollama_base
+    installed_raw = check_ollama(ollama_base)
+    ollama_reachable = installed_raw is not None
+    installed_raw = installed_raw or []
+
+    small_recommended = [
+        "qwen2.5:3b",
+        "phi3:latest",
+        "llama3.2:3b",
+        "gemma:2b",
+        "tinyllama:latest",
     ]
+    small_options = build_ollama_options(installed_raw, small_recommended)
+    small_default = option_index_for_value(small_options, "ollama/qwen2.5:3b", default=0)
 
-    small_choice = ask_choice("Select your small (local) model:", small_models, default=0)
-    if small_choice == "other (specify)":
-        config["PRELLM_SMALL_DEFAULT"] = ask("Enter small model (e.g., ollama/phi3:latest)")
-    else:
-        config["PRELLM_SMALL_DEFAULT"] = small_choice
+    while True:
+        small_choice = ask_choice("Select your small (local) model:", small_options, default=small_default)
+        if small_choice == "other":
+            config["PRELLM_SMALL_DEFAULT"] = ask("Enter small model (e.g., ollama/phi3:latest)")
+        else:
+            config["PRELLM_SMALL_DEFAULT"] = small_choice
 
-    # Ollama base URL + diagnostics
-    if config["PRELLM_SMALL_DEFAULT"].startswith("ollama/"):
-        ollama_base = ask("Ollama API base URL", "http://localhost:11434")
-        config["OLLAMA_API_BASE"] = ollama_base
-        check_ollama(ollama_base)
+        if validate_ollama_model(ollama_base, config["PRELLM_SMALL_DEFAULT"], installed_raw, ollama_reachable):
+            break
 
     ok(f"Small model: {config['PRELLM_SMALL_DEFAULT']}")
 
@@ -279,20 +372,34 @@ def main():
         config["PRELLM_LARGE_DEFAULT"] = f"openrouter/{model}"
 
     elif "Ollama" in provider:
-        large_models = [
+        if not config.get("OLLAMA_API_BASE"):
+            ollama_base = ask("Ollama API base URL", "http://localhost:11434")
+            config["OLLAMA_API_BASE"] = ollama_base
+            installed_raw = check_ollama(ollama_base)
+            ollama_reachable = installed_raw is not None
+            installed_raw = installed_raw or []
+
+        large_recommended = [
             "llama3:latest",
             "qwen2.5:7b",
             "qwen2.5:14b",
             "mistral:7b",
             "codellama:13b",
-            "other (specify)",
         ]
-        model_choice = ask_choice("Select large model:", large_models, default=1)
-        if model_choice == "other (specify)":
-            model = ask("Enter model name (e.g., llama3:latest)")
-        else:
-            model = model_choice
-        config["PRELLM_LARGE_DEFAULT"] = f"ollama/{model}"
+        large_options = build_ollama_options(installed_raw, large_recommended)
+        large_default = option_index_for_value(large_options, "ollama/qwen2.5:7b", default=0)
+
+        while True:
+            model_choice = ask_choice("Select large model:", large_options, default=large_default)
+            if model_choice == "other":
+                model = ask("Enter model name (e.g., llama3:latest)")
+                model_full = to_ollama_full(model)
+            else:
+                model_full = model_choice
+
+            config["PRELLM_LARGE_DEFAULT"] = model_full
+            if validate_ollama_model(ollama_base, model_full, installed_raw, ollama_reachable):
+                break
 
     else:
         config["PRELLM_LARGE_DEFAULT"] = ask(

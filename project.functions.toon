@@ -1,31 +1,37 @@
 project: prellm
-generated: "2026-02-15T21:10:09.466362"
-modules[49]{path,lang,items}:
+generated: "2026-02-16T09:58:14.930796"
+modules[55]{path,lang,items}:
   examples/embedded_refactor.py,python,1
-  examples/providers.py,python,16
-  examples/quick_start.py,python,11
-  examples/python_sdk.py,python,8
+  examples/providers.py,python,17
+  examples/quick_start.py,python,12
+  examples/python_sdk.py,python,11
   examples/polish_leasing.py,python,1
   examples/k8s_debug.py,python,1
   prellm/env_config.py,python,12
-  prellm/cli.py,python,12
+  prellm/cli.py,python,18
+  prellm/trace.py,python,14
+  prellm/model_catalog.py,python,2
+  prellm/logging_setup.py,python,3
   prellm/server.py,python,9
   prellm/__init__.py,python,0
   prellm/query_decomposer.py,python,9
   prellm/prompt_registry.py,python,11
   prellm/validators.py,python,8
   prellm/models.py,python,0
-  prellm/core.py,python,15
-  prellm/llm_provider.py,python,5
+  prellm/core.py,python,10
+  prellm/llm_provider.py,python,6
   prellm/pipeline.py,python,12
+  prellm/budget.py,python,14
   tests/test_executor_agent.py,python,9
   tests/test_preprocessor_agent.py,python,10
-  tests/test_one_function.py,python,20
-  tests/test_edge_cases.py,python,17
-  tests/test_promptguard.py,python,25
+  tests/test_one_function.py,python,16
   tests/test_server.py,python,24
+  tests/test_preprocessor_memory.py,python,8
   tests/test_decomposer.py,python,14
+  tests/test_model_catalog.py,python,10
   tests/test_env_config.py,python,21
+  tests/test_budget.py,python,15
+  tests/test_trace.py,python,16
   tests/__init__.py,python,0
   tests/test_validators.py,python,15
   tests/test_context.py,python,7
@@ -35,19 +41,19 @@ modules[49]{path,lang,items}:
   tests/test_v2_architecture.py,python,43
   tests/test_models.py,python,21
   tests/test_v3_architecture.py,python,15
-  tests/test_integration.py,python,22
+  tests/test_integration.py,python,15
+  tests/test_shipped_configs.py,python,11
   tests/test_prompt_registry.py,python,14
   tests/test_pipeline.py,python,16
-  htmlcov/coverage_html_cb_dd2e7eb5.js,javascript,6
+  scripts/config_wizard.py,python,19
   prellm/chains/__init__.py,python,0
   prellm/chains/process_chain.py,python,10
   prellm/context/user_memory.py,python,9
   prellm/context/__init__.py,python,0
   prellm/context/codebase_indexer.py,python,12
-  prellm/analyzers/bias_detector.py,python,2
   prellm/analyzers/__init__.py,python,0
   prellm/analyzers/context_engine.py,python,8
-  prellm/agents/preprocessor.py,python,4
+  prellm/agents/preprocessor.py,python,6
   prellm/agents/__init__.py,python,0
   prellm/agents/executor.py,python,3
 
@@ -56,7 +62,7 @@ function_details:
     functions[1]{name,kind,sig,loc,async,lines,cc,does}:
       main,function,(),12-58,true,47,5,main
   examples/providers.py:
-    functions[16]{name,kind,sig,loc,async,lines,cc,does}:
+    functions[17]{name,kind,sig,loc,async,lines,cc,does}:
       run_example,function,"(name:str, small_llm:str, large_llm:str)",21-43,true,23,2,Run a single provider example.
       ollama_local,function,(),50-56,true,7,1,Both models local via Ollama.
       ollama_plus_openai,function,(),59-65,true,7,1,"Local preprocessing, OpenAI execution."
@@ -70,32 +76,37 @@ function_details:
       google_gemini,function,(),133-140,true,8,1,Google Gemini models.
       together_ai,function,(),143-150,true,8,1,Together AI hosted models.
       deepseek,function,(),153-160,true,8,1,DeepSeek models.
-      mixed_providers_pipeline,function,(),163-182,true,20,2,v0.3 pipeline with mixed providers.
-      print_env_setup,function,(),189-233,false,45,1,Print required environment variables for each provider.
-      main,function,(),236-260,true,25,2,main
+      openrouter_kimi,function,(),163-170,true,8,1,OpenRouter — access many providers through one API.
+      mixed_providers_pipeline,function,(),173-192,true,20,2,Pipeline with mixed providers.
+      print_env_setup,function,(),199-246,false,48,1,Print required environment variables for each provider.
+      main,function,(),249-274,true,26,2,main
   examples/quick_start.py:
-    functions[11]{name,kind,sig,loc,async,lines,cc,does}:
-      example_zero_config,function,(),16-23,true,8,1,"Simplest possible usage — one line, default models."
-      example_strategy_based,function,(),26-41,true,16,2,"v0.2 — strategy-based preprocessing (classify, structure, split, enrich)."
-      example_pipeline_based,function,(),44-55,true,12,1,v0.3 — pipeline-based two-agent architecture.
-      example_ollama_local,function,(),58-68,true,11,1,Both models run locally via Ollama — $0.00 cost.
-      example_hybrid_ollama_openai,function,(),71-81,true,11,1,"Hybrid: local preprocessing + cloud execution."
-      example_hybrid_ollama_anthropic,function,(),84-94,true,11,1,"Hybrid: local preprocessing + Anthropic execution."
-      example_domain_rules,function,(),97-115,true,19,3,Domain rules catch missing safety-critical fields.
-      example_sync,function,(),118-127,true,10,1,"Synchronous version — for scripts, notebooks, non-async code."
-      example_custom_pipeline,function,(),130-159,true,30,1,Use PromptPipeline directly for maximum control.
-      example_openai_sdk_client,function,(),162-173,true,12,1,Use preLLM server from any OpenAI SDK client.
-      main,function,(),176-205,true,30,3,Run all examples (requires LLM providers to be configured).
+    functions[12]{name,kind,sig,loc,async,lines,cc,does}:
+      example_zero_config,function,(),17-24,true,8,1,"Simplest possible usage — one line, default models."
+      example_strategy,function,(),27-41,true,15,2,"Strategy-based preprocessing (classify, structure, split, enrich)."
+      example_pipeline,function,(),44-54,true,11,1,Named pipeline — 4-step preprocessing for maximum quality.
+      example_ollama_local,function,(),57-67,true,11,1,Both models run locally via Ollama — $0.00 cost.
+      example_hybrid_ollama_openai,function,(),70-80,true,11,1,"Hybrid: local preprocessing + cloud execution."
+      example_hybrid_ollama_anthropic,function,(),83-93,true,11,1,"Hybrid: local preprocessing + Anthropic execution."
+      example_domain_rules,function,(),96-114,true,19,3,Domain rules catch missing safety-critical fields.
+      example_with_memory,function,(),117-131,true,15,1,UserMemory enriches queries with interaction history.
+      example_with_codebase,function,(),134-142,true,9,1,CodebaseIndexer enriches queries with relevant source symbols.
+      example_sync,function,(),145-154,false,10,1,"Synchronous version — for scripts, notebooks, non-async code."
+      example_openai_sdk_client,function,(),157-163,true,7,1,Use preLLM server from any OpenAI SDK client.
+      main,function,(),166-197,true,32,4,Run all examples (requires LLM providers to be configured).
   examples/python_sdk.py:
-    functions[8]{name,kind,sig,loc,async,lines,cc,does}:
-      example_one_function,function,(),16-45,true,30,4,The simplest way to use preLLM — like litellm.completion().
-      example_domain_rules,function,(),52-75,true,24,2,Inline domain rules for safety checks.
-      example_sync,function,(),82-91,false,10,1,Synchronous wrapper — no async needed.
-      example_class_based,function,(),98-123,true,26,1,More control with the PreLLM class.
-      example_openai_sdk,function,(),130-158,true,29,2,Use preLLM as an OpenAI drop-in replacement.
-      example_batch,function,(),165-181,true,17,3,Batch multiple queries via the API.
-      example_strategies,function,(),188-211,true,24,8,Demonstrate all 5 decomposition strategies.
-      main,function,(),218-233,true,16,1,main
+    functions[11]{name,kind,sig,loc,async,lines,cc,does}:
+      example_one_function,function,(),18-47,true,30,4,The simplest way to use preLLM — like litellm.completion().
+      example_domain_rules,function,(),54-77,true,24,2,Inline domain rules for safety checks.
+      example_sync,function,(),84-93,false,10,1,Synchronous wrapper — no async needed.
+      example_pipeline,function,(),100-113,true,14,1,Use a named YAML-defined pipeline for maximum preprocessing quality.
+      example_user_memory,function,(),120-139,true,20,1,Enrich queries with interaction history from UserMemory.
+      example_codebase_context,function,(),146-157,true,12,1,Enrich queries with codebase symbols from CodebaseIndexer.
+      example_class_based,function,(),164-187,true,24,1,More control with the PreLLM class.
+      example_custom_pipeline,function,(),194-213,true,20,1,Build a pipeline from components for maximum flexibility.
+      example_openai_sdk,function,(),220-237,true,18,2,Use preLLM as an OpenAI drop-in replacement.
+      example_strategies,function,(),244-265,true,22,8,Demonstrate all 5 decomposition strategies.
+      main,function,(),272-302,true,31,4,main
   examples/polish_leasing.py:
     functions[1]{name,kind,sig,loc,async,lines,cc,does}:
       main,function,(),12-49,true,38,3,main
@@ -117,30 +128,61 @@ function_details:
       config_list,function,"(global_:bool=False, show_secrets:bool=False) -> dict[str, dict[str, str]]",366-401,false,36,10,List all config values from .env files and environment.
       check_providers_live,function,"(env:Any=None) -> dict[str, dict[str, Any]]",404-434,true,31,7,Check providers with live connectivity tests.
   prellm/cli.py:
-    functions[12]{name,kind,sig,loc,async,lines,cc,does}:
-      query,function,"(prompt:str=typer.Argument(..., help='The prompt/query to preprocess and execute'), small:str=typer.Option('ollama/qwen2.5:3b', '--small', '-s', help='Small LLM for preprocessing'), large:str=typer.Option('gpt-4o-mini', '--large', '-l', help='Large LLM for execution'), strategy:str=typer.Option('classify', '--strategy', '-S', help='Strategy: classify|structure|split|enrich|passthrough'), context:Optional[str]=typer.Option(None, '--context', '-C', help=\"User context tag (e.g. 'gdansk_embedded_python')\"), config:Optional[Path]=typer.Option(None, '--config', '-c', help='Optional YAML config file'), json_output:bool=typer.Option(False, '--json', '-j', help='Output as JSON'))",26-64,false,39,9,"Preprocess a query with small LLM, then execute with large LLM."
-      process,function,"(config:Path=typer.Argument(..., help='Path to process chain YAML'), guard_config:Path=typer.Option('rules.yaml', '--guard-config', '-g', help='Path to guard YAML config'), dry_run:bool=typer.Option(False, '--dry-run', '-d', help='Analyze steps without calling LLM'), json_output:bool=typer.Option(False, '--json', '-j', help='Output as JSON'), env:Optional[str]=typer.Option(None, '--env', '-e', help='Environment override (e.g., production)'))",68-104,false,37,6,Execute a DevOps process chain.
-      decompose,function,"(query:str=typer.Argument(..., help='The prompt/query to decompose'), config:Path=typer.Option('configs/prellm_config.yaml', '--config', '-c', help='Path to preLLM v0.2 YAML config'), strategy:str=typer.Option('classify', '--strategy', '-s', help='Decomposition strategy: classify|structure|split|enrich|passthrough'), json_output:bool=typer.Option(False, '--json', '-j', help='Output as JSON'))",108-144,false,37,7,"[v0.2] Decompose a query using small LLM without calling the large model."
-      init,function,"(output:Path=typer.Option('rules.yaml', '--output', '-o', help='Output path for config'), devops:bool=typer.Option(False, '--devops', help='Include DevOps-specific patterns'), v2:bool=typer.Option(False, '--v2', help='Generate preLLM v0.2 config instead of v0.1'))",148-216,false,69,7,Generate a starter config file (v0.1 rules.yaml or v0.2 prellm_config.yaml).
-      serve,function,"(host:str=typer.Option('0.0.0.0', '--host', '-H', help='Bind host'), port:int=typer.Option(8080, '--port', '-p', help='Bind port'), small:Optional[str]=typer.Option(None, '--small', '-s', help='Override small LLM (default: from .env)'), large:Optional[str]=typer.Option(None, '--large', '-l', help='Override large LLM (default: from .env)'), strategy:Optional[str]=typer.Option(None, '--strategy', '-S', help='Override strategy (default: from .env)'), config:Optional[Path]=typer.Option(None, '--config', '-c', help='YAML config file'), env_file:Optional[Path]=typer.Option(None, '--env-file', help='Path to .env file (default: .env)'), reload:bool=typer.Option(False, '--reload', help='Auto-reload on code changes (dev mode)'))",220-273,false,54,8,Start the OpenAI-compatible API server.
-      doctor,function,"(env_file:Optional[Path]=typer.Option(None, '--env-file', help='Path to .env file'), live:bool=typer.Option(False, '--live', help='Test live connectivity to providers'))",277-354,false,78,15,Check configuration and provider connectivity.
-      config_set_cmd,function,"(key:str=typer.Argument(..., help='Config key (e.g. openrouter-key, model, small-model, strategy)'), value:str=typer.Argument(..., help='Value to set'), global_:bool=typer.Option(False, '--global', '-g', help='Save to ~/.prellm/.env (user-wide) instead of project .env'))",370-391,false,22,1,Set a config value persistently.
-      config_get_cmd,function,"(key:str=typer.Argument(..., help='Config key (e.g. openrouter-key, model, small-model)'), raw:bool=typer.Option(False, '--raw', '-r', help='Show unmasked value'))",395-415,false,21,3,Get a config value.
-      config_list_cmd,function,"(raw:bool=typer.Option(False, '--raw', '-r', help='Show unmasked secret values'))",419-475,false,57,18,List all configured values.
-      config_show_cmd,function,(),479-512,false,34,8,Show effective configuration (resolved from all sources).
-      config_init_env,function,"(global_:bool=typer.Option(False, '--global', '-g', help='Create ~/.prellm/.env instead of project .env'), force:bool=typer.Option(False, '--force', '-f', help='Overwrite existing file'))",516-587,false,72,3,Generate a starter .env file with all available settings.
-      models,function,"(provider:Optional[str]=typer.Option(None, '--provider', '-p', help='Filter by provider (e.g. openrouter, ollama, openai)'), search:Optional[str]=typer.Option(None, '--search', '-s', help='Search model name'))",595-666,false,72,21,List popular model pairs and provider examples.
+    functions[18]{name,kind,sig,loc,async,lines,cc,does}:
+      _init_logging,function,() -> None,25-31,false,7,1,Initialize nfo logging from .env config (called once per CLI invocation).
+      query,function,"(prompt:str=typer.Argument(..., help='The prompt/query to preprocess and execute'), small:Optional[str]=typer.Option(None, '--small', '-s', help='Small LLM for preprocessing (default: from .env)'), large:Optional[str]=typer.Option(None, '--large', '-l', help='Large LLM for execution (default: from .env)'), strategy:Optional[str]=typer.Option(None, '--strategy', '-S', help='Strategy: classify|structure|split|enrich|passthrough (default: from .env)'), context:Optional[str]=typer.Option(None, '--context', '-C', help=\"User context tag (e.g. 'gdansk_embedded_python')\"), config:Optional[Path]=typer.Option(None, '--config', '-c', help='Optional YAML config file'), memory:Optional[Path]=typer.Option(None, '--memory', '-m', help='Path to UserMemory database'), codebase:Optional[Path]=typer.Option(None, '--codebase', help='Path to codebase root for context indexing'))",35-114,false,80,19,"Preprocess a query with small LLM, then execute with large LLM."
+      process,function,"(config:Path=typer.Argument(..., help='Path to process chain YAML'), guard_config:Path=typer.Option('rules.yaml', '--guard-config', '-g', help='Path to guard YAML config'), dry_run:bool=typer.Option(False, '--dry-run', '-d', help='Analyze steps without calling LLM'), json_output:bool=typer.Option(False, '--json', '-j', help='Output as JSON'), env:Optional[str]=typer.Option(None, '--env', '-e', help='Environment override (e.g., production)'))",118-154,false,37,6,Execute a DevOps process chain.
+      decompose,function,"(query:str=typer.Argument(..., help='The prompt/query to decompose'), config:Path=typer.Option('configs/prellm_config.yaml', '--config', '-c', help='Path to preLLM v0.2 YAML config'), strategy:str=typer.Option('classify', '--strategy', '-s', help='Decomposition strategy: classify|structure|split|enrich|passthrough'), json_output:bool=typer.Option(False, '--json', '-j', help='Output as JSON'))",158-194,false,37,7,"[v0.2] Decompose a query using small LLM without calling the large model."
+      init,function,"(output:Path=typer.Option('prellm_config.yaml', '--output', '-o', help='Output path for config'), devops:bool=typer.Option(False, '--devops', help='Include DevOps-specific domain rules and context sources'))",198-228,false,31,4,Generate a starter preLLM config file.
+      serve,function,"(host:str=typer.Option('0.0.0.0', '--host', '-H', help='Bind host'), port:int=typer.Option(8080, '--port', '-p', help='Bind port'), small:Optional[str]=typer.Option(None, '--small', '-s', help='Override small LLM (default: from .env)'), large:Optional[str]=typer.Option(None, '--large', '-l', help='Override large LLM (default: from .env)'), strategy:Optional[str]=typer.Option(None, '--strategy', '-S', help='Override strategy (default: from .env)'), config:Optional[Path]=typer.Option(None, '--config', '-c', help='YAML config file'), env_file:Optional[Path]=typer.Option(None, '--env-file', help='Path to .env file (default: .env)'), reload:bool=typer.Option(False, '--reload', help='Auto-reload on code changes (dev mode)'))",232-286,false,55,8,Start the OpenAI-compatible API server.
+      _doctor_check_config,function,"(env) -> list[str]",289-304,false,16,5,Format configuration summary lines.
+      _doctor_check_providers,function,"(env, live:bool=False) -> list[str]",307-325,false,19,6,Check providers and return formatted lines.
+      _doctor_check_files,function,"(env_file:Any) -> list[str]",328-346,false,19,5,Check config files and return formatted lines.
+      doctor,function,"(env_file:Optional[Path]=typer.Option(None, '--env-file', help='Path to .env file'), live:bool=typer.Option(False, '--live', help='Test live connectivity to providers'))",350-382,false,33,5,Check configuration and provider connectivity.
+      config_set_cmd,function,"(key:str=typer.Argument(..., help='Config key (e.g. openrouter-key, model, small-model, strategy)'), value:str=typer.Argument(..., help='Value to set'), global_:bool=typer.Option(False, '--global', '-g', help='Save to ~/.prellm/.env (user-wide) instead of project .env'))",398-419,false,22,1,Set a config value persistently.
+      config_get_cmd,function,"(key:str=typer.Argument(..., help='Config key (e.g. openrouter-key, model, small-model)'), raw:bool=typer.Option(False, '--raw', '-r', help='Show unmasked value'))",423-443,false,21,3,Get a config value.
+      _format_config_sections,function,"(entries:dict) -> dict[str, list[str]]",446-465,false,20,9,Group config entries into categorized sections for display.
+      config_list_cmd,function,"(raw:bool=typer.Option(False, '--raw', '-r', help='Show unmasked secret values'))",469-496,false,28,5,List all configured values.
+      config_show_cmd,function,(),500-533,false,34,8,Show effective configuration (resolved from all sources).
+      config_init_env,function,"(global_:bool=typer.Option(False, '--global', '-g', help='Create ~/.prellm/.env instead of project .env'), force:bool=typer.Option(False, '--force', '-f', help='Overwrite existing file'))",537-608,false,72,3,Generate a starter .env file with all available settings.
+      budget,function,"(reset:bool=typer.Option(False, '--reset', help=\"Reset current month's budget\"), json_output:bool=typer.Option(False, '--json', '-j', help='Output as JSON'))",616-665,false,50,7,Show LLM API spend tracking and budget status.
+      models,function,"(provider:Optional[str]=typer.Option(None, '--provider', '-p', help='Filter by provider (e.g. openrouter, ollama, openai)'), search:Optional[str]=typer.Option(None, '--search', '-s', help='Search model name'))",673-708,false,36,5,List popular model pairs and provider examples.
+  prellm/trace.py:
+    functions[14]{name,kind,sig,loc,async,lines,cc,does}:
+      get_current_trace,function,"() -> \"TraceRecorder | None\"",28-30,false,3,1,Get the active trace recorder for the current execution context.
+      set_current_trace,function,"(trace:TraceRecorder | None) -> None",33-35,false,3,1,Set the active trace recorder for the current execution context.
+      _step_icon,function,"(status:str) -> str",290-291,false,2,1,step icon
+      _safe_json,function,"(obj:Any, max_len:int=2000) -> str",294-302,false,9,3,Serialize to JSON with truncation for large values.
+      _sanitize,function,"(obj:Any, depth:int=0) -> Any",305-324,false,20,13,"Sanitize an object for JSON serialization (handle Pydantic, Path, etc.)."
+      _compact_value,function,"(val:Any, max_len:int=120) -> str",327-341,false,15,5,Compact value for terminal output.
+      TraceRecorder.start,method,"(query:str) -> None",67-72,false,6,1,Start recording a trace.
+      TraceRecorder.stop,method,() -> None,74-77,false,4,1,Stop recording.
+      TraceRecorder.step,method,"(name:str, step_type:str='action', description:str='', inputs:Any=None, outputs:Any=None, duration_ms:float=0.0, status:str='ok') -> TraceStep",79-104,false,26,4,Record a single execution step.
+      TraceRecorder.set_result,method,() -> None,106-108,false,3,1,Record the final result summary.
+      TraceRecorder.total_duration_ms,method,() -> float,111-114,false,4,3,total duration ms
+      TraceRecorder.to_markdown,method,() -> str,118-222,false,105,18,Generate full markdown trace document.
+      TraceRecorder.to_stdout,method,() -> str,224-265,false,42,12,Generate compact terminal-friendly trace output.
+      TraceRecorder.save,method,"(output_dir:Any=None) -> Path",267-284,false,18,5,Save markdown trace to .prellm/ directory.
+  prellm/model_catalog.py:
+    functions[2]{name,kind,sig,loc,async,lines,cc,does}:
+      list_model_pairs,function,"(provider:Any=None, search:Any=None) -> list[dict[str, str]]",41-58,false,18,8,Filter model pairs by provider and/or search term.
+      list_openrouter_models,function,"(provider:Any=None, search:Any=None) -> list[dict[str, str]]",61-78,false,18,8,Filter OpenRouter models by provider and/or search term.
+  prellm/logging_setup.py:
+    functions[3]{name,kind,sig,loc,async,lines,cc,does}:
+      setup_logging,function,"(level:str='INFO', markdown_file:Any=None, terminal_format:str='markdown') -> Logger",27-82,false,56,5,Initialize nfo logging for the entire preLLM project.
+      get_logger,function,"(name:str='prellm') -> Logger",85-97,false,13,2,Get or create the nfo logger.
+      _get_version,function,() -> str,100-106,false,7,2,Read preLLM version without circular imports.
   prellm/server.py:
     functions[9]{name,kind,sig,loc,async,lines,cc,does}:
-      _parse_model_pair,function,"(model_str:str) -> tuple[str, str]",179-210,false,32,10,"Parse 'prellm:qwen→claude' or 'prellm:small→large' into (small, large) model str..."
-      _build_prellm_meta,function,"(result:PreLLMResponse, strategy:str) -> PreLLMMeta",213-228,false,16,3,Build preLLM metadata from a PreLLMResponse.
-      health,function,() -> HealthResponse,236-242,true,7,1,health
-      list_models,function,(),246-254,true,9,1,List available model pairs.
-      chat_completions,function,"(req:ChatCompletionRequest)",258-328,true,71,12,OpenAI-compatible chat completions with preLLM preprocessing.
-      _stream_response,function,"(query:str, small:str, large:str, strategy:str, extras:PreLLMExtras) -> AsyncGenerator[str, None]",331-384,true,54,4,SSE streaming response with stage progress.
-      batch_process,function,"(items:list[BatchItem])",388-411,true,24,3,Process multiple queries in parallel.
-      create_app,function,"(small_model:Any=None, large_model:Any=None, strategy:Any=None, config_path:Any=None, master_key:Any=None, dotenv_path:Any=None) -> FastAPI",414-446,false,33,7,Factory function to create a configured preLLM API server.
-      AuthMiddleware.dispatch,method,"(request:Request, call_next)",138-157,true,20,5,sends
+      _parse_model_pair,function,"(model_str:str) -> tuple[str, str]",180-211,false,32,10,"Parse 'prellm:qwen→claude' or 'prellm:small→large' into (small, large) model str..."
+      _build_prellm_meta,function,"(result:PreLLMResponse, strategy:str) -> PreLLMMeta",214-229,false,16,3,Build preLLM metadata from a PreLLMResponse.
+      health,function,() -> HealthResponse,237-243,true,7,1,health
+      list_models,function,(),247-255,true,9,1,List available model pairs.
+      chat_completions,function,"(req:ChatCompletionRequest)",259-329,true,71,12,OpenAI-compatible chat completions with preLLM preprocessing.
+      _stream_response,function,"(query:str, small:str, large:str, strategy:str, extras:PreLLMExtras) -> AsyncGenerator[str, None]",332-385,true,54,4,SSE streaming response with stage progress.
+      batch_process,function,"(items:list[BatchItem])",389-412,true,24,3,Process multiple queries in parallel.
+      create_app,function,"(small_model:Any=None, large_model:Any=None, strategy:Any=None, config_path:Any=None, master_key:Any=None, dotenv_path:Any=None) -> FastAPI",415-447,false,33,7,Factory function to create a configured preLLM API server.
+      AuthMiddleware.dispatch,method,"(request:Request, call_next)",139-158,true,20,5,sends
   prellm/query_decomposer.py:
     functions[9]{name,kind,sig,loc,async,lines,cc,does}:
       QueryDecomposer.__init__,method,"(small_llm:LLMProvider, prompts:Any=None, domain_rules:Any=None)",45-53,false,9,3,creates
@@ -176,43 +218,55 @@ function_details:
       ResponseValidator._check_type,method,"(value:Any, expected_type:str, field:str) -> str | None",160-184,false,25,5,Check if a value matches the expected type string.
       ResponseValidator._check_constraints,method,"(value:Any, constraint:dict[str,Any], field:str) -> list[str]",187-213,false,27,14,Check constraints on a value.
   prellm/core.py:
-    functions[15]{name,kind,sig,loc,async,lines,cc,does}:
-      preprocess_and_execute,function,"(query:str, small_llm:str='ollama/qwen2.5:3b', large_llm:str='anthropic/claude-sonnet-4-20250514', strategy:Any='classify', user_context:Any=None, config_path:Any=None, domain_rules:Any=None, pipeline:Any=None) -> PreLLMResponse",59-161,true,103,12,One function to preprocess and execute — like litellm.completion() but with smal...
-      preprocess_and_execute_sync,function,"(query:str, small_llm:str='ollama/qwen2.5:3b', large_llm:str='anthropic/claude-sonnet-4-20250514', strategy:Any='classify', user_context:Any=None, config_path:Any=None, domain_rules:Any=None, pipeline:Any=None) -> PreLLMResponse",165-199,false,35,1,Synchronous version of preprocess_and_execute() — runs the async function in an...
-      _execute_v3_pipeline,function,"(query:str, small_llm:str, large_llm:str, pipeline:str, user_context:Any=None, prompts_path:Any=None, pipelines_path:Any=None, schemas_path:Any=None) -> PreLLMResponse",206-287,true,82,8,Two-agent execution path — PreprocessorAgent + ExecutorAgent + PromptPipeline.
-      PreLLM.__init__,method,"(config_path:Any=None, config:Any=None)",314-334,false,21,3,creates
-      PreLLM.__call__,method,"(query:str, strategy:Any=None, extra_context:Any=None) -> PreLLMResponse",336-396,true,61,6,"Full pipeline: context → decompose (small LLM) → large LLM → response."
-      PreLLM.decompose_only,method,"(query:str, strategy:Any=None, extra_context:Any=None) -> dict[str, Any]",398-426,true,29,5,Run decomposition without calling the large LLM — useful for dry-run / testing.
-      PreLLM.get_audit_log,method,"() -> list[dict[str, Any]]",428-430,false,3,2,Return audit log as list of dicts.
-      PreLLM._audit,method,"(action:str, query:str, response:PreLLMResponse) -> None",432-444,false,13,3,audit
-      PreLLM._load_config,method,"(path:Path) -> PreLLMConfig",447-487,false,41,10,Load preLLM v0.2 config from YAML file.
-      prellm.__init__,method,"(config_path:Any=None, config:Any=None)",506-528,false,23,4,creates
-      prellm.__call__,method,"(query:str, model:Any=None, extra_context:Any=None) -> GuardResponse",530-596,true,67,11,"Analyze query, enrich if needed, call LLM, validate response."
-      prellm.analyze_only,method,"(query:str) -> dict[str, Any]",598-609,false,12,2,Run analysis without calling LLM — useful for dry-run / testing.
-      prellm.get_audit_log,method,"() -> list[dict[str, Any]]",611-613,false,3,2,Return audit log as list of dicts.
-      prellm._audit,method,"(action:str, query:str, response:GuardResponse, model:str) -> None",615-623,false,9,2,audit
-      prellm._load_config,method,"(path:Path) -> GuardConfig",626-647,false,22,5,Load config from YAML file.
+    functions[10]{name,kind,sig,loc,async,lines,cc,does}:
+      preprocess_and_execute,function,"(query:str, small_llm:str='ollama/qwen2.5:3b', large_llm:str='anthropic/claude-sonnet-4-20250514', strategy:Any='classify', user_context:Any=None, config_path:Any=None, domain_rules:Any=None, pipeline:Any=None) -> PreLLMResponse",59-156,true,98,11,One function to preprocess and execute — like litellm.completion() but with smal...
+      preprocess_and_execute_sync,function,"(query:str, small_llm:str='ollama/qwen2.5:3b', large_llm:str='anthropic/claude-sonnet-4-20250514', strategy:Any='classify', user_context:Any=None, config_path:Any=None, domain_rules:Any=None, pipeline:Any=None) -> PreLLMResponse",160-194,false,35,1,Synchronous version of preprocess_and_execute() — runs the async function in an...
+      _execute_v3_pipeline,function,"(query:str, small_llm:str, large_llm:str, pipeline:str, user_context:Any=None, domain_rules:Any=None, prompts_path:Any=None, pipelines_path:Any=None) -> PreLLMResponse",202-357,true,156,29,Two-agent execution path — PreprocessorAgent + ExecutorAgent + PromptPipeline.
+      _build_decomposition_result,function,"(query:str, pipeline_name:str, prep_result:Any) -> DecompositionResult | None",360-419,false,60,16,Build a backward-compatible DecompositionResult from pipeline state.
+      PreLLM.__init__,method,"(config_path:Any=None, config:Any=None)",446-466,false,21,3,creates
+      PreLLM.__call__,method,"(query:str, strategy:Any=None, extra_context:Any=None) -> PreLLMResponse",468-528,true,61,6,"Full pipeline: context → decompose (small LLM) → large LLM → response."
+      PreLLM.decompose_only,method,"(query:str, strategy:Any=None, extra_context:Any=None) -> dict[str, Any]",530-558,true,29,5,Run decomposition without calling the large LLM — useful for dry-run / testing.
+      PreLLM.get_audit_log,method,"() -> list[dict[str, Any]]",560-562,false,3,2,Return audit log as list of dicts.
+      PreLLM._audit,method,"(action:str, query:str, response:PreLLMResponse) -> None",564-576,false,13,3,audit
+      PreLLM._load_config,method,"(path:Path) -> PreLLMConfig",579-619,false,41,10,Load preLLM v0.2 config from YAML file.
   prellm/llm_provider.py:
-    functions[5]{name,kind,sig,loc,async,lines,cc,does}:
-      LLMProvider.__init__,method,"(config:LLMProviderConfig)",26-27,false,2,1,creates
-      LLMProvider.complete,method,"(user_message:str, system_prompt:str='', response_format:Any=None) -> str",29-87,true,59,9,Send a completion request with retry/fallback.
-      LLMProvider.complete_json,method,"(user_message:str, system_prompt:str='') -> dict[str, Any]",89-106,true,18,1,Complete and parse response as JSON.
-      LLMProvider.complete_structured,method,"(user_message:str, response_model:type, system_prompt:str='', max_retries:int=2)",108-175,true,68,7,Complete and return a validated Pydantic model using instructor.
-      LLMProvider._parse_json,method,"(text:str) -> dict[str, Any]",178-210,false,33,10,Best-effort JSON extraction from LLM output.
+    functions[6]{name,kind,sig,loc,async,lines,cc,does}:
+      LLMProvider.__init__,method,"(config:LLMProviderConfig)",28-30,false,3,1,creates
+      LLMProvider._get_budget,method,(),32-37,false,6,2,Lazy-load budget tracker if configured.
+      LLMProvider.complete,method,"(user_message:str, system_prompt:str='', response_format:Any=None) -> str",40-107,true,68,13,Send a completion request with retry/fallback.
+      LLMProvider.complete_json,method,"(user_message:str, system_prompt:str='') -> dict[str, Any]",110-127,true,18,1,Complete and parse response as JSON.
+      LLMProvider.complete_structured,method,"(user_message:str, response_model:type, system_prompt:str='', max_retries:int=2)",129-196,true,68,7,Complete and return a validated Pydantic model using instructor.
+      LLMProvider._parse_json,method,"(text:str) -> dict[str, Any]",199-231,false,33,10,Best-effort JSON extraction from LLM output.
   prellm/pipeline.py:
     functions[12]{name,kind,sig,loc,async,lines,cc,does}:
-      PromptPipeline.__init__,method,"(config:PipelineConfig, registry:PromptRegistry, small_llm:LLMProvider, validators:Any=None)",87-103,false,17,2,creates
-      PromptPipeline.from_yaml,method,"(pipelines_path:Any, pipeline_name:str, registry:Any=None, small_llm:Any=None, validators:Any=None) -> PromptPipeline",106-167,false,62,6,Load a named pipeline from a YAML file.
-      PromptPipeline.execute,method,"(query:str, context:Any=None) -> PipelineResult",169-237,true,69,9,"Execute pipeline step by step, collecting intermediate results."
-      PromptPipeline._execute_llm_step,method,"(step:PipelineStep, state:dict[str,Any]) -> Any",239-261,true,23,1,Execute an LLM step — call small_llm with prompt from registry.
-      PromptPipeline._execute_algo_step,method,"(step:PipelineStep, state:dict[str,Any]) -> Any",263-271,false,9,3,Execute an algorithmic (non-LLM) step.
-      PromptPipeline._gather_inputs,method,"(step:PipelineStep, state:dict[str,Any]) -> dict[str, Any]",273-284,false,12,4,Gather input values from state for a step.
-      PromptPipeline._build_user_message,method,"(step:PipelineStep, state:dict[str,Any]) -> str",286-297,false,12,5,Build user message string from step inputs.
-      PromptPipeline._evaluate_condition,method,"(condition:str, state:dict[str,Any]) -> bool",299-310,false,12,2,Safely evaluate a condition string against state.
-      PromptPipeline.register_algo_handler,method,"(name:str, handler:Callable[Ellipsis,Any]) -> None",312-314,false,3,1,Register a custom algorithmic step handler.
-      PromptPipeline._algo_domain_rule_matcher,method,"(inputs:dict[str,Any], state:dict[str,Any], config:dict[str,Any]) -> dict[str, Any]",321-343,false,23,9,Match classification against domain rules in context.
-      PromptPipeline._algo_field_validator,method,"(inputs:dict[str,Any], state:dict[str,Any], config:dict[str,Any]) -> list[str]",346-359,false,14,5,Validate extracted fields against required fields from matched rule.
-      PromptPipeline._algo_yaml_formatter,method,"(inputs:dict[str,Any], state:dict[str,Any], config:dict[str,Any]) -> dict[str, Any]",362-377,false,16,4,Format pipeline state into structured executor input.
+      PromptPipeline.__init__,method,"(config:PipelineConfig, registry:PromptRegistry, small_llm:LLMProvider, validators:Any=None)",88-104,false,17,2,creates
+      PromptPipeline.from_yaml,method,"(pipelines_path:Any, pipeline_name:str, registry:Any=None, small_llm:Any=None, validators:Any=None) -> PromptPipeline",107-168,false,62,6,Load a named pipeline from a YAML file.
+      PromptPipeline.execute,method,"(query:str, context:Any=None) -> PipelineResult",171-239,true,69,9,"Execute pipeline step by step, collecting intermediate results."
+      PromptPipeline._execute_llm_step,method,"(step:PipelineStep, state:dict[str,Any]) -> Any",241-263,true,23,1,Execute an LLM step — call small_llm with prompt from registry.
+      PromptPipeline._execute_algo_step,method,"(step:PipelineStep, state:dict[str,Any]) -> Any",265-273,false,9,3,Execute an algorithmic (non-LLM) step.
+      PromptPipeline._gather_inputs,method,"(step:PipelineStep, state:dict[str,Any]) -> dict[str, Any]",275-286,false,12,4,Gather input values from state for a step.
+      PromptPipeline._build_user_message,method,"(step:PipelineStep, state:dict[str,Any]) -> str",288-299,false,12,5,Build user message string from step inputs.
+      PromptPipeline._evaluate_condition,method,"(condition:str, state:dict[str,Any]) -> bool",301-312,false,12,2,Safely evaluate a condition string against state.
+      PromptPipeline.register_algo_handler,method,"(name:str, handler:Callable[Ellipsis,Any]) -> None",314-316,false,3,1,Register a custom algorithmic step handler.
+      PromptPipeline._algo_domain_rule_matcher,method,"(inputs:dict[str,Any], state:dict[str,Any], config:dict[str,Any]) -> dict[str, Any]",323-345,false,23,9,Match classification against domain rules in context.
+      PromptPipeline._algo_field_validator,method,"(inputs:dict[str,Any], state:dict[str,Any], config:dict[str,Any]) -> list[str]",348-361,false,14,5,Validate extracted fields against required fields from matched rule.
+      PromptPipeline._algo_yaml_formatter,method,"(inputs:dict[str,Any], state:dict[str,Any], config:dict[str,Any]) -> dict[str, Any]",364-379,false,16,4,Format pipeline state into structured executor input.
+  prellm/budget.py:
+    functions[14]{name,kind,sig,loc,async,lines,cc,does}:
+      _current_month_key,function,() -> str,209-210,false,2,1,current month key
+      get_budget_tracker,function,"(monthly_limit:Any=None, persist_path:Any=None) -> BudgetTracker",218-230,false,13,6,Get or create the global budget tracker singleton.
+      reset_budget_tracker,function,() -> None,233-236,false,4,1,Reset the global tracker (for testing).
+      BudgetExceededError.__init__,method,"(spent:float, limit:float, model:str='')",25-32,false,8,2,creates
+      BudgetTracker._ensure_loaded,method,() -> None,61-76,false,16,5,Lazy-load persisted budget data.
+      BudgetTracker.check,method,"(model:str='') -> None",78-85,false,8,3,Check if budget allows another request.
+      BudgetTracker.record,method,"(model:str, cost:float=0.0, prompt_tokens:int=0, completion_tokens:int=0) -> None",87-107,false,21,1,Record a completed API call cost.
+      BudgetTracker.record_from_response,method,"(response:Any, model:str='') -> None",109-131,false,23,5,Extract cost from a LiteLLM response and record it.
+      BudgetTracker.total_cost,method,() -> float,134-137,false,4,1,total cost
+      BudgetTracker.remaining,method,() -> float | None,140-143,false,4,2,remaining
+      BudgetTracker.entries,method,"() -> list[UsageEntry]",146-149,false,4,1,entries
+      BudgetTracker.summary,method,"() -> dict[str, Any]",151-166,false,16,2,Return budget summary as dict.
+      BudgetTracker._persist,method,() -> None,168-199,false,32,6,Save current month's data to JSON file.
+      BudgetTracker.reset,method,() -> None,201-206,false,6,1,Reset current month's budget (for testing).
   tests/test_executor_agent.py:
     functions[9]{name,kind,sig,loc,async,lines,cc,does}:
       mock_large_llm,function,() -> LLMProvider,18-22,false,5,1,mock large llm
@@ -237,73 +291,23 @@ function_details:
       test_preprocessor_agent_confidence_extraction,function,"(agent:PreprocessorAgent)",108-111,true,4,1,PreprocessorAgent extracts confidence from classification step.
       test_preprocessor_agent_pipeline_name_override,function,"(agent:PreprocessorAgent)",115-118,true,4,1,PreprocessorAgent allows pipeline_name override.
   tests/test_one_function.py:
-    functions[20]{name,kind,sig,loc,async,lines,cc,does}:
-      _mock_litellm_response,function,"(content:str) -> MagicMock",16-20,false,5,1,mock litellm response
-      TestPreprocessAndExecute.test_zero_config,method,(),27-43,true,17,1,Just query — everything else defaults.
-      TestPreprocessAndExecute.test_custom_models,method,(),46-66,true,21,1,Specify both small and large models.
-      TestPreprocessAndExecute.test_passthrough_strategy,method,(),69-81,true,13,1,Passthrough skips small LLM entirely.
-      TestPreprocessAndExecute.test_strategy_as_enum,method,(),84-94,true,11,1,Strategy can be passed as enum.
-      TestPreprocessAndExecute.test_user_context_string,method,(),97-114,true,18,1,User context as a string tag gets injected.
-      TestPreprocessAndExecute.test_user_context_dict,method,(),117-135,true,19,1,User context as a dict gets injected.
-      TestPreprocessAndExecute.test_with_domain_rules,method,(),138-164,true,27,1,Inline domain rules get matched.
-      TestPreprocessAndExecute.test_with_config_path,method,(tmp_path),167-197,true,31,1,Load config from YAML file.
-      TestPreprocessAndExecute.test_config_path_with_model_override,method,(tmp_path),200-230,true,31,1,Config from file but override models.
-      TestPreprocessAndExecute.test_large_llm_failure,method,(),233-252,true,20,1,Large LLM failure returns fallback response.
-      TestPreprocessAndExecute.test_structure_strategy,method,(),255-280,true,26,1,Structure strategy extracts fields.
-      TestPreprocessAndExecute.test_split_strategy,method,(),283-306,true,24,1,Split strategy breaks query into sub-queries.
-      TestPreprocessAndExecute.test_returns_prellm_response,method,(),309-322,true,14,1,Result is always a PreLLMResponse.
-      TestPreprocessAndExecute.test_kwargs_forwarded,method,(),325-337,true,13,1,Extra kwargs like max_tokens are forwarded to config.
-      TestPreprocessAndExecuteSync.test_sync_wrapper_works,method,(),343-353,false,11,1,checks sync wrapper works
-      TestImportFromPackage.test_import_async,method,(),359-361,false,3,1,checks import async
-      TestImportFromPackage.test_import_sync,method,(),363-365,false,3,1,checks import sync
-      TestImportFromPackage.test_version,method,(),367-369,false,3,1,checks version
-      TestImportFromPackage.test_all_exports,method,(),371-376,false,6,1,checks all exports
-  tests/test_edge_cases.py:
-    functions[17]{name,kind,sig,loc,async,lines,cc,does}:
-      TestPolishPatterns.test_polish_deploy_production,method,(),12-16,false,5,1,checks polish deploy production
-      TestPolishPatterns.test_polish_delete_database,method,(),18-22,false,5,2,checks polish delete database
-      TestPolishPatterns.test_polish_always_bias,method,(),24-27,false,4,1,checks polish always bias
-      TestPolishPatterns.test_polish_only_bias,method,(),29-32,false,4,1,checks polish only bias
-      TestPolishPatterns.test_polish_safe_long_query,method,(),34-37,false,4,1,checks polish safe long query
-      TestMixedLanguage.test_polish_english_mix,method,(),41-44,false,4,1,checks polish english mix
-      TestMixedLanguage.test_english_with_polish_verbs,method,(),46-50,false,5,1,checks english with polish verbs
-      TestMixedLanguage.test_polish_verb_no_target,method,(),52-55,false,4,1,checks polish verb no target
-      TestBoundaryConditions.test_empty_query,method,(),59-62,false,4,1,checks empty query
-      TestBoundaryConditions.test_single_word,method,(),64-67,false,4,1,checks single word
-      TestBoundaryConditions.test_very_long_safe_query,method,(),69-73,false,5,1,checks very long safe query
-      TestBoundaryConditions.test_case_insensitive_patterns,method,(),75-78,false,4,1,checks case insensitive patterns
-      TestBoundaryConditions.test_no_false_positive_on_partial_match,method,(),80-84,false,5,1,checks no false positive on partial match
-      TestBoundaryConditions.test_multiple_patterns_detected,method,(),86-90,false,5,1,checks multiple patterns detected
-      TestBoundaryConditions.test_custom_empty_patterns,method,(),92-95,false,4,1,checks custom empty patterns
-      TestBoundaryConditions.test_default_patterns_count,method,(),97-98,false,2,1,checks default patterns count
-      TestBoundaryConditions.test_severity_levels,method,(),100-104,false,5,3,checks severity levels
-  tests/test_promptguard.py:
-    functions[25]{name,kind,sig,loc,async,lines,cc,does}:
-      TestBiasDetector.test_detects_absolute_quantifier_pl,method,(),29-33,false,5,2,checks detects absolute quantifier pl
-      TestBiasDetector.test_detects_absolute_quantifier_en,method,(),35-38,false,4,1,checks detects absolute quantifier en
-      TestBiasDetector.test_detects_production_deploy,method,(),40-44,false,5,2,checks detects production deploy
-      TestBiasDetector.test_detects_destructive_db_operation,method,(),46-50,false,5,2,checks detects destructive db operation
-      TestBiasDetector.test_detects_short_query,method,(),52-56,false,5,1,checks detects short query
-      TestBiasDetector.test_detects_devops_without_target,method,(),58-62,false,5,2,checks detects devops without target
-      TestBiasDetector.test_clean_query_passes,method,(),64-67,false,4,1,checks clean query passes
-      TestBiasDetector.test_custom_patterns,method,(),69-73,false,5,1,checks custom patterns
-      TestBiasDetector.test_no_patterns_match,method,(),75-78,false,4,1,checks no patterns match
-      TestContextEngine.test_env_context,method,(monkeypatch),84-90,false,7,1,checks env context
-      TestContextEngine.test_enrich_prompt,method,(monkeypatch),92-96,false,5,1,checks enrich prompt
-      TestContextEngine.test_extra_context_override,method,(monkeypatch),98-102,false,5,1,checks extra context override
-      TestContextEngine.test_missing_env_graceful,method,(),104-107,false,4,1,checks missing env graceful
-      TestContextEngine.test_system_context,method,(),109-114,false,6,1,checks system context
-      TestprellmCore.test_load_inline_config,method,(),120-124,false,5,1,checks load inline config
-      TestprellmCore.test_analyze_only,method,(),126-129,false,4,1,checks analyze only
-      TestprellmCore.test_analyze_only_clean,method,(),131-134,false,4,1,checks analyze only clean
-      TestprellmCore.test_call_with_mock_litellm,method,(),137-148,true,12,1,checks call with mock litellm
-      TestprellmCore.test_call_with_clarification,method,(),151-162,true,12,1,checks call with clarification
-      TestprellmCore.test_audit_log,method,(),164-166,false,3,1,checks audit log
-      TestProcessChainConfig.test_process_config_model,method,(),172-181,false,10,1,checks process config model
-      TestProcessChainConfig.test_step_dependencies,method,(),183-185,false,3,1,checks step dependencies
-      TestModels.test_guard_response_defaults,method,(),191-195,false,5,1,checks guard response defaults
-      TestModels.test_analysis_result,method,(),197-203,false,7,1,checks analysis result
-      TestModels.test_config_defaults,method,(),205-208,false,4,1,checks config defaults
+    functions[16]{name,kind,sig,loc,async,lines,cc,does}:
+      _mock_litellm_response,function,"(content:str) -> MagicMock",19-23,false,5,1,mock litellm response
+      TestPreprocessAndExecute.test_zero_config,method,(),30-39,true,10,1,Just query — everything else defaults.
+      TestPreprocessAndExecute.test_custom_models,method,(),42-55,true,14,1,Specify both small and large models.
+      TestPreprocessAndExecute.test_passthrough_strategy,method,(),58-69,true,12,1,Passthrough maps to pipeline name.
+      TestPreprocessAndExecute.test_strategy_as_enum,method,(),72-82,true,11,1,Strategy can be passed as enum.
+      TestPreprocessAndExecute.test_user_context_string,method,(),85-95,true,11,1,User context as a string tag gets injected.
+      TestPreprocessAndExecute.test_user_context_dict,method,(),98-109,true,12,1,User context as a dict gets injected.
+      TestPreprocessAndExecute.test_with_domain_rules,method,(),112-129,true,18,1,Inline domain rules get passed to pipeline.
+      TestPreprocessAndExecute.test_with_config_path,method,(tmp_path),132-155,true,24,1,Load config from YAML file.
+      TestPreprocessAndExecute.test_large_llm_failure,method,(),158-168,true,11,2,Large LLM failure returns fallback response.
+      TestPreprocessAndExecute.test_returns_prellm_response,method,(),171-184,true,14,1,Result is always a PreLLMResponse.
+      TestPreprocessAndExecuteSync.test_sync_wrapper_works,method,(),190-197,false,8,1,Sync wrapper calls async version.
+      TestImportFromPackage.test_import_async,method,(),203-205,false,3,1,checks import async
+      TestImportFromPackage.test_import_sync,method,(),207-209,false,3,1,checks import sync
+      TestImportFromPackage.test_version,method,(),211-213,false,3,1,checks version
+      TestImportFromPackage.test_all_exports,method,(),215-220,false,6,1,checks all exports
   tests/test_server.py:
     functions[24]{name,kind,sig,loc,async,lines,cc,does}:
       _mock_litellm_response,function,"(content:str) -> MagicMock",14-18,false,5,1,mock litellm response
@@ -311,25 +315,35 @@ function_details:
       TestParseModelPair.test_default,method,(),36-39,false,4,1,checks default
       TestParseModelPair.test_arrow_unicode,method,(),41-44,false,4,1,checks arrow unicode
       TestParseModelPair.test_arrow_ascii,method,(),46-49,false,4,1,checks arrow ascii
-      TestParseModelPair.test_single_model,method,(),51-53,false,3,1,checks single model
+      TestParseModelPair.test_single_model,method,(),51-53,false,3,3,checks single model
       TestParseModelPair.test_no_prefix,method,(),55-58,false,4,1,checks no prefix
       TestHealthEndpoint.test_health,method,(),62-68,false,7,1,checks health
       TestHealthEndpoint.test_models,method,(),70-76,false,7,1,checks models
-      TestChatCompletions.test_basic_completion,method,(),80-94,false,15,1,checks basic completion
-      TestChatCompletions.test_with_prellm_extras,method,(),96-111,false,16,1,checks with prellm extras
-      TestChatCompletions.test_with_yaml_response_format,method,(),113-122,false,10,1,checks with yaml response format
-      TestChatCompletions.test_prellm_meta_in_response,method,(),124-137,false,14,1,checks prellm meta in response
-      TestChatCompletions.test_passthrough_strategy,method,(),139-153,false,15,1,checks passthrough strategy
-      TestChatCompletions.test_empty_messages_error,method,(),155-161,false,7,1,checks empty messages error
-      TestChatCompletions.test_no_user_message_error,method,(),163-169,false,7,1,checks no user message error
-      TestChatCompletions.test_usage_info,method,(),171-182,false,12,1,checks usage info
-      TestChatCompletions.test_with_domain_rules,method,(),184-212,false,29,1,checks with domain rules
-      TestChatCompletions.test_max_tokens_and_temperature,method,(),214-224,false,11,1,checks max tokens and temperature
-      TestStreamingEndpoint.test_streaming_response,method,(),228-245,false,18,3,checks streaming response
-      TestStreamingEndpoint.test_streaming_with_stages,method,(),247-260,false,14,1,checks streaming with stages
-      TestBatchEndpoint.test_batch_processing,method,(),264-286,false,23,1,checks batch processing
-      TestBatchEndpoint.test_batch_empty_error,method,(),288-291,false,4,1,checks batch empty error
-      TestCreateApp.test_factory_function,method,(),295-301,false,7,1,checks factory function
+      TestChatCompletions.test_basic_completion,method,(),80-96,false,17,1,checks basic completion
+      TestChatCompletions.test_with_prellm_extras,method,(),98-115,false,18,1,checks with prellm extras
+      TestChatCompletions.test_with_yaml_response_format,method,(),117-128,false,12,1,checks with yaml response format
+      TestChatCompletions.test_prellm_meta_in_response,method,(),130-145,false,16,1,checks prellm meta in response
+      TestChatCompletions.test_passthrough_strategy,method,(),147-161,false,15,1,checks passthrough strategy
+      TestChatCompletions.test_empty_messages_error,method,(),163-169,false,7,1,checks empty messages error
+      TestChatCompletions.test_no_user_message_error,method,(),171-177,false,7,1,checks no user message error
+      TestChatCompletions.test_usage_info,method,(),179-192,false,14,1,checks usage info
+      TestChatCompletions.test_with_domain_rules,method,(),194-222,false,29,1,checks with domain rules
+      TestChatCompletions.test_max_tokens_and_temperature,method,(),224-236,false,13,1,checks max tokens and temperature
+      TestStreamingEndpoint.test_streaming_response,method,(),240-259,false,20,3,checks streaming response
+      TestStreamingEndpoint.test_streaming_with_stages,method,(),261-276,false,16,1,checks streaming with stages
+      TestBatchEndpoint.test_batch_processing,method,(),280-302,false,23,1,checks batch processing
+      TestBatchEndpoint.test_batch_empty_error,method,(),304-307,false,4,1,checks batch empty error
+      TestCreateApp.test_factory_function,method,(),311-317,false,7,1,checks factory function
+  tests/test_preprocessor_memory.py:
+    functions[8]{name,kind,sig,loc,async,lines,cc,does}:
+      tmp_prompts,function,"(tmp_path:Path) -> Path",19-29,false,11,1,tmp prompts
+      mock_small_llm,function,() -> LLMProvider,33-38,false,6,1,mock small llm
+      simple_pipeline,function,"(tmp_prompts, mock_small_llm) -> PromptPipeline",42-48,false,7,1,simple pipeline
+      test_preprocessor_with_user_memory,function,"(tmp_prompts, mock_small_llm, simple_pipeline)",52-73,true,22,1,PreprocessorAgent enriches context with UserMemory data.
+      test_preprocessor_with_codebase_indexer,function,"(tmp_path, tmp_prompts, mock_small_llm, simple_pipeline)",77-98,true,22,1,PreprocessorAgent enriches context with CodebaseIndexer data.
+      test_preprocessor_without_memory_or_indexer,function,"(tmp_prompts, mock_small_llm, simple_pipeline)",102-114,true,13,1,PreprocessorAgent works fine without UserMemory or CodebaseIndexer.
+      test_preprocessor_memory_failure_graceful,function,"(tmp_prompts, mock_small_llm, simple_pipeline)",118-134,true,17,1,PreprocessorAgent handles UserMemory failures gracefully.
+      test_preprocessor_empty_memory,function,"(tmp_prompts, mock_small_llm, simple_pipeline)",138-155,true,18,1,PreprocessorAgent handles empty UserMemory results.
   tests/test_decomposer.py:
     functions[14]{name,kind,sig,loc,async,lines,cc,does}:
       TestLLMProvider.test_complete_returns_content,method,(),25-34,true,10,1,checks complete returns content
@@ -346,9 +360,21 @@ function_details:
       TestQueryDecomposer.test_split_strategy,method,(),183-196,true,14,1,checks split strategy
       TestQueryDecomposer.test_enrich_strategy,method,(),199-217,true,19,1,checks enrich strategy
       TestQueryDecomposer.test_missing_fields_from_domain_rules,method,(),220-237,true,18,1,checks missing fields from domain rules
+  tests/test_model_catalog.py:
+    functions[10]{name,kind,sig,loc,async,lines,cc,does}:
+      test_model_catalog_all_providers,function,(),13-17,false,5,5,list_model_pairs() returns all pairs when no filter is applied.
+      test_model_catalog_filter_by_provider,function,(),20-24,false,5,4,list_model_pairs() filters by provider name.
+      test_model_catalog_filter_by_provider_case_insensitive,function,(),27-31,false,5,1,Provider filter is case-insensitive.
+      test_model_catalog_search,function,(),34-38,false,5,2,list_model_pairs() filters by search term.
+      test_model_catalog_search_no_match,function,(),41-44,false,4,1,list_model_pairs() returns empty list for non-matching search.
+      test_model_catalog_combined_filter,function,(),47-51,false,5,2,list_model_pairs() applies both provider and search filters.
+      test_openrouter_models_all,function,(),54-58,false,5,3,list_openrouter_models() returns all models when no filter.
+      test_openrouter_models_search,function,(),61-65,false,5,2,list_openrouter_models() filters by search term.
+      test_openrouter_models_provider_filter,function,(),68-71,false,4,1,list_openrouter_models() filters by provider.
+      test_model_pairs_data_integrity,function,(),74-82,false,9,6,All MODEL_PAIRS entries have 4 elements.
   tests/test_env_config.py:
     functions[21]{name,kind,sig,loc,async,lines,cc,does}:
-      _mock_resp,function,"(content:str) -> MagicMock",310-314,false,5,1,mock resp
+      _mock_resp,function,"(content:str) -> MagicMock",311-315,false,5,1,mock resp
       TestEnvConfigDefaults.test_default_config,method,(),20-29,false,10,1,checks default config
       TestEnvConfigDefaults.test_provider_key_map_has_all_providers,method,(),31-37,false,7,1,checks provider key map has all providers
       TestLoadDotenv.test_load_env_file,method,(tmp_path),41-65,false,25,3,checks load env file
@@ -358,17 +384,52 @@ function_details:
       TestGetEnvConfig.test_reads_from_env,method,(),101-125,false,25,1,checks reads from env
       TestGetEnvConfig.test_reads_from_dotenv_file,method,(tmp_path),127-143,false,17,3,checks reads from dotenv file
       TestGetEnvConfig.test_litellm_compat_env_vars,method,(),145-157,false,13,1,LiteLLM env vars (OPENAI_API_KEY etc.) are detected in providers.
-      TestGetEnvConfig.test_small_model_fallback_to_old_env,method,(),159-166,false,8,1,SMALL_MODEL env var (old name) still works.
-      TestGetEnvConfig.test_empty_master_key_is_none,method,(),168-171,false,4,1,checks empty master key is none
-      TestGetEnvConfig.test_ollama_base_url,method,(),173-176,false,4,1,checks ollama base url
-      TestCheckProviders.test_check_with_keys,method,(),180-191,false,12,1,checks check with keys
-      TestCheckProviders.test_check_without_keys,method,(),193-202,false,10,2,checks check without keys
-      TestAuthMiddleware.test_no_auth_when_no_master_key,method,(),208-226,false,19,1,checks no auth when no master key
-      TestAuthMiddleware.test_auth_required_when_master_key_set,method,(),228-245,false,18,1,checks auth required when master key set
-      TestAuthMiddleware.test_auth_with_bearer_token,method,(),247-267,false,21,1,checks auth with bearer token
-      TestAuthMiddleware.test_auth_with_x_api_key,method,(),269-288,false,20,1,checks auth with x api key
-      TestAuthMiddleware.test_wrong_key_rejected,method,(),290-302,false,13,1,checks wrong key rejected
-      TestAuthMiddleware.teardown_method,method,(),304-307,false,4,1,Reset master key after each test.
+      TestGetEnvConfig.test_small_model_fallback_to_old_env,method,(),159-167,false,9,1,SMALL_MODEL env var (old name) still works.
+      TestGetEnvConfig.test_empty_master_key_is_none,method,(),169-172,false,4,1,checks empty master key is none
+      TestGetEnvConfig.test_ollama_base_url,method,(),174-177,false,4,1,checks ollama base url
+      TestCheckProviders.test_check_with_keys,method,(),181-192,false,12,1,checks check with keys
+      TestCheckProviders.test_check_without_keys,method,(),194-203,false,10,2,checks check without keys
+      TestAuthMiddleware.test_no_auth_when_no_master_key,method,(),209-227,false,19,1,checks no auth when no master key
+      TestAuthMiddleware.test_auth_required_when_master_key_set,method,(),229-246,false,18,1,checks auth required when master key set
+      TestAuthMiddleware.test_auth_with_bearer_token,method,(),248-268,false,21,1,checks auth with bearer token
+      TestAuthMiddleware.test_auth_with_x_api_key,method,(),270-289,false,20,1,checks auth with x api key
+      TestAuthMiddleware.test_wrong_key_rejected,method,(),291-303,false,13,1,checks wrong key rejected
+      TestAuthMiddleware.teardown_method,method,(),305-308,false,4,1,Reset master key after each test.
+  tests/test_budget.py:
+    functions[15]{name,kind,sig,loc,async,lines,cc,does}:
+      TestBudgetTracker.test_no_limit,method,(),21-24,false,4,1,checks no limit
+      TestBudgetTracker.test_record_cost,method,"(tmp_path:Path)",26-34,false,9,1,checks record cost
+      TestBudgetTracker.test_multiple_records,method,"(tmp_path:Path)",36-47,false,12,1,checks multiple records
+      TestBudgetTracker.test_budget_exceeded,method,"(tmp_path:Path)",49-59,false,11,1,checks budget exceeded
+      TestBudgetTracker.test_persist_and_reload,method,"(tmp_path:Path)",61-72,false,12,1,checks persist and reload
+      TestBudgetTracker.test_summary,method,"(tmp_path:Path)",74-89,false,16,1,checks summary
+      TestBudgetTracker.test_reset,method,"(tmp_path:Path)",91-101,false,11,1,checks reset
+      TestBudgetTracker.test_record_from_response,method,"(tmp_path:Path)",103-119,false,17,1,checks record from response
+      TestBudgetTracker.test_no_persist_path_error,method,"(tmp_path:Path)",121-129,false,9,1,Tracker should handle persist errors gracefully.
+      TestBudgetExceededError.test_message,method,(),133-137,false,5,1,checks message
+      TestBudgetExceededError.test_no_model,method,(),139-141,false,3,1,checks no model
+      TestSingleton.setup_method,method,(),145-146,false,2,1,initializes method
+      TestSingleton.teardown_method,method,(),148-149,false,2,1,teardown method
+      TestSingleton.test_get_creates_singleton,method,(),151-154,false,4,1,checks get creates singleton
+      TestSingleton.test_update_limit,method,(),156-161,false,6,1,checks update limit
+  tests/test_trace.py:
+    functions[16]{name,kind,sig,loc,async,lines,cc,does}:
+      TestTraceStep.test_defaults,method,(),15-22,false,8,1,checks defaults
+      TestTraceRecorder.test_start_stop,method,(),26-34,false,9,1,checks start stop
+      TestTraceRecorder.test_step_recording,method,(),36-49,false,14,1,checks step recording
+      TestTraceRecorder.test_set_result,method,(),51-58,false,8,1,checks set result
+      TestTraceRecorder.test_to_markdown,method,(),60-101,false,42,1,checks to markdown
+      TestTraceRecorder.test_to_stdout,method,(),103-119,false,17,1,checks to stdout
+      TestTraceRecorder.test_save_creates_file,method,"(tmp_path:Path)",121-134,false,14,1,checks save creates file
+      TestTraceRecorder.test_save_custom_dir,method,"(tmp_path:Path)",136-145,false,10,1,checks save custom dir
+      TestTraceRecorder.test_empty_trace,method,(),147-157,false,11,1,checks empty trace
+      TestContextVar.test_set_and_get,method,(),161-167,false,7,1,checks set and get
+      TestContextVar.test_start_sets_context,method,(),169-174,false,6,1,checks start sets context
+      TestMarkdownEdgeCases.test_long_content_truncated,method,(),178-187,false,10,2,checks long content truncated
+      TestMarkdownEdgeCases.test_pydantic_model_in_outputs,method,(),189-198,false,10,1,Outputs with Pydantic-like objects should be serialized.
+      TestMarkdownEdgeCases.test_result_content_preview,method,(),200-209,false,10,1,checks result content preview
+      TestMarkdownEdgeCases.test_error_step_in_markdown,method,(),211-219,false,9,1,checks error step in markdown
+      TestMarkdownEdgeCases.test_skipped_step_in_markdown,method,(),221-228,false,8,1,checks skipped step in markdown
   tests/test_validators.py:
     functions[15]{name,kind,sig,loc,async,lines,cc,does}:
       sample_schemas_yaml,function,"(tmp_path:Path) -> Path",14-45,false,32,1,sample schemas yaml
@@ -514,29 +575,35 @@ function_details:
       test_preprocessor_tracks_pipeline_steps,function,"(tmp_configs, mock_small_llm)",348-367,true,20,2,PreprocessorAgent decomposition tracks which steps executed (for cost attributio...
       test_executor_tracks_model_used,function,(mock_large_llm),371-375,true,5,1,ExecutorAgent records which model was used (for cost attribution).
   tests/test_integration.py:
-    functions[22]{name,kind,sig,loc,async,lines,cc,does}:
+    functions[15]{name,kind,sig,loc,async,lines,cc,does}:
       TestYAMLConfigLoading._write_yaml,method,"(data:dict) -> str",28-32,false,5,1,logs yaml
       TestYAMLConfigLoading.test_load_minimal_config,method,(),34-39,false,6,1,checks load minimal config
-      TestYAMLConfigLoading.test_load_full_config,method,(),41-57,false,17,1,checks load full config
-      TestYAMLConfigLoading.test_load_empty_config,method,(),59-63,false,5,1,checks load empty config
-      TestYAMLConfigLoading.test_configs_rules_yaml,method,(),65-71,false,7,2,Test that the shipped configs/rules.yaml loads correctly.
-      TestAnalyzeOnly.test_production_deploy_detected,method,(),77-80,false,4,1,checks production deploy detected
-      TestAnalyzeOnly.test_db_delete_detected,method,(),82-85,false,4,1,checks db delete detected
-      TestAnalyzeOnly.test_safe_query_passes,method,(),87-92,false,6,1,checks safe query passes
-      TestAnalyzeOnly.test_short_devops_query_flagged,method,(),94-97,false,4,1,checks short devops query flagged
-      TestAnalyzeOnly.test_scale_operation_detected,method,(),99-102,false,4,1,checks scale operation detected
-      TestAnalyzeOnly.test_config_change_detected,method,(),104-107,false,4,1,checks config change detected
-      TestAnalyzeOnly.test_polish_migration_detected,method,(),109-112,false,4,1,checks polish migration detected
-      TestProcessChainDryRun._make_chain,method,"(steps:list[ProcessStep]) -> ProcessChain",118-121,false,4,1,creates chain
-      TestProcessChainDryRun.test_simple_chain_dry_run,method,(),124-132,true,9,2,checks simple chain dry run
-      TestProcessChainDryRun.test_chain_with_manual_approval_pauses,method,(),135-145,true,11,1,checks chain with manual approval pauses
-      TestProcessChainDryRun.test_chain_with_approval_callback,method,(),148-165,true,18,1,checks chain with approval callback
-      TestProcessChainDryRun.test_chain_dependency_failure,method,(),168-174,true,7,1,checks chain dependency failure
-      TestProcessChainDryRun.test_chain_context_injection,method,(monkeypatch),177-187,true,11,1,checks chain context injection
-      TestProcessChainDryRun.test_chain_extra_context,method,(),190-195,true,6,1,checks chain extra context
-      TestProcessChainDryRun.test_chain_timing,method,(),198-205,true,8,1,checks chain timing
-      TestProcessChainDryRun.test_chain_audit_trail,method,(),208-222,true,15,1,checks chain audit trail
-      TestDeployConfig.test_deploy_yaml_loads,method,(),228-239,false,12,2,checks deploy yaml loads
+      TestYAMLConfigLoading.test_load_full_config,method,(),41-53,false,13,1,checks load full config
+      TestYAMLConfigLoading.test_load_empty_config,method,(),55-59,false,5,1,checks load empty config
+      TestYAMLConfigLoading.test_configs_prellm_config_yaml,method,(),61-67,false,7,2,Test that the shipped configs/prellm_config.yaml loads correctly.
+      TestProcessChainDryRun._make_chain,method,"(steps:list[ProcessStep]) -> ProcessChain",73-76,false,4,1,creates chain
+      TestProcessChainDryRun.test_simple_chain_dry_run,method,(),79-87,true,9,2,checks simple chain dry run
+      TestProcessChainDryRun.test_chain_with_manual_approval_pauses,method,(),90-100,true,11,1,checks chain with manual approval pauses
+      TestProcessChainDryRun.test_chain_with_approval_callback,method,(),103-120,true,18,1,checks chain with approval callback
+      TestProcessChainDryRun.test_chain_dependency_failure,method,(),123-129,true,7,1,checks chain dependency failure
+      TestProcessChainDryRun.test_chain_context_injection,method,(monkeypatch),132-142,true,11,1,checks chain context injection
+      TestProcessChainDryRun.test_chain_extra_context,method,(),145-150,true,6,1,checks chain extra context
+      TestProcessChainDryRun.test_chain_timing,method,(),153-160,true,8,1,checks chain timing
+      TestProcessChainDryRun.test_chain_audit_trail,method,(),163-177,true,15,1,checks chain audit trail
+      TestDeployConfig.test_deploy_yaml_loads,method,(),183-192,false,10,2,checks deploy yaml loads
+  tests/test_shipped_configs.py:
+    functions[11]{name,kind,sig,loc,async,lines,cc,does}:
+      test_shipped_prompts_yaml_loads,function,(),27-39,false,13,2,configs/prompts.yaml loads without error and contains required prompts.
+      test_shipped_pipelines_yaml_loads,function,(),42-52,false,11,3,configs/pipelines.yaml loads without error and contains required pipelines.
+      test_shipped_schemas_yaml_loads,function,(),55-63,false,9,1,configs/response_schemas.yaml loads without error and contains required schemas.
+      test_all_pipeline_prompts_exist_in_registry,function,(),70-86,false,17,5,Every prompt referenced in pipelines.yaml exists in prompts.yaml.
+      test_prompt_registry_loads_shipped_prompts,function,(),93-98,false,6,1,PromptRegistry loads shipped prompts.yaml and validates all required prompts.
+      test_prompt_registry_renders_shipped_prompts,function,(),101-106,false,6,2,All shipped prompts render without error (using defaults).
+      test_response_validator_loads_shipped_schemas,function,(),109-116,false,8,1,ResponseValidator loads shipped response_schemas.yaml.
+      test_response_validator_validates_classification,function,(),119-127,false,9,1,ResponseValidator correctly validates a classification result.
+      test_response_validator_rejects_invalid_classification,function,(),130-135,false,6,2,ResponseValidator rejects classification with missing required fields.
+      test_domain_configs_exist,function,(),142-147,false,6,1,Domain config files exist in configs/domains/.
+      test_domain_configs_load,function,(),150-159,false,10,3,All domain config YAML files load without error.
   tests/test_prompt_registry.py:
     functions[14]{name,kind,sig,loc,async,lines,cc,does}:
       sample_prompts_yaml,function,"(tmp_path:Path) -> Path",15-53,false,39,1,Create a temporary prompts.yaml for testing.
@@ -571,26 +638,39 @@ function_details:
       test_pipeline_missing_prompt_error,function,"(mock_llm:LLMProvider)",304-313,true,10,2,Pipeline with a prompt not in registry fails gracefully.
       test_pipeline_custom_validator,function,"(registry:PromptRegistry, mock_llm:LLMProvider)",317-333,true,17,1,Pipeline supports custom algorithmic step handlers.
       test_pipeline_empty_passthrough,function,"(registry:PromptRegistry, mock_llm:LLMProvider)",337-345,true,9,1,Empty pipeline (passthrough) returns state with just query and context.
-  htmlcov/coverage_html_cb_dd2e7eb5.js:
-    functions[6]{name,kind,sig,loc,async,lines,cc,does}:
-      debounce,function,"(callback, wait)",11-19,false,9,1,debounce
-      checkVisible,function,(element),21-26,false,6,1,checks visible
-      on_click,function,"(sel, fn)",28-33,false,6,1,handles click
-      getCellValue,function,(row),36-48,false,13,1,retrieves cell value
-      rowComparator,function,"(rowA, rowB)",50-57,false,8,1,row comparator
-      sortColumn,function,(th),59-110,false,52,1,sorts column
+  scripts/config_wizard.py:
+    functions[19]{name,kind,sig,loc,async,lines,cc,does}:
+      ok,function,"(msg:str) -> None",24-25,false,2,1,ok
+      warn,function,"(msg:str) -> None",28-29,false,2,1,warn
+      fail,function,"(msg:str) -> None",32-33,false,2,1,fail
+      info,function,"(msg:str) -> None",36-37,false,2,1,info
+      ask,function,"(question:str, default:str='', required:bool=False) -> str",40-55,false,16,6,Ask user for input with optional default.
+      ask_yn,function,"(question:str, default:bool=False) -> bool",58-64,false,7,3,Ask yes/no question.
+      ask_choice,function,"(question:str, options:list, default:int=0) -> str",67-98,false,32,9,Ask user to choose from options.
+      check_ollama,function,"(base_url:str) -> list[str] | None",105-118,false,14,3,Check if Ollama is reachable and list available models.
+      fetch_ollama_models,function,"(base_url:str) -> list[str] | None",121-133,false,13,5,Return list of installed Ollama models (raw names) or None if unreachable.
+      to_ollama_full,function,"(name:str) -> str",136-137,false,2,2,converts ollama full
+      strip_ollama_prefix,function,"(name:str) -> str",140-141,false,2,2,strip ollama prefix
+      build_ollama_options,function,"(installed_raw:list[str], recommended:list[str]) -> list[tuple[str, str]]",144-160,false,17,4,creates ollama options
+      option_index_for_value,function,"(options:list[tuple[str,str]], value:str, default:int=0) -> int",163-167,false,5,3,option index for value
+      install_ollama_model,function,"(raw:str) -> bool",170-182,false,13,3,Attempt to install an Ollama model via CLI.
+      validate_ollama_model,function,"(base_url:str, model:str, installed_raw:list[str], reachable:bool) -> bool",185-200,false,16,8,validates ollama model
+      check_api_key_format,function,"(provider:str, key:str) -> bool",203-220,false,18,3,Validate API key format.
+      check_port_available,function,"(host:str, port:int) -> bool",223-236,false,14,4,Check if port is available for the server.
+      mask_key,function,"(key:str) -> str",239-243,false,5,2,Mask API key for display.
+      main,function,(),250-632,false,383,30,main
   prellm/chains/process_chain.py:
     functions[10]{name,kind,sig,loc,async,lines,cc,does}:
-      ProcessChain.__init__,method,"(config_path:Any=None, config:Any=None, guard_config_path:Any=None, guard:Any=None, engine:Any=None)",56-80,false,25,5,creates
-      ProcessChain.execute,method,"(extra_context:Any=None, approval_callback:Any=None, dry_run:bool=False) -> ProcessResult",82-136,true,55,6,Execute the full process chain.
-      ProcessChain._execute_step,method,"(step:ProcessStep, ctx:dict[str,str], approval_callback:Any, dry_run:bool) -> StepResult",138-175,true,38,5,Execute a single step in the chain.
-      ProcessChain._check_dependencies,method,"(step:ProcessStep) -> str | None",177-183,false,7,4,Check that all step dependencies are completed.
-      ProcessChain._handle_approval,method,"(step_result:StepResult, step:ProcessStep, enriched_prompt:str, approval_callback:Any) -> bool",185-211,true,27,4,Handle manual approval gate.
-      ProcessChain._run_dry_run,method,"(step_result:StepResult, step:ProcessStep, enriched_prompt:str, step_start:float) -> None",213-225,true,13,3,"Dry-run: analyze without calling LLM."
-      ProcessChain._run_engine,method,"(step_result:StepResult, step:ProcessStep, enriched_prompt:str, ctx:dict[str,str]) -> None",227-255,true,29,7,"Execute step through v0.3 pipeline, v0.2 engine, or v0.1 guard."
-      ProcessChain.get_audit_log,method,"() -> list[dict[str, Any]]",257-258,false,2,2,retrieves audit log
-      ProcessChain._audit_step,method,"(step_name:str, prompt:str, response:str) -> None",260-268,false,9,2,audit step
-      ProcessChain._load_process_config,method,"(path:Path) -> ProcessConfig",271-284,false,14,3,retrieves process config
+      ProcessChain.__init__,method,"(config_path:Any=None, config:Any=None, guard_config_path:Any=None, guard:Any=None, engine:Any=None)",47-71,false,25,5,creates
+      ProcessChain.execute,method,"(extra_context:Any=None, approval_callback:Any=None, dry_run:bool=False) -> ProcessResult",73-127,true,55,6,Execute the full process chain.
+      ProcessChain._execute_step,method,"(step:ProcessStep, ctx:dict[str,str], approval_callback:Any, dry_run:bool) -> StepResult",129-166,true,38,5,Execute a single step in the chain.
+      ProcessChain._check_dependencies,method,"(step:ProcessStep) -> str | None",168-174,false,7,4,Check that all step dependencies are completed.
+      ProcessChain._handle_approval,method,"(step_result:StepResult, step:ProcessStep, enriched_prompt:str, approval_callback:Any) -> bool",176-202,true,27,4,Handle manual approval gate.
+      ProcessChain._run_dry_run,method,"(step_result:StepResult, step:ProcessStep, enriched_prompt:str, step_start:float) -> None",204-216,true,13,3,"Dry-run: analyze without calling LLM."
+      ProcessChain._run_engine,method,"(step_result:StepResult, step:ProcessStep, enriched_prompt:str, ctx:dict[str,str]) -> None",218-246,true,29,7,"Execute step through v0.3 pipeline, v0.2 engine, or v0.1 guard."
+      ProcessChain.get_audit_log,method,"() -> list[dict[str, Any]]",248-249,false,2,2,retrieves audit log
+      ProcessChain._audit_step,method,"(step_name:str, prompt:str, response:str) -> None",251-259,false,9,2,audit step
+      ProcessChain._load_process_config,method,"(path:Path) -> ProcessConfig",262-275,false,14,3,retrieves process config
   prellm/context/user_memory.py:
     functions[9]{name,kind,sig,loc,async,lines,cc,does}:
       UserMemory.__init__,method,"(backend:str='sqlite', path:Any=_DEFAULT_DB_PATH)",41-52,false,12,3,creates
@@ -616,10 +696,6 @@ function_details:
       CodebaseIndexer._extract_imports,method,"(content:str, language:str) -> list[str]",307-321,false,15,7,Extract import statements.
       CodebaseIndexer.search,method,"(index:CodebaseIndex, query:str, limit:int=20) -> list[CodeSymbol]",323-341,false,19,6,Search the index for symbols matching a query string.
       CodebaseIndexer.get_context_for_query,method,"(index:CodebaseIndex, query:str, max_symbols:int=10) -> str",343-357,false,15,3,Build a context string from the index for a given query.
-  prellm/analyzers/bias_detector.py:
-    functions[2]{name,kind,sig,loc,async,lines,cc,does}:
-      BiasDetector.__init__,method,"(patterns:Any=None)",38-49,false,12,4,creates
-      BiasDetector.analyze,method,"(query:str) -> AnalysisResult",51-96,false,46,11,Analyze a query for bias patterns and ambiguity.
   prellm/analyzers/context_engine.py:
     functions[8]{name,kind,sig,loc,async,lines,cc,does}:
       ContextEngine.__init__,method,"(context_sources:Any=None)",16-17,false,2,2,creates
@@ -631,13 +707,15 @@ function_details:
       ContextEngine._gather_git_subprocess,method,"(fields:list[str]) -> dict[str, str]",95-115,false,21,5,"Fallback: gather git info using subprocess calls."
       ContextEngine._gather_system,method,"(fields:list[str]) -> dict[str, str]",118-131,false,14,3,gather system
   prellm/agents/preprocessor.py:
-    functions[4]{name,kind,sig,loc,async,lines,cc,does}:
-      PreprocessorAgent.__init__,method,"(small_llm:LLMProvider, registry:PromptRegistry, pipeline:PromptPipeline, context_engine:Any=None)",50-60,false,11,2,creates
-      PreprocessorAgent.preprocess,method,"(query:str, user_context:Any=None, pipeline_name:Any=None) -> PreprocessResult",62-98,true,37,3,Preprocess a query and return structured input for the Executor.
-      PreprocessorAgent._extract_executor_input,method,"(query:str, pipeline_result:PipelineResult) -> str",101-115,false,15,5,Extract the best executor input from pipeline state.
-      PreprocessorAgent._extract_confidence,method,"(pipeline_result:PipelineResult) -> float",118-123,false,6,2,Extract confidence score from classification step if available.
+    functions[6]{name,kind,sig,loc,async,lines,cc,does}:
+      _get_user_memory_class,function,(),31-36,false,6,2,retrieves user memory class
+      _get_codebase_indexer_class,function,(),38-43,false,6,2,retrieves codebase indexer class
+      PreprocessorAgent.__init__,method,"(small_llm:LLMProvider, registry:PromptRegistry, pipeline:PromptPipeline, context_engine:Any=None, user_memory:Any=None, codebase_indexer:Any=None, codebase_path:Any=None)",69-93,false,25,5,creates
+      PreprocessorAgent.preprocess,method,"(query:str, user_context:Any=None, pipeline_name:Any=None) -> PreprocessResult",96-154,true,59,13,Preprocess a query and return structured input for the Executor.
+      PreprocessorAgent._extract_executor_input,method,"(query:str, pipeline_result:PipelineResult) -> str",157-171,false,15,5,Extract the best executor input from pipeline state.
+      PreprocessorAgent._extract_confidence,method,"(pipeline_result:PipelineResult) -> float",174-179,false,6,2,Extract confidence score from classification step if available.
   prellm/agents/executor.py:
     functions[3]{name,kind,sig,loc,async,lines,cc,does}:
-      ExecutorAgent.__init__,method,"(large_llm:LLMProvider, response_validator:Any=None, response_schema_name:Any=None)",46-54,false,9,1,creates
-      ExecutorAgent.execute,method,"(executor_input:str, system_prompt:str='') -> ExecutorResult",56-100,true,45,6,Execute the task with the large LLM.
-      ExecutorAgent._validate_response,method,"(content:str) -> ValidationResult | None",102-118,false,17,5,Validate response content against the configured schema.
+      ExecutorAgent.__init__,method,"(large_llm:LLMProvider, response_validator:Any=None, response_schema_name:Any=None)",47-55,false,9,1,creates
+      ExecutorAgent.execute,method,"(executor_input:str, system_prompt:str='') -> ExecutorResult",58-102,true,45,6,Execute the task with the large LLM.
+      ExecutorAgent._validate_response,method,"(content:str) -> ValidationResult | None",104-120,false,17,5,Validate response content against the configured schema.
