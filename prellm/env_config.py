@@ -23,6 +23,13 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+try:
+    from getv import EnvStore
+    from getv.security import mask_value as _getv_mask, is_sensitive_key as _getv_is_sensitive
+    _HAS_GETV = True
+except ImportError:
+    _HAS_GETV = False
+
 logger = logging.getLogger("prellm.env_config")
 
 # LiteLLM-compatible provider env vars
@@ -247,7 +254,14 @@ def _resolve_config_path(global_: bool = False) -> Path:
 
 
 def _read_env_file(path: Path) -> dict[str, str]:
-    """Read .env file into ordered dict, preserving comments and order."""
+    """Read .env file into ordered dict, preserving comments and order.
+
+    Delegates to getv.EnvStore when available.
+    """
+    if _HAS_GETV:
+        if not path.is_file():
+            return {}
+        return EnvStore(path, auto_create=False).as_dict()
     entries: dict[str, str] = {}
     if not path.is_file():
         return entries
@@ -265,10 +279,16 @@ def _read_env_file(path: Path) -> dict[str, str]:
 
 
 def _write_env_file(path: Path, entries: dict[str, str], comments: list[str] | None = None) -> None:
-    """Write entries to .env file, preserving existing comments and adding new entries."""
-    path.parent.mkdir(parents=True, exist_ok=True)
+    """Write entries to .env file, preserving existing comments.
 
-    # Read existing file to preserve comments and order
+    Delegates to getv.EnvStore when available.
+    """
+    if _HAS_GETV:
+        store = EnvStore(path)
+        store.update(entries)
+        store.save()
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
     existing_lines: list[str] = []
     existing_keys: set[str] = set()
     if path.is_file():
@@ -284,12 +304,9 @@ def _write_env_file(path: Path, entries: dict[str, str], comments: list[str] | N
                         existing_keys.add(key)
                         continue
                 existing_lines.append(raw)
-
-    # Append new entries not yet in file
     for key, value in entries.items():
         if key not in existing_keys:
             existing_lines.append(f"{key}={value}")
-
     with open(path, "w") as f:
         if comments:
             for c in comments:
@@ -317,7 +334,14 @@ def resolve_alias(key: str) -> str:
 
 
 def mask_value(key: str, value: str) -> str:
-    """Mask secret values for display."""
+    """Mask secret values for display.
+
+    Delegates to getv.security when available.
+    """
+    if _HAS_GETV:
+        if _getv_is_sensitive(key):
+            return _getv_mask(value, visible_chars=4)
+        return value
     if key in _SECRET_KEYS and len(value) > 8:
         return value[:4] + "..." + value[-4:]
     return value
