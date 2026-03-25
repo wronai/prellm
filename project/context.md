@@ -73,15 +73,15 @@
 - **Classes**: 5
 - **File**: `prompt_registry.py`
 
-### prellm.budget
-- **Functions**: 11
-- **Classes**: 3
-- **File**: `budget.py`
-
 ### prellm.context.sensitive_filter
 - **Functions**: 11
 - **Classes**: 1
 - **File**: `sensitive_filter.py`
+
+### prellm.budget
+- **Functions**: 11
+- **Classes**: 3
+- **File**: `budget.py`
 
 ### prellm.query_decomposer
 - **Functions**: 10
@@ -173,10 +173,6 @@ Example:
  
 - **Calls**: app.command, typer.Option, typer.Option, typer.Option, typer.Option, typer.Option, typer.Option, typer.Option
 
-### prellm.server.chat_completions
-> OpenAI-compatible chat completions with preLLM preprocessing.
-- **Calls**: app.post, reversed, prellm.server._parse_model_pair, prellm.server._build_prellm_meta, ChatCompletionResponse, HTTPException, HTTPException, PreLLMExtras
-
 ### prellm.pipeline.PromptPipeline.from_yaml
 > Load a named pipeline from a YAML file.
 
@@ -184,6 +180,10 @@ Args:
     pipelines_path: Path to pipelines.yaml (or None for default).
     pipeline_name: Name of the pipeli
 - **Calls**: raw.get, pipe_data.get, PipelineConfig, cls, Path, open, sorted, KeyError
+
+### prellm.server.chat_completions
+> OpenAI-compatible chat completions with preLLM preprocessing.
+- **Calls**: app.post, reversed, prellm.server._parse_model_pair, prellm.server._build_prellm_meta, ChatCompletionResponse, HTTPException, HTTPException, PreLLMExtras
 
 ### prellm.context.sensitive_filter.SensitiveDataFilter._filter_recursive
 > Recursively filter a data structure.
@@ -244,10 +244,10 @@ Args:
 > Load custom sensitive rules from YAML.
 - **Calls**: None.get, None.get, None.get, raw.get, open, self._sensitive_key_patterns.append, self._masked_patterns.append, self._safe_keys.add
 
-### examples.k8s_debug.main
+### examples.embedded_refactor.main
 - **Calls**: print, print, print, print, print, print, print, print
 
-### examples.embedded_refactor.main
+### examples.k8s_debug.main
 - **Calls**: print, print, print, print, print, print, print, print
 
 ### examples.polish_leasing.main
@@ -495,16 +495,6 @@ Key functions that process and transform data:
 > Validate that all prompts have non-empty templates. Returns list of error messages.
 - **Output to**: self._ensure_loaded, set, self._entries.items, self._entries.keys, errors.append
 
-### prellm.server._parse_model_pair
-> Parse 'prellm:qwen→claude' or 'prellm:small→large' into (small, large) model strings.
-
-Special cases
-- **Output to**: model_str.split, None.lower, pair.split, len, pair.split
-
-### prellm.server.batch_process
-> Process multiple queries in parallel.
-- **Output to**: app.post, HTTPException, asyncio.gather, list, prellm.core.preprocess_and_execute
-
 ### prellm.core.preprocess_and_execute
 > One function to preprocess and execute — like litellm.completion() but with small LLM decomposition.
 - **Output to**: logger.info, prellm.trace.get_current_trace, PreLLM._load_config, trace.step, prellm.core._execute_v3_pipeline
@@ -524,6 +514,10 @@ Usage:
 > Best-effort JSON extraction from LLM output.
 - **Output to**: text.strip, logger.warning, json.loads, text.split, text.find
 
+### prellm.pipeline.PromptPipeline._algo_yaml_formatter
+> Format pipeline state into structured executor input.
+- **Output to**: inputs.get, state.get, state.get, isinstance, str
+
 ### prellm.validators.ResponseValidator.validate
 > Validate a dict against a named schema.
 
@@ -539,9 +533,18 @@ Args:
   
 - **Output to**: self.validate, logger.info, retry_fn, self.validate
 
-### prellm.pipeline.PromptPipeline._algo_yaml_formatter
-> Format pipeline state into structured executor input.
-- **Output to**: inputs.get, state.get, state.get, isinstance, str
+### prellm.server._parse_model_pair
+> Parse 'prellm:qwen→claude' or 'prellm:small→large' into (small, large) model strings.
+
+Special cases
+- **Output to**: model_str.split, None.lower, pair.split, len, pair.split
+
+### prellm.server.batch_process
+> Process multiple queries in parallel.
+- **Output to**: app.post, HTTPException, asyncio.gather, list, prellm.core.preprocess_and_execute
+
+### prellm.chains.process_chain.ProcessChain._load_process_config
+- **Output to**: raw.get, ProcessConfig, open, steps.append, yaml.safe_load
 
 ### scripts.config_wizard.validate_ollama_model
 - **Output to**: scripts.config_wizard.strip_ollama_prefix, scripts.config_wizard.warn, scripts.config_wizard.info, scripts.config_wizard.ask_yn, scripts.config_wizard.ask_yn
@@ -549,9 +552,6 @@ Args:
 ### scripts.config_wizard.check_api_key_format
 > Validate API key format.
 - **Output to**: patterns.get, re.match, scripts.config_wizard.ok, scripts.config_wizard.warn
-
-### prellm.chains.process_chain.ProcessChain._load_process_config
-- **Output to**: raw.get, ProcessConfig, open, steps.append, yaml.safe_load
 
 ### prellm.context.shell_collector.ShellContextCollector.collect_process_info
 > Collect current process information.
@@ -561,6 +561,17 @@ Args:
 > Get or create a tree-sitter parser for the given language.
 - **Output to**: __import__, tree_sitter.Language, tree_sitter.Parser, lang_module.language, logger.debug
 
+### prellm.agents.preprocessor.PreprocessorAgent.preprocess
+> Preprocess a query and return structured input for the Executor.
+
+Args:
+    query: The raw user quer
+- **Output to**: self.context_engine.gather, self._extract_executor_input, self._extract_confidence, PreprocessResult, self.pipeline.execute
+
+### prellm.agents.executor.ExecutorAgent._validate_response
+> Validate response content against the configured schema.
+- **Output to**: self.response_validator.validate, json.loads, isinstance, self.response_validator.validate
+
 ### prellm.analyzers.context_engine.ContextEngine._gather_process
 > PID, CWD, user, parent PID, TTY.
 - **Output to**: os.getpid, os.getcwd, os.environ.get, hasattr, os.ttyname
@@ -568,17 +579,6 @@ Args:
 ### prellm.analyzers.context_engine.ContextEngine._gather_git_subprocess
 > Fallback: gather git info using subprocess calls.
 - **Output to**: git_commands.get, subprocess.run, out.stdout.strip
-
-### prellm.agents.executor.ExecutorAgent._validate_response
-> Validate response content against the configured schema.
-- **Output to**: self.response_validator.validate, json.loads, isinstance, self.response_validator.validate
-
-### prellm.agents.preprocessor.PreprocessorAgent.preprocess
-> Preprocess a query and return structured input for the Executor.
-
-Args:
-    query: The raw user quer
-- **Output to**: self.context_engine.gather, self._extract_executor_input, self._extract_confidence, PreprocessResult, self.pipeline.execute
 
 ## Behavioral Patterns
 
@@ -602,8 +602,8 @@ Functions exposed as public API (no underscore prefix):
 - `prellm.cli.budget` - 26 calls
 - `prellm.cli.config_show_cmd` - 25 calls
 - `prellm.cli.serve` - 22 calls
-- `prellm.server.chat_completions` - 22 calls
 - `prellm.pipeline.PromptPipeline.from_yaml` - 22 calls
+- `prellm.server.chat_completions` - 22 calls
 - `prellm.context.codebase_indexer.CodebaseIndexer.get_compressed_context` - 21 calls
 - `prellm.cli.process` - 20 calls
 - `prellm.cli.doctor` - 18 calls
@@ -614,21 +614,21 @@ Functions exposed as public API (no underscore prefix):
 - `prellm.env_config.config_list` - 17 calls
 - `prellm.query_decomposer.QueryDecomposer.decompose` - 17 calls
 - `prellm.context.folder_compressor.FolderCompressor.to_toon` - 17 calls
-- `examples.k8s_debug.main` - 16 calls
 - `examples.embedded_refactor.main` - 16 calls
+- `examples.k8s_debug.main` - 16 calls
 - `examples.polish_leasing.main` - 15 calls
 - `examples.python_sdk.example_custom_pipeline` - 15 calls
 - `prellm.cli.session_import_cmd` - 14 calls
 - `prellm.pipeline.PromptPipeline.execute` - 14 calls
 - `prellm.context.folder_compressor.FolderCompressor.to_dependency_graph` - 14 calls
+- `prellm.context.user_memory.UserMemory.get_recent_context` - 14 calls
 - `prellm.context.codebase_indexer.CodebaseIndexer.index_directory` - 14 calls
 - `prellm.analyzers.context_engine.ContextEngine.gather_runtime` - 14 calls
-- `prellm.context.user_memory.UserMemory.get_recent_context` - 14 calls
 - `prellm.cli.config_list_cmd` - 13 calls
 - `prellm.env_config.check_providers_live` - 13 calls
 - `prellm.validators.ResponseValidator.validate` - 13 calls
-- `scripts.config_wizard.ask_choice` - 13 calls
 - `prellm.chains.process_chain.ProcessChain.execute` - 13 calls
+- `scripts.config_wizard.ask_choice` - 13 calls
 - `prellm.agents.preprocessor.PreprocessorAgent.preprocess` - 13 calls
 - `examples.python_sdk.example_one_function` - 12 calls
 

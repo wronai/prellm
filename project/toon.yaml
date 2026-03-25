@@ -18,15 +18,15 @@ REFACTOR[2]:
   2. break 1 circular dependencies
 
 PIPELINES[226]:
-  [1] Src [example_zero_config]: example_zero_config → preprocess_and_execute → get_current_trace
+  [1] Src [ollama_local]: ollama_local → run_example → preprocess_and_execute → get_current_trace
       PURITY: 100% pure
-  [2] Src [example_strategy]: example_strategy → preprocess_and_execute → get_current_trace
+  [2] Src [ollama_plus_openai]: ollama_plus_openai → run_example → preprocess_and_execute → get_current_trace
       PURITY: 100% pure
-  [3] Src [example_pipeline]: example_pipeline → preprocess_and_execute → get_current_trace
+  [3] Src [ollama_plus_anthropic]: ollama_plus_anthropic → run_example → preprocess_and_execute → get_current_trace
       PURITY: 100% pure
-  [4] Src [example_ollama_local]: example_ollama_local → preprocess_and_execute → get_current_trace
+  [4] Src [openai_only]: openai_only → run_example → preprocess_and_execute → get_current_trace
       PURITY: 100% pure
-  [5] Src [example_hybrid_ollama_openai]: example_hybrid_ollama_openai → preprocess_and_execute → get_current_trace
+  [5] Src [anthropic_only]: anthropic_only → run_example → preprocess_and_execute → get_current_trace
       PURITY: 100% pure
 
 LAYERS:
