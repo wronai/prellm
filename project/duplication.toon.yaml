@@ -6,7 +6,7 @@ SUMMARY:
   dup_groups:    4
   dup_fragments: 21
   saved_lines:   126
-  scan_ms:       4077
+  scan_ms:       3414
 
 DUPLICATES[4] (ranked by impact):
   [d80472b893ab7a2d] ! STRU  ollama_local  L=7 N=13 saved=84 sim=1.00
@@ -32,8 +32,8 @@ DUPLICATES[4] (ranked by impact):
       prellm/agents/preprocessor.py:31-36  (_get_user_memory_class)
       prellm/agents/preprocessor.py:38-43  (_get_codebase_indexer_class)
   [0b82a5c0bc599006]   EXAC  _ensure_loaded  L=3 N=2 saved=3 sim=1.00
-      prellm/validators.py:51-53  (_ensure_loaded)
       prellm/prompt_registry.py:60-62  (_ensure_loaded)
+      prellm/validators.py:51-53  (_ensure_loaded)
 
 REFACTOR[4] (ranked by priority):
   [1] ○ extract_function   → examples/utils/ollama_local.py

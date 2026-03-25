@@ -33,7 +33,7 @@ flowchart TD
     prellm_cli -->|1| prellm_core
     prellm_cli -->|1| prellm_server
     prellm_cli -->|1| prellm_models
+    prellm_server -->|1| prellm_env_config
     prellm_core -->|1| prellm_pipeline
     prellm_llm_provider -->|1| prellm_budget
-    prellm_server -->|1| prellm_env_config
     prellm_chains -->|1| prellm_core
