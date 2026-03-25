@@ -187,35 +187,59 @@ class SensitiveDataFilter:
         """Return report of what was blocked/masked in the last filter_dict call."""
         return self._report
 
+    def _filter_dict_item(self, key: Any, value: Any) -> tuple[bool, Any]:
+        """Filter a single dictionary item. Returns (should_include, filtered_value)."""
+        str_key = str(key)
+        
+        # Only apply key-based classification to env-var-style keys (ALL_CAPS)
+        if self._looks_like_env_var(str_key):
+            return self._filter_env_var_item(key, value, str_key)
+        else:
+            return self._filter_non_env_var_item(key, value)
+    
+    def _filter_env_var_item(self, key: Any, value: Any, str_key: str) -> tuple[bool, Any]:
+        """Filter environment variable style item."""
+        key_level = self.classify_key(str_key)
+        
+        # Block entirely if key is blocked
+        if key_level == SensitivityLevel.BLOCKED:
+            return False, None
+        
+        # Check if value should be blocked
+        val_str = str(value) if not isinstance(value, (dict, list)) else ""
+        if val_str and self.classify_value(val_str) == SensitivityLevel.BLOCKED:
+            return False, None
+        
+        # Mask if key is masked
+        if key_level == SensitivityLevel.MASKED:
+            if isinstance(value, str):
+                return True, self._mask_value(value)
+            else:
+                return True, self._filter_recursive(value)
+        
+        # Keep as-is
+        return True, self._filter_recursive(value)
+    
+    def _filter_non_env_var_item(self, key: Any, value: Any) -> tuple[bool, Any]:
+        """Filter non-environment variable style item."""
+        # For non-env-var keys, sanitize value rather than dropping key
+        val_str = str(value) if not isinstance(value, (dict, list)) else ""
+        if val_str and self.classify_value(val_str) == SensitivityLevel.BLOCKED:
+            if isinstance(value, str):
+                return True, self.sanitize_text(value)
+            else:
+                return False, None
+        
+        return True, self._filter_recursive(value)
+    
     def _filter_recursive(self, data: Any) -> Any:
         """Recursively filter a data structure."""
         if isinstance(data, dict):
             result = {}
             for key, value in data.items():
-                str_key = str(key)
-                # Only apply key-based classification to env-var-style keys (ALL_CAPS)
-                if self._looks_like_env_var(str_key):
-                    key_level = self.classify_key(str_key)
-                    if key_level == SensitivityLevel.BLOCKED:
-                        continue
-                    val_str = str(value) if not isinstance(value, (dict, list)) else ""
-                    if val_str and self.classify_value(val_str) == SensitivityLevel.BLOCKED:
-                        continue
-                    if key_level == SensitivityLevel.MASKED:
-                        if isinstance(value, str):
-                            result[key] = self._mask_value(value)
-                        else:
-                            result[key] = self._filter_recursive(value)
-                        continue
-                else:
-                    # For non-env-var keys, sanitize value rather than dropping key
-                    val_str = str(value) if not isinstance(value, (dict, list)) else ""
-                    if val_str and self.classify_value(val_str) == SensitivityLevel.BLOCKED:
-                        if isinstance(value, str):
-                            result[key] = self.sanitize_text(value)
-                            continue
-                        continue
-                result[key] = self._filter_recursive(value)
+                should_include, filtered_value = self._filter_dict_item(key, value)
+                if should_include:
+                    result[key] = filtered_value
             return result
         elif isinstance(data, list):
             return [self._filter_recursive(item) for item in data]

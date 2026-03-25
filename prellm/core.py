@@ -343,6 +343,113 @@ async def _execute_v3_pipeline(
     return response
 
 
+def _collect_user_context(user_context: str | dict[str, str] | None) -> dict[str, Any]:
+    """Process and normalize user context."""
+    extra_context: dict[str, Any] = {}
+    if isinstance(user_context, str) and user_context:
+        extra_context["user_context"] = user_context
+    elif isinstance(user_context, dict):
+        extra_context.update(user_context)
+    return extra_context
+
+
+def _collect_environment_context(collect_env: bool) -> tuple[Any, dict[str, Any]]:
+    """Collect shell and runtime context if requested."""
+    extra_context: dict[str, Any] = {}
+    shell_ctx = None
+    
+    if collect_env:
+        try:
+            from prellm.context.shell_collector import ShellContextCollector
+            shell_ctx = ShellContextCollector().collect_all()
+            extra_context["shell_context"] = shell_ctx.model_dump_json()
+        except Exception as e:
+            logger.warning(f"Shell context collection failed: {e}")
+        
+        # Also collect RuntimeContext
+        try:
+            runtime_ctx = ContextEngine().gather_runtime()
+            extra_context["runtime_context"] = runtime_ctx.model_dump()
+        except Exception as e:
+            logger.warning(f"RuntimeContext collection failed: {e}")
+    
+    return shell_ctx, extra_context
+
+
+def _compress_codebase_folder(compress_folder: bool, codebase_path: str | Path | None) -> tuple[Any, dict[str, Any]]:
+    """Compress codebase folder if requested."""
+    extra_context: dict[str, Any] = {}
+    compressed = None
+    
+    if compress_folder and codebase_path:
+        try:
+            from prellm.context.folder_compressor import FolderCompressor
+            compressed = FolderCompressor().compress(codebase_path)
+            extra_context["folder_compressed"] = compressed.toon_output
+        except Exception as e:
+            logger.warning(f"Folder compression failed: {e}")
+    
+    return compressed, extra_context
+
+
+def _generate_context_schema(collect_env: bool, compress_folder: bool, shell_ctx: Any, compressed: Any) -> dict[str, Any]:
+    """Generate context schema if environment collection or compression is enabled."""
+    extra_context: dict[str, Any] = {}
+    
+    if collect_env or compress_folder:
+        try:
+            from prellm.context.schema_generator import ContextSchemaGenerator
+            env_schema = ContextSchemaGenerator().generate(
+                shell_context=shell_ctx,
+                folder_compressed=compressed,
+            )
+            extra_context["context_schema"] = env_schema.model_dump_json()
+        except Exception as e:
+            logger.warning(f"Context schema generation failed: {e}")
+    
+    return extra_context
+
+
+def _build_sensitive_filter(sanitize: bool, sensitive_rules: str | Path | None, extra_context: dict[str, Any]) -> Any:
+    """Build and apply sensitive data filter if sanitization is enabled."""
+    sensitive_filter = None
+    
+    if sanitize:
+        try:
+            from prellm.context.sensitive_filter import SensitiveDataFilter
+            sensitive_filter = SensitiveDataFilter(
+                rules_path=sensitive_rules if sensitive_rules else None,
+            )
+            filtered = sensitive_filter.filter_context_for_large_llm(extra_context)
+            extra_context.clear()
+            extra_context.update(filtered)
+        except Exception as e:
+            logger.warning(f"Sensitive filtering failed: {e}")
+    
+    return sensitive_filter
+
+
+def _initialize_context_components(memory_path: str | Path | None, codebase_path: str | Path | None) -> tuple[Any, Any]:
+    """Initialize optional context enrichment components."""
+    user_memory = None
+    if memory_path:
+        try:
+            from prellm.context.user_memory import UserMemory
+            user_memory = UserMemory(path=memory_path)
+        except Exception as e:
+            logger.warning(f"Failed to initialize UserMemory: {e}")
+    
+    codebase_indexer = None
+    if codebase_path:
+        try:
+            from prellm.context.codebase_indexer import CodebaseIndexer
+            codebase_indexer = CodebaseIndexer()
+        except Exception as e:
+            logger.warning(f"Failed to initialize CodebaseIndexer: {e}")
+    
+    return user_memory, codebase_indexer
+
+
 def _prepare_context(
     user_context: str | dict[str, str] | None,
     domain_rules: list[dict[str, Any]] | None,
@@ -357,84 +464,31 @@ def _prepare_context(
 
     Returns (extra_context, sensitive_filter, user_memory, codebase_indexer).
     """
-    extra_context: dict[str, Any] = {}
-    if isinstance(user_context, str) and user_context:
-        extra_context["user_context"] = user_context
-    elif isinstance(user_context, dict):
-        extra_context.update(user_context)
-
+    # Collect and normalize user context
+    extra_context = _collect_user_context(user_context)
+    
+    # Add domain rules if provided
     if domain_rules:
         extra_context["domain_rules"] = domain_rules
-
-    # Collect shell context + runtime context
-    shell_ctx = None
-    if collect_env:
-        try:
-            from prellm.context.shell_collector import ShellContextCollector
-            shell_ctx = ShellContextCollector().collect_all()
-            extra_context["shell_context"] = shell_ctx.model_dump_json()
-        except Exception as e:
-            logger.warning(f"Shell context collection failed: {e}")
-
-        # Also collect RuntimeContext
-        try:
-            runtime_ctx = ContextEngine().gather_runtime()
-            extra_context["runtime_context"] = runtime_ctx.model_dump()
-        except Exception as e:
-            logger.warning(f"RuntimeContext collection failed: {e}")
-
-    # Compress folder
-    compressed = None
-    if compress_folder and codebase_path:
-        try:
-            from prellm.context.folder_compressor import FolderCompressor
-            compressed = FolderCompressor().compress(codebase_path)
-            extra_context["folder_compressed"] = compressed.toon_output
-        except Exception as e:
-            logger.warning(f"Folder compression failed: {e}")
-
+    
+    # Collect environment context
+    shell_ctx, env_context = _collect_environment_context(collect_env)
+    extra_context.update(env_context)
+    
+    # Compress codebase folder
+    compressed, compress_context = _compress_codebase_folder(compress_folder, codebase_path)
+    extra_context.update(compress_context)
+    
     # Generate context schema
-    if collect_env or compress_folder:
-        try:
-            from prellm.context.schema_generator import ContextSchemaGenerator
-            env_schema = ContextSchemaGenerator().generate(
-                shell_context=shell_ctx,
-                folder_compressed=compressed,
-            )
-            extra_context["context_schema"] = env_schema.model_dump_json()
-        except Exception as e:
-            logger.warning(f"Context schema generation failed: {e}")
-
-    # Build sensitive filter
-    sensitive_filter = None
-    if sanitize:
-        try:
-            from prellm.context.sensitive_filter import SensitiveDataFilter
-            sensitive_filter = SensitiveDataFilter(
-                rules_path=sensitive_rules if sensitive_rules else None,
-            )
-            filtered = sensitive_filter.filter_context_for_large_llm(extra_context)
-            extra_context = filtered
-        except Exception as e:
-            logger.warning(f"Sensitive filtering failed: {e}")
-
-    # Build optional context enrichment
-    user_memory = None
-    if memory_path:
-        try:
-            from prellm.context.user_memory import UserMemory
-            user_memory = UserMemory(path=memory_path)
-        except Exception as e:
-            logger.warning(f"Failed to initialize UserMemory: {e}")
-
-    codebase_indexer = None
-    if codebase_path:
-        try:
-            from prellm.context.codebase_indexer import CodebaseIndexer
-            codebase_indexer = CodebaseIndexer()
-        except Exception as e:
-            logger.warning(f"Failed to initialize CodebaseIndexer: {e}")
-
+    schema_context = _generate_context_schema(collect_env, compress_folder, shell_ctx, compressed)
+    extra_context.update(schema_context)
+    
+    # Build and apply sensitive filter
+    sensitive_filter = _build_sensitive_filter(sanitize, sensitive_rules, extra_context)
+    
+    # Initialize optional components
+    user_memory, codebase_indexer = _initialize_context_components(memory_path, codebase_path)
+    
     return extra_context, sensitive_filter, user_memory, codebase_indexer
 
 
@@ -473,6 +527,96 @@ async def _run_preprocessing(
     return prep_result, duration_ms
 
 
+def _format_classification_context(prep_result: Any) -> list[str]:
+    """Extract and format classification context from preprocessing result."""
+    parts: list[str] = []
+    
+    if not prep_result.decomposition:
+        return parts
+    
+    state = prep_result.decomposition.state
+    classification = state.get("classification")
+    
+    if isinstance(classification, dict):
+        intent = classification.get("intent", "unknown")
+        confidence = classification.get("confidence", 0)
+        domain = classification.get("domain", "general")
+        parts.append(
+            f"User intent: {intent} (confidence: {confidence}, domain: {domain})"
+        )
+    
+    matched_rule = state.get("matched_rule")
+    if isinstance(matched_rule, dict) and matched_rule.get("name"):
+        parts.append(f"Matched domain rule: {matched_rule['name']}")
+        if matched_rule.get("required_fields"):
+            parts.append(f"Required fields: {', '.join(matched_rule['required_fields'])}")
+    
+    return parts
+
+
+def _format_context_schema(extra_context: dict[str, Any]) -> list[str]:
+    """Extract and format context schema information."""
+    parts: list[str] = []
+    
+    ctx_schema = extra_context.get("context_schema")
+    if not ctx_schema:
+        return parts
+    
+    try:
+        import json
+        schema_data = json.loads(ctx_schema) if isinstance(ctx_schema, str) else ctx_schema
+        
+        tools = schema_data.get("available_tools", [])
+        if tools:
+            parts.append(f"Available tools on user's system: {', '.join(tools[:15])}")
+        
+        platform = schema_data.get("platform")
+        if platform:
+            parts.append(f"Platform: {platform}")
+        
+        locale = schema_data.get("locale")
+        if locale:
+            parts.append(f"Locale: {locale}")
+    except Exception:
+        pass
+    
+    return parts
+
+
+def _format_runtime_context(extra_context: dict[str, Any]) -> list[str]:
+    """Extract and format runtime context information."""
+    parts: list[str] = []
+    
+    runtime = extra_context.get("runtime_context")
+    if not isinstance(runtime, dict):
+        return parts
+    
+    sys_info = runtime.get("system", {})
+    proc_info = runtime.get("process", {})
+    
+    if sys_info.get("os"):
+        parts.append(f"OS: {sys_info['os']} {sys_info.get('arch', '')}")
+    
+    if sys_info.get("python"):
+        parts.append(f"Python: {sys_info['python']}")
+    
+    if proc_info.get("cwd"):
+        parts.append(f"Working directory: {proc_info['cwd']}")
+    
+    return parts
+
+
+def _format_user_context(extra_context: dict[str, Any]) -> list[str]:
+    """Extract and format user context information."""
+    parts: list[str] = []
+    
+    user_ctx = extra_context.get("user_context")
+    if user_ctx:
+        parts.append(f"User context: {user_ctx}")
+    
+    return parts
+
+
 def _build_executor_system_prompt(
     prep_result: Any,
     extra_context: dict[str, Any],
@@ -482,64 +626,22 @@ def _build_executor_system_prompt(
     Injects classification, context schema, and runtime info so the large LLM
     understands the user's intent and environment.
     """
+    # Collect all context sections
+    sections = [
+        _format_classification_context(prep_result),
+        _format_context_schema(extra_context),
+        _format_runtime_context(extra_context),
+        _format_user_context(extra_context),
+    ]
+    
+    # Flatten all parts
     parts: list[str] = []
-
-    # 1. Classification context
-    if prep_result.decomposition:
-        state = prep_result.decomposition.state
-        classification = state.get("classification")
-        if isinstance(classification, dict):
-            intent = classification.get("intent", "unknown")
-            confidence = classification.get("confidence", 0)
-            domain = classification.get("domain", "general")
-            parts.append(
-                f"User intent: {intent} (confidence: {confidence}, domain: {domain})"
-            )
-
-        matched_rule = state.get("matched_rule")
-        if isinstance(matched_rule, dict) and matched_rule.get("name"):
-            parts.append(f"Matched domain rule: {matched_rule['name']}")
-            if matched_rule.get("required_fields"):
-                parts.append(f"Required fields: {', '.join(matched_rule['required_fields'])}")
-
-    # 2. Available tools from context schema
-    ctx_schema = extra_context.get("context_schema")
-    if ctx_schema:
-        try:
-            import json
-            schema_data = json.loads(ctx_schema) if isinstance(ctx_schema, str) else ctx_schema
-            tools = schema_data.get("available_tools", [])
-            if tools:
-                parts.append(f"Available tools on user's system: {', '.join(tools[:15])}")
-            platform = schema_data.get("platform")
-            if platform:
-                parts.append(f"Platform: {platform}")
-            locale = schema_data.get("locale")
-            if locale:
-                parts.append(f"Locale: {locale}")
-        except Exception:
-            pass
-
-    # 3. Runtime context summary
-    runtime = extra_context.get("runtime_context")
-    if isinstance(runtime, dict):
-        sys_info = runtime.get("system", {})
-        proc_info = runtime.get("process", {})
-        if sys_info.get("os"):
-            parts.append(f"OS: {sys_info['os']} {sys_info.get('arch', '')}")
-        if sys_info.get("python"):
-            parts.append(f"Python: {sys_info['python']}")
-        if proc_info.get("cwd"):
-            parts.append(f"Working directory: {proc_info['cwd']}")
-
-    # 4. User preferences / history
-    user_ctx = extra_context.get("user_context")
-    if user_ctx:
-        parts.append(f"User context: {user_ctx}")
-
+    for section in sections:
+        parts.extend(section)
+    
     if not parts:
         return ""
-
+    
     return "Context from preprocessing:\n" + "\n".join(f"- {p}" for p in parts)
 
 
@@ -631,14 +733,78 @@ def _record_trace(
     )
 
 
+def _extract_classification_from_state(state: dict) -> Any:
+    """Extract classification result from pipeline state."""
+    from prellm.models import ClassificationResult
+    
+    classification = state.get("classification")
+    if isinstance(classification, dict):
+        return ClassificationResult(
+            intent=classification.get("intent", "unknown"),
+            confidence=float(classification.get("confidence", 0.0)),
+            domain=classification.get("domain", "general"),
+        )
+    return None
+
+
+def _extract_structure_from_state(state: dict) -> Any:
+    """Extract structure result from pipeline state."""
+    from prellm.models import StructureResult
+    
+    fields = state.get("fields")
+    if isinstance(fields, dict):
+        return StructureResult(
+            action=fields.get("action", ""),
+            target=fields.get("target", ""),
+            parameters=fields.get("parameters", {}),
+        )
+    return None
+
+
+def _extract_sub_queries_from_state(state: dict) -> list[str]:
+    """Extract sub-queries from pipeline state."""
+    sub_queries = state.get("sub_queries")
+    
+    if isinstance(sub_queries, dict) and "sub_queries" in sub_queries:
+        return [str(q) for q in sub_queries["sub_queries"]]
+    elif isinstance(sub_queries, list):
+        return [str(q) for q in sub_queries]
+    
+    return []
+
+
+def _extract_missing_fields_from_state(state: dict) -> list[str]:
+    """Extract missing fields from pipeline state."""
+    missing_fields = state.get("missing_fields")
+    if isinstance(missing_fields, list):
+        return missing_fields
+    return []
+
+
+def _extract_matched_rule_from_state(state: dict, current_missing_fields: list[str]) -> tuple[str | None, list[str]]:
+    """Extract matched rule and missing fields from pipeline state."""
+    matched_rule = state.get("matched_rule")
+    
+    if isinstance(matched_rule, dict) and "name" in matched_rule:
+        rule_name = matched_rule["name"]
+        
+        # Also extract missing fields from rule matching if not already present
+        if not current_missing_fields and matched_rule.get("required_fields"):
+            missing_fields = matched_rule["required_fields"]
+        else:
+            missing_fields = current_missing_fields
+        
+        return rule_name, missing_fields
+    
+    return None, current_missing_fields
+
+
 def _build_decomposition_result(
     query: str,
     pipeline_name: str,
     prep_result: Any,
 ) -> DecompositionResult | None:
     """Build a backward-compatible DecompositionResult from pipeline state."""
-    from prellm.models import ClassificationResult, StructureResult
-
     if not prep_result.decomposition:
         return None
 
@@ -652,43 +818,16 @@ def _build_decomposition_result(
         composed_prompt=prep_result.executor_input,
     )
 
-    # Extract classification from pipeline state
-    classification = state.get("classification")
-    if isinstance(classification, dict):
-        result.classification = ClassificationResult(
-            intent=classification.get("intent", "unknown"),
-            confidence=float(classification.get("confidence", 0.0)),
-            domain=classification.get("domain", "general"),
-        )
-
-    # Extract structure from pipeline state
-    fields = state.get("fields")
-    if isinstance(fields, dict):
-        result.structure = StructureResult(
-            action=fields.get("action", ""),
-            target=fields.get("target", ""),
-            parameters=fields.get("parameters", {}),
-        )
-
-    # Extract sub_queries from pipeline state
-    sub_queries = state.get("sub_queries")
-    if isinstance(sub_queries, dict) and "sub_queries" in sub_queries:
-        result.sub_queries = [str(q) for q in sub_queries["sub_queries"]]
-    elif isinstance(sub_queries, list):
-        result.sub_queries = [str(q) for q in sub_queries]
-
-    # Extract missing_fields from pipeline state
-    missing_fields = state.get("missing_fields")
-    if isinstance(missing_fields, list):
-        result.missing_fields = missing_fields
-
-    # Extract matched_rule from pipeline state
-    matched_rule = state.get("matched_rule")
-    if isinstance(matched_rule, dict) and "name" in matched_rule:
-        result.matched_rule = matched_rule["name"]
-        # Also extract missing fields from rule matching
-        if not result.missing_fields and matched_rule.get("required_fields"):
-            result.missing_fields = matched_rule["required_fields"]
+    # Extract all components from state
+    result.classification = _extract_classification_from_state(state)
+    result.structure = _extract_structure_from_state(state)
+    result.sub_queries = _extract_sub_queries_from_state(state)
+    result.missing_fields = _extract_missing_fields_from_state(state)
+    
+    # Extract matched rule and update missing fields
+    matched_rule, missing_fields = _extract_matched_rule_from_state(state, result.missing_fields)
+    result.matched_rule = matched_rule
+    result.missing_fields = missing_fields
 
     return result
 

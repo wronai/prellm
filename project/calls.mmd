@@ -1,127 +1,153 @@
 flowchart LR
     subgraph examples_providers
-        examples__providers__main["main"]
-        examples__providers__anthropic_only["anthropic_only"]
-        examples__providers__mixed_providers_pipeline["mixed_providers_pipeline"]
-        examples__providers__google_gemini["google_gemini"]
-        examples__providers__mistral_cloud["mistral_cloud"]
-        examples__providers__openai_only["openai_only"]
-        examples__providers__ollama_plus_anthropic["ollama_plus_anthropic"]
-        examples__providers__deepseek["deepseek"]
         examples__providers__openrouter_kimi["openrouter_kimi"]
+        examples__providers__ollama_plus_anthropic["ollama_plus_anthropic"]
+        examples__providers__google_gemini["google_gemini"]
+        examples__providers__aws_bedrock["aws_bedrock"]
         examples__providers__ollama_plus_openai["ollama_plus_openai"]
         examples__providers__together_ai["together_ai"]
-        examples__providers__groq_fast["groq_fast"]
-        examples__providers__azure_openai["azure_openai"]
-        examples__providers__ollama_local["ollama_local"]
-        examples__providers__aws_bedrock["aws_bedrock"]
+        examples__providers__mixed_providers_pipeline["mixed_providers_pipeline"]
+        examples__providers__deepseek["deepseek"]
         examples__providers__print_env_setup["print_env_setup"]
+        examples__providers__openai_only["openai_only"]
+        examples__providers__ollama_local["ollama_local"]
+        examples__providers__anthropic_only["anthropic_only"]
+        examples__providers__mistral_cloud["mistral_cloud"]
+        examples__providers__azure_openai["azure_openai"]
+        examples__providers__main["main"]
+        examples__providers__groq_fast["groq_fast"]
     end
     subgraph examples_python_sdk
-        examples__python_sdk__example_pipeline["example_pipeline"]
+        examples__python_sdk__example_user_memory["example_user_memory"]
+        examples__python_sdk__example_sync["example_sync"]
+        examples__python_sdk__example_custom_pipeline["example_custom_pipeline"]
         examples__python_sdk__example_domain_rules["example_domain_rules"]
         examples__python_sdk__example_strategies["example_strategies"]
+        examples__python_sdk__example_pipeline["example_pipeline"]
         examples__python_sdk__example_codebase_context["example_codebase_context"]
-        examples__python_sdk__main["main"]
-        examples__python_sdk__example_custom_pipeline["example_custom_pipeline"]
         examples__python_sdk__example_one_function["example_one_function"]
-        examples__python_sdk__example_sync["example_sync"]
-        examples__python_sdk__example_user_memory["example_user_memory"]
+        examples__python_sdk__main["main"]
     end
     subgraph examples_quick_start
-        examples__quick_start__example_hybrid_ollama_anthropic["example_hybrid_ollama_anthropi"]
-        examples__quick_start__example_ollama_local["example_ollama_local"]
-        examples__quick_start__example_zero_config["example_zero_config"]
-        examples__quick_start__example_with_memory["example_with_memory"]
-        examples__quick_start__example_domain_rules["example_domain_rules"]
-        examples__quick_start__example_pipeline["example_pipeline"]
-        examples__quick_start__example_strategy["example_strategy"]
         examples__quick_start__example_sync["example_sync"]
-        examples__quick_start__main["main"]
-        examples__quick_start__example_with_codebase["example_with_codebase"]
+        examples__quick_start__example_ollama_local["example_ollama_local"]
+        examples__quick_start__example_domain_rules["example_domain_rules"]
+        examples__quick_start__example_strategy["example_strategy"]
         examples__quick_start__example_hybrid_ollama_openai["example_hybrid_ollama_openai"]
+        examples__quick_start__example_pipeline["example_pipeline"]
+        examples__quick_start__example_with_memory["example_with_memory"]
+        examples__quick_start__example_with_codebase["example_with_codebase"]
+        examples__quick_start__main["main"]
+        examples__quick_start__example_hybrid_ollama_anthropic["example_hybrid_ollama_anthropi"]
+        examples__quick_start__example_zero_config["example_zero_config"]
     end
     subgraph examples_utils
         examples__utils__example_helpers__run_provider_example["run_provider_example"]
         examples__utils__example_helpers__run_quick_start_example["run_quick_start_example"]
     end
+    subgraph prellm_agents
+        prellm__agents__preprocessor___get_user_memory_class["_get_user_memory_class"]
+        prellm__agents__preprocessor___get_codebase_indexer_class["_get_codebase_indexer_class"]
+    end
     subgraph prellm_analyzers
-        prellm__ContextEngine___gather_git["_gather_git"]
         prellm__ContextEngine___gather_git_gitpython["_gather_git_gitpython"]
         prellm__ContextEngine___gather_git_subprocess["_gather_git_subprocess"]
+        prellm__ContextEngine___gather_git["_gather_git"]
     end
     subgraph prellm_budget
-        prellm__budget__BudgetTracker___persist["_persist"]
         prellm__budget__get_budget_tracker["get_budget_tracker"]
-        prellm__budget__BudgetTracker__summary["summary"]
+        prellm__budget__BudgetTracker___persist["_persist"]
         prellm__budget__BudgetTracker___ensure_loaded["_ensure_loaded"]
         prellm__budget___current_month_key["_current_month_key"]
+        prellm__budget__BudgetTracker__summary["summary"]
     end
     subgraph prellm_chains
         prellm__chains__process_chain__ProcessChain___run_engine["_run_engine"]
     end
     subgraph prellm_cli
-        prellm__cli__budget["budget"]
-        prellm__cli__session_export_cmd["session_export_cmd"]
-        prellm__cli__context_show_cmd["context_show_cmd"]
-        prellm__cli__config_show_cmd["config_show_cmd"]
+        prellm__cli__doctor["doctor"]
         prellm__cli__session_list_cmd["session_list_cmd"]
-        prellm__cli__session_import_cmd["session_import_cmd"]
+        prellm__cli__serve["serve"]
+        prellm__cli__config_show_cmd["config_show_cmd"]
         prellm__cli__models["models"]
-        prellm__cli___doctor_check_providers["_doctor_check_providers"]
+        prellm__cli___execute_and_format_result["_execute_and_format_result"]
         prellm__cli___doctor_check_config["_doctor_check_config"]
         prellm__cli__config_init_env["config_init_env"]
         prellm__cli__session_clear_cmd["session_clear_cmd"]
-        prellm__cli__config_set_cmd["config_set_cmd"]
-        prellm__cli___execute_and_format_result["_execute_and_format_result"]
-        prellm__cli__doctor["doctor"]
-        prellm__cli___handle_query_options["_handle_query_options"]
+        prellm__cli__session_export_cmd["session_export_cmd"]
+        prellm__cli___doctor_check_providers["_doctor_check_providers"]
         prellm__cli___initialize_execution["_initialize_execution"]
+        prellm__cli___handle_query_options["_handle_query_options"]
+        prellm__cli__config_set_cmd["config_set_cmd"]
+        prellm__cli__session_import_cmd["session_import_cmd"]
+        prellm__cli__config_get_cmd["config_get_cmd"]
         prellm__cli___init_logging["_init_logging"]
         prellm__cli__config_list_cmd["config_list_cmd"]
-        prellm__cli__config_get_cmd["config_get_cmd"]
-        prellm__cli__serve["serve"]
+        prellm__cli__budget["budget"]
+        prellm__cli__context_show_cmd["context_show_cmd"]
     end
     subgraph prellm_context
+        prellm__context__folder_compressor___relative_path["_relative_path"]
+        prellm__FolderCompressor__to_toon["to_toon"]
+        prellm__context__folder_compressor___extract_module_docstrin["_extract_module_docstring"]
+        prellm__FolderCompressor__to_dependency_graph["to_dependency_graph"]
         prellm__context__folder_compressor___path_to_module["_path_to_module"]
         prellm__FolderCompressor__to_summary["to_summary"]
-        prellm__context__folder_compressor___relative_path["_relative_path"]
-        prellm__FolderCompressor__to_dependency_graph["to_dependency_graph"]
-        prellm__context__folder_compressor___extract_module_docstrin["_extract_module_docstring"]
-        prellm__FolderCompressor__to_toon["to_toon"]
     end
     subgraph prellm_core
         prellm__core__preprocess_and_execute_sync["preprocess_and_execute_sync"]
+        prellm__core___generate_context_schema["_generate_context_schema"]
+        prellm__core___build_sensitive_filter["_build_sensitive_filter"]
+        prellm__core__preprocess_and_execute["preprocess_and_execute"]
+        prellm__core___format_context_schema["_format_context_schema"]
+        prellm__core___collect_environment_context["_collect_environment_context"]
+        prellm__core___build_executor_system_prompt["_build_executor_system_prompt"]
+        prellm__core___format_runtime_context["_format_runtime_context"]
+        prellm__core___extract_classification_from_state["_extract_classification_from_s"]
+        prellm__core___execute_v3_pipeline["_execute_v3_pipeline"]
+        prellm__core___build_decomposition_result["_build_decomposition_result"]
+        prellm__core___extract_missing_fields_from_state["_extract_missing_fields_from_s"]
+        prellm__core___extract_matched_rule_from_state["_extract_matched_rule_from_sta"]
+        prellm__core___initialize_context_components["_initialize_context_components"]
+        prellm__core___extract_structure_from_state["_extract_structure_from_state"]
         prellm__core___prepare_context["_prepare_context"]
         prellm__core__PreLLM___load_config["_load_config"]
-        prellm__core__preprocess_and_execute["preprocess_and_execute"]
-        prellm__core___execute_v3_pipeline["_execute_v3_pipeline"]
+        prellm__core___format_classification_context["_format_classification_context"]
+        prellm__core___format_user_context["_format_user_context"]
+        prellm__core___extract_sub_queries_from_state["_extract_sub_queries_from_stat"]
+        prellm__core___compress_codebase_folder["_compress_codebase_folder"]
+        prellm__core___collect_user_context["_collect_user_context"]
     end
     subgraph prellm_env_config
-        prellm__env_config__config_set["config_set"]
-        prellm__env_config__load_dotenv_if_available["load_dotenv_if_available"]
-        prellm__env_config___write_env_file["_write_env_file"]
-        prellm__env_config___resolve_config_path["_resolve_config_path"]
-        prellm__env_config__config_list["config_list"]
-        prellm__env_config__check_providers["check_providers"]
-        prellm__env_config__mask_value["mask_value"]
-        prellm__env_config__resolve_alias["resolve_alias"]
-        prellm__env_config__check_providers_live["check_providers_live"]
-        prellm__env_config___read_env_file["_read_env_file"]
-        prellm__env_config__get_env_config["get_env_config"]
         prellm__env_config__config_get["config_get"]
+        prellm__env_config___get_env_candidates["_get_env_candidates"]
+        prellm__env_config__mask_value["mask_value"]
+        prellm__env_config__check_providers["check_providers"]
+        prellm__env_config__resolve_alias["resolve_alias"]
+        prellm__env_config__load_dotenv_if_available["load_dotenv_if_available"]
+        prellm__env_config__check_providers_live["check_providers_live"]
+        prellm__env_config___load_env_file_with_getv["_load_env_file_with_getv"]
+        prellm__env_config___load_getv_defaults["_load_getv_defaults"]
+        prellm__env_config___parse_env_line["_parse_env_line"]
+        prellm__env_config__config_set["config_set"]
+        prellm__env_config___write_env_file["_write_env_file"]
+        prellm__env_config__get_env_config["get_env_config"]
+        prellm__env_config__config_list["config_list"]
+        prellm__env_config___resolve_config_path["_resolve_config_path"]
+        prellm__env_config___read_env_file["_read_env_file"]
+        prellm__env_config___load_env_file_manually["_load_env_file_manually"]
     end
     subgraph prellm_llm_provider
         prellm__llm_provider__LLMProvider___get_budget["_get_budget"]
     end
     subgraph prellm_logging_setup
         prellm__logging_setup__get_logger["get_logger"]
-        prellm__logging_setup__setup_logging["setup_logging"]
         prellm__logging_setup___get_version["_get_version"]
+        prellm__logging_setup__setup_logging["setup_logging"]
     end
     subgraph prellm_model_catalog
-        prellm__model_catalog__list_model_pairs["list_model_pairs"]
         prellm__model_catalog__list_openrouter_models["list_openrouter_models"]
+        prellm__model_catalog__list_model_pairs["list_model_pairs"]
     end
     subgraph prellm_models
         prellm__models__SessionSnapshot__from_file["from_file"]
@@ -130,36 +156,61 @@ flowchart LR
         prellm__pipeline__PromptPipeline__from_yaml["from_yaml"]
     end
     subgraph prellm_server
-        prellm__server__batch_process["batch_process"]
-        prellm__server__create_app["create_app"]
         prellm__server___build_prellm_meta["_build_prellm_meta"]
-        prellm__server___parse_model_pair["_parse_model_pair"]
+        prellm__server__create_app["create_app"]
         prellm__server__chat_completions["chat_completions"]
         prellm__server___stream_response["_stream_response"]
+        prellm__server___parse_model_pair["_parse_model_pair"]
+        prellm__server__batch_process["batch_process"]
     end
     subgraph prellm_trace
-        prellm__trace__TraceRecorder__stop["stop"]
-        prellm__trace__get_current_trace["get_current_trace"]
-        prellm__trace__TraceRecorder__start["start"]
-        prellm__trace___sanitize["_sanitize"]
-        prellm__trace__set_current_trace["set_current_trace"]
         prellm__trace___safe_json["_safe_json"]
+        prellm__trace___sanitize["_sanitize"]
+        prellm__trace__get_current_trace["get_current_trace"]
+        prellm__trace__TraceRecorder___generate_decision_tree["_generate_decision_tree"]
+        prellm__trace__set_current_trace["set_current_trace"]
+        prellm__trace__TraceRecorder___generate_step_log["_generate_step_log"]
+        prellm__trace___step_icon["_step_icon"]
+        prellm__trace__TraceRecorder__stop["stop"]
+        prellm__trace__TraceRecorder___generate_markdown_summary["_generate_markdown_summary"]
+        prellm__TraceRecorder___generate_markdown_step_details["_generate_markdown_step_detail"]
+        prellm__trace__TraceRecorder__start["start"]
+    end
+    subgraph prellm_utils
+        prellm__utils__lazy_imports__lazy_import_global["lazy_import_global"]
     end
     subgraph scripts_config_wizard
-        scripts__config_wizard__check_ollama["check_ollama"]
-        scripts__config_wizard__info["info"]
-        scripts__config_wizard__strip_ollama_prefix["strip_ollama_prefix"]
-        scripts__config_wizard__fail["fail"]
-        scripts__config_wizard__check_port_available["check_port_available"]
-        scripts__config_wizard__install_ollama_model["install_ollama_model"]
-        scripts__config_wizard__ok["ok"]
-        scripts__config_wizard__ask_yn["ask_yn"]
-        scripts__config_wizard__build_ollama_options["build_ollama_options"]
-        scripts__config_wizard__warn["warn"]
+        scripts__config_wizard___configure_large_llm["_configure_large_llm"]
+        scripts__config_wizard___generate_config_file["_generate_config_file"]
+        scripts__config_wizard___configure_anthropic["_configure_anthropic"]
         scripts__config_wizard__to_ollama_full["to_ollama_full"]
-        scripts__config_wizard__fetch_ollama_models["fetch_ollama_models"]
         scripts__config_wizard__validate_ollama_model["validate_ollama_model"]
+        scripts__config_wizard__info["info"]
+        scripts__config_wizard___configure_budget_and_limits["_configure_budget_and_limits"]
+        scripts__config_wizard__strip_ollama_prefix["strip_ollama_prefix"]
+        scripts__config_wizard___configure_ollama_large["_configure_ollama_large"]
+        scripts__config_wizard___configure_groq["_configure_groq"]
         scripts__config_wizard__check_api_key_format["check_api_key_format"]
+        scripts__config_wizard__check_ollama["check_ollama"]
+        scripts__config_wizard___configure_openai["_configure_openai"]
+        scripts__config_wizard__fail["fail"]
+        scripts__config_wizard___run_diagnostics["_run_diagnostics"]
+        scripts__config_wizard__ok["ok"]
+        scripts__config_wizard__option_index_for_value["option_index_for_value"]
+        scripts__config_wizard__fetch_ollama_models["fetch_ollama_models"]
+        scripts__config_wizard__ask_yn["ask_yn"]
+        scripts__config_wizard___configure_openrouter["_configure_openrouter"]
+        scripts__config_wizard__ask["ask"]
+        scripts__config_wizard___configure_strategy_and_server["_configure_strategy_and_server"]
+        scripts__config_wizard__install_ollama_model["install_ollama_model"]
+        scripts__config_wizard__warn["warn"]
+        scripts__config_wizard___configure_logging["_configure_logging"]
+        scripts__config_wizard__build_ollama_options["build_ollama_options"]
+        scripts__config_wizard___configure_small_llm["_configure_small_llm"]
+        scripts__config_wizard___configure_other_provider["_configure_other_provider"]
+        scripts__config_wizard__check_port_available["check_port_available"]
+        scripts__config_wizard__main["main"]
+        scripts__config_wizard__ask_choice["ask_choice"]
     end
     examples__providers__ollama_local --> examples__utils__example_helpers__run_provider_example
     examples__providers__ollama_plus_openai --> examples__utils__example_helpers__run_provider_example
@@ -176,6 +227,15 @@ flowchart LR
     examples__providers__openrouter_kimi --> examples__utils__example_helpers__run_provider_example
     examples__providers__mixed_providers_pipeline --> prellm__core__preprocess_and_execute
     examples__providers__main --> examples__providers__print_env_setup
+    examples__python_sdk__example_one_function --> prellm__core__preprocess_and_execute
+    examples__python_sdk__example_domain_rules --> prellm__core__preprocess_and_execute
+    examples__python_sdk__example_sync --> prellm__core__preprocess_and_execute_sync
+    examples__python_sdk__example_pipeline --> prellm__core__preprocess_and_execute
+    examples__python_sdk__example_user_memory --> prellm__core__preprocess_and_execute
+    examples__python_sdk__example_codebase_context --> prellm__core__preprocess_and_execute
+    examples__python_sdk__example_custom_pipeline --> prellm__pipeline__PromptPipeline__from_yaml
+    examples__python_sdk__example_strategies --> prellm__core__preprocess_and_execute
+    examples__python_sdk__main --> examples__python_sdk__example_sync
     examples__quick_start__example_zero_config --> prellm__core__preprocess_and_execute
     examples__quick_start__example_strategy --> prellm__core__preprocess_and_execute
     examples__quick_start__example_pipeline --> examples__utils__example_helpers__run_quick_start_example
@@ -187,15 +247,11 @@ flowchart LR
     examples__quick_start__example_with_codebase --> prellm__core__preprocess_and_execute
     examples__quick_start__example_sync --> prellm__core__preprocess_and_execute_sync
     examples__quick_start__main --> examples__quick_start__example_sync
-    examples__python_sdk__example_one_function --> prellm__core__preprocess_and_execute
-    examples__python_sdk__example_domain_rules --> prellm__core__preprocess_and_execute
-    examples__python_sdk__example_sync --> prellm__core__preprocess_and_execute_sync
-    examples__python_sdk__example_pipeline --> prellm__core__preprocess_and_execute
-    examples__python_sdk__example_user_memory --> prellm__core__preprocess_and_execute
-    examples__python_sdk__example_codebase_context --> prellm__core__preprocess_and_execute
-    examples__python_sdk__example_custom_pipeline --> prellm__pipeline__PromptPipeline__from_yaml
-    examples__python_sdk__example_strategies --> prellm__core__preprocess_and_execute
-    examples__python_sdk__main --> examples__python_sdk__example_sync
+    prellm__env_config___load_env_file_manually --> prellm__env_config___parse_env_line
+    prellm__env_config__load_dotenv_if_available --> prellm__env_config___load_getv_defaults
+    prellm__env_config__load_dotenv_if_available --> prellm__env_config___get_env_candidates
+    prellm__env_config__load_dotenv_if_available --> prellm__env_config___load_env_file_with_getv
+    prellm__env_config__load_dotenv_if_available --> prellm__env_config___load_env_file_manually
     prellm__env_config__get_env_config --> prellm__env_config__load_dotenv_if_available
     prellm__env_config__check_providers --> prellm__env_config__get_env_config
     prellm__env_config__config_set --> prellm__env_config__resolve_alias
@@ -237,6 +293,10 @@ flowchart LR
     prellm__cli__session_clear_cmd --> prellm__cli___init_logging
     prellm__trace__TraceRecorder__start --> prellm__trace__set_current_trace
     prellm__trace__TraceRecorder__stop --> prellm__trace__set_current_trace
+    prellm__TraceRecorder___generate_markdown_step_details --> prellm__trace___step_icon
+    prellm__trace__TraceRecorder___generate_markdown_summary --> prellm__trace___step_icon
+    prellm__trace__TraceRecorder___generate_decision_tree --> prellm__trace___step_icon
+    prellm__trace__TraceRecorder___generate_step_log --> prellm__trace___step_icon
     prellm__trace___safe_json --> prellm__trace___sanitize
     prellm__server__chat_completions --> prellm__server___parse_model_pair
     prellm__server__chat_completions --> prellm__server___build_prellm_meta
@@ -253,6 +313,21 @@ flowchart LR
     prellm__core__preprocess_and_execute_sync --> prellm__core__preprocess_and_execute
     prellm__core___execute_v3_pipeline --> prellm__pipeline__PromptPipeline__from_yaml
     prellm__core___execute_v3_pipeline --> prellm__core___prepare_context
+    prellm__core___prepare_context --> prellm__core___collect_user_context
+    prellm__core___prepare_context --> prellm__core___collect_environment_context
+    prellm__core___prepare_context --> prellm__core___compress_codebase_folder
+    prellm__core___prepare_context --> prellm__core___generate_context_schema
+    prellm__core___prepare_context --> prellm__core___build_sensitive_filter
+    prellm__core___prepare_context --> prellm__core___initialize_context_components
+    prellm__core___build_executor_system_prompt --> prellm__core___format_classification_context
+    prellm__core___build_executor_system_prompt --> prellm__core___format_context_schema
+    prellm__core___build_executor_system_prompt --> prellm__core___format_runtime_context
+    prellm__core___build_executor_system_prompt --> prellm__core___format_user_context
+    prellm__core___build_decomposition_result --> prellm__core___extract_classification_from_state
+    prellm__core___build_decomposition_result --> prellm__core___extract_structure_from_state
+    prellm__core___build_decomposition_result --> prellm__core___extract_sub_queries_from_state
+    prellm__core___build_decomposition_result --> prellm__core___extract_missing_fields_from_state
+    prellm__core___build_decomposition_result --> prellm__core___extract_matched_rule_from_state
     scripts__config_wizard__check_ollama --> scripts__config_wizard__fetch_ollama_models
     scripts__config_wizard__check_ollama --> scripts__config_wizard__fail
     scripts__config_wizard__check_ollama --> scripts__config_wizard__info
@@ -271,7 +346,52 @@ flowchart LR
     scripts__config_wizard__check_api_key_format --> scripts__config_wizard__warn
     scripts__config_wizard__check_port_available --> scripts__config_wizard__warn
     scripts__config_wizard__check_port_available --> scripts__config_wizard__ok
-    prellm__chains__process_chain__ProcessChain___run_engine --> prellm__core__preprocess_and_execute
+    scripts__config_wizard___run_diagnostics --> scripts__config_wizard__ask
+    scripts__config_wizard___run_diagnostics --> scripts__config_wizard__check_ollama
+    scripts__config_wizard___configure_small_llm --> scripts__config_wizard__build_ollama_options
+    scripts__config_wizard___configure_small_llm --> scripts__config_wizard__option_index_for_value
+    scripts__config_wizard___configure_small_llm --> scripts__config_wizard__ok
+    scripts__config_wizard___configure_small_llm --> scripts__config_wizard__ask_choice
+    scripts__config_wizard___configure_small_llm --> scripts__config_wizard__validate_ollama_model
+    scripts__config_wizard___configure_small_llm --> scripts__config_wizard__ask
+    scripts__config_wizard___configure_large_llm --> scripts__config_wizard__ask_choice
+    scripts__config_wizard___configure_large_llm --> scripts__config_wizard__ok
+    scripts__config_wizard___configure_large_llm --> scripts__config_wizard___configure_openai
+    scripts__config_wizard___configure_large_llm --> scripts__config_wizard___configure_anthropic
+    scripts__config_wizard___configure_large_llm --> scripts__config_wizard___configure_groq
+    scripts__config_wizard___configure_large_llm --> scripts__config_wizard___configure_openrouter
+    scripts__config_wizard___configure_openai --> scripts__config_wizard__ask
+    scripts__config_wizard___configure_openai --> scripts__config_wizard__check_api_key_format
+    scripts__config_wizard___configure_openai --> scripts__config_wizard__ask_choice
+    scripts__config_wizard___configure_anthropic --> scripts__config_wizard__ask
+    scripts__config_wizard___configure_anthropic --> scripts__config_wizard__check_api_key_format
+    scripts__config_wizard___configure_anthropic --> scripts__config_wizard__ask_choice
+    scripts__config_wizard___configure_groq --> scripts__config_wizard__ask
+    scripts__config_wizard___configure_groq --> scripts__config_wizard__check_api_key_format
+    scripts__config_wizard___configure_groq --> scripts__config_wizard__ask_choice
+    scripts__config_wizard___configure_openrouter --> scripts__config_wizard__ask
+    scripts__config_wizard___configure_openrouter --> scripts__config_wizard__check_api_key_format
+    scripts__config_wizard___configure_openrouter --> scripts__config_wizard__ask_choice
+    scripts__config_wizard___configure_ollama_large --> scripts__config_wizard__build_ollama_options
+    scripts__config_wizard___configure_ollama_large --> scripts__config_wizard__option_index_for_value
+    scripts__config_wizard___configure_ollama_large --> scripts__config_wizard__ask
+    scripts__config_wizard___configure_ollama_large --> scripts__config_wizard__check_ollama
+    scripts__config_wizard___configure_ollama_large --> scripts__config_wizard__ask_choice
+    scripts__config_wizard___configure_ollama_large --> scripts__config_wizard__validate_ollama_model
+    scripts__config_wizard___configure_ollama_large --> scripts__config_wizard__to_ollama_full
+    scripts__config_wizard___configure_other_provider --> scripts__config_wizard__ask
+    scripts__config_wizard___configure_strategy_and_server --> scripts__config_wizard__ask_choice
+    scripts__config_wizard___configure_strategy_and_server --> scripts__config_wizard__ok
+    scripts__config_wizard___configure_strategy_and_server --> scripts__config_wizard__ask_yn
+    scripts__config_wizard___configure_strategy_and_server --> scripts__config_wizard__ask
+    scripts__config_wizard___configure_strategy_and_server --> scripts__config_wizard__check_port_available
+    scripts__config_wizard___configure_budget_and_limits --> scripts__config_wizard__ask
+    scripts__config_wizard___configure_budget_and_limits --> scripts__config_wizard__info
+    scripts__config_wizard___configure_logging --> scripts__config_wizard__ask_choice
+    scripts__config_wizard___generate_config_file --> scripts__config_wizard__ok
+    scripts__config_wizard__main --> scripts__config_wizard___run_diagnostics
+    scripts__config_wizard__main --> scripts__config_wizard___configure_small_llm
+    scripts__config_wizard__main --> scripts__config_wizard___configure_large_llm
     prellm__FolderCompressor__to_toon --> prellm__context__folder_compressor___relative_path
     prellm__FolderCompressor__to_dependency_graph --> prellm__context__folder_compressor___relative_path
     prellm__FolderCompressor__to_dependency_graph --> prellm__context__folder_compressor___path_to_module
@@ -281,6 +401,9 @@ flowchart LR
     prellm__budget__BudgetTracker___ensure_loaded --> prellm__budget___current_month_key
     prellm__budget__BudgetTracker__summary --> prellm__budget___current_month_key
     prellm__budget__BudgetTracker___persist --> prellm__budget___current_month_key
+    prellm__chains__process_chain__ProcessChain___run_engine --> prellm__core__preprocess_and_execute
+    prellm__agents__preprocessor___get_user_memory_class --> prellm__utils__lazy_imports__lazy_import_global
+    prellm__agents__preprocessor___get_codebase_indexer_class --> prellm__utils__lazy_imports__lazy_import_global
     examples__utils__example_helpers__run_provider_example --> prellm__core__preprocess_and_execute
     examples__utils__example_helpers__run_quick_start_example --> prellm__core__preprocess_and_execute
     prellm__ContextEngine___gather_git --> prellm__ContextEngine___gather_git_gitpython

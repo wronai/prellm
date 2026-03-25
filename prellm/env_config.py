@@ -94,6 +94,74 @@ class EnvConfig:
     providers: dict[str, dict[str, Any]] = field(default_factory=dict)
 
 
+def _load_getv_defaults() -> None:
+    """Load getv app defaults if available."""
+    if not _HAS_GETV:
+        return
+    
+    try:
+        from getv import AppDefaults
+        from getv.integrations.pydantic_env import load_profile_into_env
+        defaults = AppDefaults("prellm")
+        llm_profile = defaults.get("llm")
+        if llm_profile:
+            load_profile_into_env("llm", llm_profile)
+            logger.debug(f"Loaded getv default LLM profile: {llm_profile}")
+    except Exception:
+        pass  # non-critical
+
+
+def _get_env_candidates(path: str | Path | None) -> list[Path]:
+    """Get list of candidate .env files to load."""
+    if path:
+        return [Path(path)]
+    return [Path(".env"), Path.home() / ".prellm" / ".env"]
+
+
+def _load_env_file_with_getv(candidate: Path) -> bool:
+    """Load .env file using getv EnvStore. Returns True if successful."""
+    if not _HAS_GETV:
+        return False
+    
+    try:
+        store = EnvStore(candidate, auto_create=False)
+        for key, value in store.items():
+            if key and value and key not in os.environ:
+                os.environ[key] = value
+        return True
+    except Exception:
+        return False
+
+
+def _parse_env_line(line: str) -> tuple[str, str] | None:
+    """Parse a single .env line. Returns (key, value) or None if invalid."""
+    line = line.strip()
+    if not line or line.startswith("#") or "=" not in line:
+        return None
+    
+    key, _, value = line.partition("=")
+    key = key.strip()
+    value = value.strip().strip("'\"")
+    
+    if key and value:
+        return key, value
+    return None
+
+
+def _load_env_file_manually(candidate: Path) -> None:
+    """Load .env file using manual parsing."""
+    try:
+        with open(candidate) as f:
+            for line in f:
+                parsed = _parse_env_line(line)
+                if parsed:
+                    key, value = parsed
+                    if key not in os.environ:
+                        os.environ[key] = value
+    except Exception:
+        pass  # non-critical
+
+
 def load_dotenv_if_available(path: str | Path | None = None) -> None:
     """Load .env file if it exists. No dependency on python-dotenv — just basic parsing.
 
@@ -101,39 +169,18 @@ def load_dotenv_if_available(path: str | Path | None = None) -> None:
     (set via ``getv use prellm llm PROFILE``).
     """
     # Load getv app defaults first (if configured)
-    if _HAS_GETV:
-        try:
-            from getv import AppDefaults
-            from getv.integrations.pydantic_env import load_profile_into_env
-            defaults = AppDefaults("prellm")
-            llm_profile = defaults.get("llm")
-            if llm_profile:
-                load_profile_into_env("llm", llm_profile)
-                logger.debug(f"Loaded getv default LLM profile: {llm_profile}")
-        except Exception:
-            pass  # non-critical
-
-    candidates = [path] if path else [".env", Path.home() / ".prellm" / ".env"]
-
-    for candidate in candidates:
-        if candidate and Path(candidate).is_file():
+    _load_getv_defaults()
+    
+    # Try each candidate file
+    for candidate in _get_env_candidates(path):
+        if candidate and candidate.is_file():
             logger.debug(f"Loading .env from {candidate}")
-            if _HAS_GETV:
-                store = EnvStore(Path(candidate), auto_create=False)
-                for key, value in store.items():
-                    if key and value and key not in os.environ:
-                        os.environ[key] = value
+            
+            # Try getv first, fall back to manual parsing
+            if _load_env_file_with_getv(candidate):
                 return
-            with open(candidate) as f:
-                for line in f:
-                    line = line.strip()
-                    if not line or line.startswith("#") or "=" not in line:
-                        continue
-                    key, _, value = line.partition("=")
-                    key = key.strip()
-                    value = value.strip().strip("'\"")
-                    if key and value and key not in os.environ:
-                        os.environ[key] = value
+            
+            _load_env_file_manually(candidate)
             return
 
 

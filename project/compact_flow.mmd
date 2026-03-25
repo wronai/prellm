@@ -6,18 +6,20 @@ flowchart TD
     examples_python_sdk["examples.python_sdk<br/>11 funcs"]
     examples_quick_start["examples.quick_start<br/>12 funcs"]
     examples_utils["examples.utils<br/>2 funcs"]
+    prellm_agents["prellm.agents<br/>9 funcs"]
     prellm_budget["prellm.budget<br/>11 funcs"]
     prellm_chains["prellm.chains<br/>10 funcs"]
     prellm_cli["prellm.cli<br/>28 funcs"]
-    prellm_core["prellm.core<br/>17 funcs"]
-    prellm_env_config["prellm.env_config<br/>12 funcs"]
+    prellm_core["prellm.core<br/>32 funcs"]
+    prellm_env_config["prellm.env_config<br/>17 funcs"]
     prellm_llm_provider["prellm.llm_provider<br/>6 funcs"]
     prellm_logging_setup["prellm.logging_setup<br/>3 funcs"]
     prellm_model_catalog["prellm.model_catalog<br/>2 funcs"]
     prellm_models["prellm.models<br/>2 funcs"]
     prellm_pipeline["prellm.pipeline<br/>18 funcs"]
     prellm_server["prellm.server<br/>9 funcs"]
-    prellm_trace["prellm.trace<br/>16 funcs"]
+    prellm_trace["prellm.trace<br/>29 funcs"]
+    prellm_utils["prellm.utils<br/>4 funcs"]
     prellm_cli ==>|14| prellm_env_config
     examples_providers ==>|13| examples_utils
     examples_python_sdk ==>|8| prellm_core
@@ -30,6 +32,7 @@ flowchart TD
     prellm_cli -->|2| prellm_budget
     prellm_cli -->|2| prellm_model_catalog
     prellm_core -->|2| prellm_trace
+    prellm_agents -->|2| prellm_utils
     examples_utils -->|2| prellm_core
     examples_providers -->|1| prellm_core
     examples_python_sdk -->|1| prellm_pipeline

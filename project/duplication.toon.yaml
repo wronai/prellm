@@ -1,12 +1,12 @@
-# redup/duplication | 3 groups | 31f 9069L | 2026-03-25
+# redup/duplication | 3 groups | 33f 9559L | 2026-03-25
 
 SUMMARY:
-  files_scanned: 31
-  total_lines:   9069
+  files_scanned: 33
+  total_lines:   9559
   dup_groups:    3
   dup_fragments: 19
   saved_lines:   115
-  scan_ms:       3229
+  scan_ms:       4484
 
 DUPLICATES[3] (ranked by impact):
   [d80472b893ab7a2d] ! STRU  ollama_local  L=7 N=13 saved=84 sim=1.00

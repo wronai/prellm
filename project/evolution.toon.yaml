@@ -1,57 +1,33 @@
-# code2llm/evolution | 254 func | 25f | 2026-03-25
+# code2llm/evolution | 292 func | 27f | 2026-03-25
 
-NEXT[10] (ranked by impact):
+NEXT[4] (ranked by impact):
   [1] !! SPLIT           prellm/core.py
-      WHY: 893L, 1 classes, max CC=21
-      EFFORT: ~4h  IMPACT: 18753
+      WHY: 1032L, 1 classes, max CC=15
+      EFFORT: ~4h  IMPACT: 15480
 
-  [2] !! SPLIT           prellm/trace.py
-      WHY: 532L, 2 classes, max CC=28
-      EFFORT: ~4h  IMPACT: 14896
-
-  [3] !! SPLIT           prellm/cli.py
+  [2] !! SPLIT           prellm/cli.py
       WHY: 1076L, 0 classes, max CC=13
       EFFORT: ~4h  IMPACT: 13988
 
-  [4] !! SPLIT-FUNC      TraceRecorder.to_stdout  CC=28  fan=22
-      WHY: CC=28 exceeds 15
-      EFFORT: ~1h  IMPACT: 616
+  [3] !! SPLIT           prellm/trace.py
+      WHY: 649L, 2 classes, max CC=13
+      EFFORT: ~4h  IMPACT: 8437
 
-  [5] !  SPLIT-FUNC      _prepare_context  CC=21  fan=18
-      WHY: CC=21 exceeds 15
-      EFFORT: ~1h  IMPACT: 378
-
-  [6] !  SPLIT-FUNC      load_dotenv_if_available  CC=20  fan=16
-      WHY: CC=20 exceeds 15
-      EFFORT: ~1h  IMPACT: 320
-
-  [7] !  SPLIT-FUNC      _build_executor_system_prompt  CC=19  fan=12
-      WHY: CC=19 exceeds 15
-      EFFORT: ~1h  IMPACT: 228
-
-  [8] !  SPLIT-FUNC      TraceRecorder.to_markdown  CC=17  fan=12
-      WHY: CC=17 exceeds 15
-      EFFORT: ~1h  IMPACT: 204
-
-  [9] !  SPLIT-FUNC      _build_decomposition_result  CC=16  fan=11
-      WHY: CC=16 exceeds 15
-      EFFORT: ~1h  IMPACT: 176
-
-  [10] !  SPLIT-FUNC      preprocess_and_execute  CC=15  fan=11
+  [4] !  SPLIT-FUNC      preprocess_and_execute  CC=15  fan=11
       WHY: CC=15 exceeds 15
       EFFORT: ~1h  IMPACT: 165
 
 
 RISKS[3]:
   ⚠ Splitting prellm/cli.py may break 28 import paths
-  ⚠ Splitting prellm/core.py may break 17 import paths
-  ⚠ Splitting prellm/trace.py may break 16 import paths
+  ⚠ Splitting prellm/core.py may break 32 import paths
+  ⚠ Splitting prellm/trace.py may break 29 import paths
 
 METRICS-TARGET:
-  CC̄:          5.0 → ≤3.5
-  max-CC:      28 → ≤14
-  god-modules: 3 → 0
-  high-CC(≥15): 8 → ≤4
+  CC̄:          4.5 → ≤3.1
+  max-CC:      15 → ≤7
+  god-modules: 4 → 0
+  high-CC(≥15): 1 → ≤0
   hub-types:   0 → ≤0
 
 PATTERNS (language parser shared logic):
@@ -79,4 +55,4 @@ PATTERNS (language parser shared logic):
     - Standardized FunctionInfo/ClassInfo models
 
 HISTORY:
-  prev CC̄=5.1 → now CC̄=5.0
+  prev CC̄=4.5 → now CC̄=4.5

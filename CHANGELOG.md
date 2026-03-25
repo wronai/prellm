@@ -1,5 +1,26 @@
 ## [Unreleased]
 
+## [0.4.16] - 2026-03-25
+
+### Docs
+- Update docs/README.md
+- Update docs/refactoring-plan.md
+- Update project/README.md
+- Update project/context.md
+
+### Other
+- Update prellm/context/sensitive_filter.py
+- Update prellm/core.py
+- Update prellm/env_config.py
+- Update prellm/trace.py
+- Update prellm/utils/lazy_imports.py
+- Update project/analysis.toon.yaml
+- Update project/calls.mmd
+- Update project/calls.png
+- Update project/compact_flow.mmd
+- Update project/compact_flow.png
+- ... and 8 more files
+
 ## [0.4.15] - 2026-03-25
 
 ### Docs

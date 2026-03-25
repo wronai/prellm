@@ -1,10 +1,10 @@
-# vallm batch | 134f | 89✓ 45✗
+# vallm batch | 135f | 90✓ 45✗
 
 SUMMARY:
-  total: 134
-  passed: 89
+  total: 135
+  passed: 90
   failed: 45
-  success: 66.4%
+  success: 66.7%
 
 FILES:
   [yaml]
@@ -31,7 +31,7 @@ FILES:
       verdict: fail
       score: 0.00
       issues: 1
-        [error] syntax.tree_sitter: tree-sitter found 5 parse error(s) in yaml
+        [error] syntax.tree_sitter: tree-sitter found 3 parse error(s) in yaml
     ✗ project/evolution.toon.yaml
       verdict: fail
       score: 0.00
@@ -129,8 +129,8 @@ FILES:
       issues: 4
         [error] python.import.resolvable: Module 'getv' not found@27
         [error] python.import.resolvable: Module 'getv.security' not found@28
-        [error] python.import.resolvable: Module 'getv' not found@106
-        [error] python.import.resolvable: Module 'getv.integrations.pydantic_env' not found@107
+        [error] python.import.resolvable: Module 'getv' not found@103
+        [error] python.import.resolvable: Module 'getv.integrations.pydantic_env' not found@104
     ✓ prellm/cli.py
       verdict: pass
       score: 0.98
@@ -138,13 +138,9 @@ FILES:
         [warning] complexity.maintainability: Low maintainability index: 10.4 (threshold: 20)
     ✓ prellm/trace.py
       verdict: pass
-      score: 0.90
-      issues: 5
-        [warning] complexity.cyclomatic: to_markdown has cyclomatic complexity 17 (max: 15)@119
-        [warning] complexity.cyclomatic: to_stdout has cyclomatic complexity 20 (max: 15)@264
-        [warning] complexity.lizard_cc: to_markdown: CC=17 exceeds limit 15@119
-        [warning] complexity.lizard_cc: to_stdout: CC=20 exceeds limit 15@264
-        [warning] complexity.lizard_length: to_stdout: 110 lines exceeds limit 100@264
+      score: 0.98
+      issues: 1
+        [warning] complexity.maintainability: Low maintainability index: 18.3 (threshold: 20)
     ✓ prellm/model_catalog.py
       verdict: pass
       score: 1.00
@@ -171,14 +167,7 @@ FILES:
       score: 1.00
     ✓ prellm/core.py
       verdict: pass
-      score: 0.90
-      issues: 6
-        [warning] complexity.cyclomatic: _prepare_context has cyclomatic complexity 21 (max: 15)@346
-        [warning] complexity.cyclomatic: _build_executor_system_prompt has cyclomatic complexity 19 (max: 15)@476
-        [warning] complexity.cyclomatic: _build_decomposition_result has cyclomatic complexity 16 (max: 15)@634
-        [warning] complexity.lizard_cc: _prepare_context: CC=21 exceeds limit 15@346
-        [warning] complexity.lizard_cc: _build_executor_system_prompt: CC=19 exceeds limit 15@476
-        [warning] complexity.lizard_cc: _build_decomposition_result: CC=16 exceeds limit 15@634
+      score: 1.00
     ✗ prellm/llm_provider.py
       verdict: fail
       score: 0.96
@@ -287,11 +276,7 @@ FILES:
       score: 1.00
     ✓ scripts/config_wizard.py
       verdict: pass
-      score: 0.93
-      issues: 3
-        [warning] complexity.cyclomatic: main has cyclomatic complexity 30 (max: 15)@250
-        [warning] complexity.lizard_cc: main: CC=29 exceeds limit 15@250
-        [warning] complexity.lizard_length: main: 240 lines exceeds limit 100@250
+      score: 1.00
     ✓ prellm/chains/__init__.py
       verdict: pass
       score: 1.00
@@ -304,6 +289,9 @@ FILES:
       issues: 2
         [error] python.import.resolvable: Module 'lazy_imports' not found@3
         [error] python.import.resolvable: Module 'lazy_loader' not found@4
+    ✓ prellm/utils/lazy_imports.py
+      verdict: pass
+      score: 1.00
     ✓ prellm/utils/lazy_loader.py
       verdict: pass
       score: 1.00
@@ -320,10 +308,7 @@ FILES:
         [error] python.import.resolvable: Module 'chromadb' not found@83
     ✓ prellm/context/sensitive_filter.py
       verdict: pass
-      score: 0.97
-      issues: 2
-        [warning] complexity.cyclomatic: _filter_recursive has cyclomatic complexity 17 (max: 15)@190
-        [warning] complexity.lizard_cc: _filter_recursive: CC=17 exceeds limit 15@190
+      score: 1.00
     ✓ prellm/context/__init__.py
       verdict: pass
       score: 1.00

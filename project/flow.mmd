@@ -23,22 +23,22 @@ flowchart TD
     end
 
     subgraph Core
-        prellm__env_config__load_dotenv_if_available{{load_dotenv_if_available CC=20}}
+        prellm__env_config___parse_env_line["_parse_env_line"]
+        prellm__env_config___load_env_file_manually["_load_env_file_manually"]
+        prellm__env_config__load_dotenv_if_available["load_dotenv_if_available"]
         prellm__env_config__get_env_config("get_env_config CC=9")
         prellm__env_config__check_providers["check_providers"]
         prellm__env_config__check_providers_live["check_providers_live"]
+        prellm___get_process_chain["_get_process_chain"]
         prellm__trace__TraceRecorder__start["start"]
         prellm__trace__TraceRecorder__stop["stop"]
         prellm__trace__TraceRecorder__step["step"]
         prellm__trace__TraceRecorder__set_result["set_result"]
-        prellm__trace__TraceRecorder__to_markdown["to_markdown"]
-        prellm__trace__TraceRecorder__to_stdout["to_stdout"]
-        prellm__trace__TraceRecorder__save["save"]
-        prellm__trace___compact_value["_compact_value"]
-        prellm__prompt_registry__PromptEntry____repr__["__repr__"]
-        prellm__prompt_registry__PromptRegistry___ensure_loaded["_ensure_loaded"]
-        prellm__prompt_registry__PromptRegistry___load["_load"]
-        ...["+155 more"]
+        prellm__trace__TraceRecorder___generate_markdown_header["_generate_markdown_header"]
+        prellm__trace__TraceRecorder___generate_markdown_config["_generate_markdown_config"]
+        prellm__TraceRecorder___generate_markdown_step_details["_generate_markdown_step_detail"]
+        prellm__TraceRecorder___generate_markdown_decision_path["_generate_markdown_decision_pa"]
+        ...["+171 more"]
     end
 
     subgraph Exporters
