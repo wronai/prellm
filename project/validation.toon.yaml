@@ -1,10 +1,10 @@
-# vallm batch | 133f | 88✓ 45✗
+# vallm batch | 132f | 87✓ 45✗
 
 SUMMARY:
-  total: 133
-  passed: 88
+  total: 132
+  passed: 87
   failed: 45
-  success: 66.2%
+  success: 65.9%
 
 FILES:
   [yaml]
@@ -32,16 +32,11 @@ FILES:
       score: 0.00
       issues: 1
         [error] syntax.tree_sitter: tree-sitter found 1 parse error(s) in yaml
-    ✗ project/evolution.yaml
+    ✗ project/validation.toon.yaml
       verdict: fail
       score: 0.00
       issues: 1
         [error] syntax.tree_sitter: tree-sitter found 1 parse error(s) in yaml
-    ✗ project/map.yaml
-      verdict: fail
-      score: 0.00
-      issues: 1
-        [error] syntax.tree_sitter: tree-sitter found 6 parse error(s) in yaml
     ✗ project/map.toon.yaml
       verdict: fail
       score: 0.00
@@ -52,9 +47,11 @@ FILES:
       score: 0.00
       issues: 1
         [error] syntax.tree_sitter: tree-sitter found 1 parse error(s) in yaml
-    ✓ project/analysis.toon.yaml
-      verdict: pass
-      score: 1.00
+    ✗ project/analysis.toon.yaml
+      verdict: fail
+      score: 0.00
+      issues: 1
+        [error] syntax.tree_sitter: tree-sitter found 1 parse error(s) in yaml
     ✓ configs/response_schemas.yaml
       verdict: pass
       score: 1.00
@@ -400,11 +397,11 @@ FAILED:
   ✗ project/index.html: Unsupported file type
   ✗ project/duplication.toon.yaml: Validation fail
   ✗ project/context.md: Unsupported file type
-  ✗ project/evolution.yaml: Validation fail
-  ✗ project/map.yaml: Validation fail
+  ✗ project/validation.toon.yaml: Validation fail
   ✗ project/map.toon.yaml: Validation fail
   ✗ project/flow.mmd: Unsupported file type
   ✗ project/evolution.toon.yaml: Validation fail
   ✗ project/README.md: Unsupported file type
+  ✗ project/analysis.toon.yaml: Validation fail
   ✗ prellm/context/user_memory.py: Validation fail
   ✗ prellm/analyzers/context_engine.py: Validation fail

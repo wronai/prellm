@@ -1,63 +1,81 @@
-format: toon-v2-yaml
-timestamp: '2026-03-25'
-header:
-  files: 31
-  lines: 8900
-  functions: 310
-  avg_cc: 5.0
-  critical_count: 10
-  duplicates: 0
-  cycles: 1
-health:
-  count: 10
-  status: issues_found
-  issues:
-  - severity: yellow
-    code: CC
-    message: load_dotenv_if_available CC=20 (limit:15)
-  - severity: yellow
-    code: CC
-    message: query CC=27 (limit:15)
-  - severity: yellow
-    code: CC
-    message: to_markdown CC=17 (limit:15)
-  - severity: yellow
-    code: CC
-    message: to_stdout CC=28 (limit:15)
-  - severity: yellow
-    code: CC
-    message: preprocess_and_execute CC=15 (limit:15)
-  - severity: yellow
-    code: CC
-    message: _prepare_context CC=21 (limit:15)
-  - severity: yellow
-    code: CC
-    message: _build_executor_system_prompt CC=19 (limit:15)
-  - severity: yellow
-    code: CC
-    message: _build_decomposition_result CC=16 (limit:15)
-  - severity: yellow
-    code: CC
-    message: main CC=30 (limit:15)
-  - severity: yellow
-    code: CC
-    message: _filter_recursive CC=17 (limit:15)
-refactor:
-  steps:
-  - action: split_methods
-    count: 10
-    reason: high_cc
-  - action: break_cycles
-    count: 1
-pipelines:
-  count: 0
-  pipelines: []
-layers:
-  count: 0
-  layers: []
-coupling:
-  count: 0
-  packages: []
-external:
-  count: 0
-  libraries: []
+# code2llm | 31f 8900L | python:30,shell:1 | 2026-03-25
+# CC̄=5.0 | critical:10/310 | dups:0 | cycles:1
+
+HEALTH[10]:
+  🟡 CC    load_dotenv_if_available CC=20 (limit:15)
+  🟡 CC    query CC=27 (limit:15)
+  🟡 CC    to_markdown CC=17 (limit:15)
+  🟡 CC    to_stdout CC=28 (limit:15)
+  🟡 CC    preprocess_and_execute CC=15 (limit:15)
+  🟡 CC    _prepare_context CC=21 (limit:15)
+  🟡 CC    _build_executor_system_prompt CC=19 (limit:15)
+  🟡 CC    _build_decomposition_result CC=16 (limit:15)
+  🟡 CC    main CC=30 (limit:15)
+  🟡 CC    _filter_recursive CC=17 (limit:15)
+
+REFACTOR[2]:
+  1. split 10 high-CC methods  (CC>15)
+  2. break 1 circular dependencies
+
+PIPELINES[226]:
+  [1] Src [ollama_local]: ollama_local → run_example → preprocess_and_execute → get_current_trace
+      PURITY: 100% pure
+  [2] Src [ollama_plus_openai]: ollama_plus_openai → run_example → preprocess_and_execute → get_current_trace
+      PURITY: 100% pure
+  [3] Src [ollama_plus_anthropic]: ollama_plus_anthropic → run_example → preprocess_and_execute → get_current_trace
+      PURITY: 100% pure
+  [4] Src [openai_only]: openai_only → run_example → preprocess_and_execute → get_current_trace
+      PURITY: 100% pure
+  [5] Src [anthropic_only]: anthropic_only → run_example → preprocess_and_execute → get_current_trace
+      PURITY: 100% pure
+
+LAYERS:
+  prellm/                         CC̄=5.1    ←in:1  →out:0
+  │ !! cli                        999L  0C   24m  CC=27     ←0
+  │ !! core                       893L  1C   17m  CC=21     ←9
+  │ !! trace                      509L  2C   16m  CC=28     ←1
+  │ pipeline                   483L  5C   18m  CC=9      ←2
+  │ !! env_config                 481L  1C   12m  CC=20     ←2
+  │ server                     447L  10C    9m  CC=12     ←1
+  │ models                     434L  33C    2m  CC=1      ←1
+  │ codebase_indexer           418L  4C   14m  CC=11     ←0
+  │ user_memory                361L  1C   15m  CC=12     ←0
+  │ query_decomposer           330L  1C   10m  CC=9      ←0
+  │ process_chain              275L  1C   10m  CC=7      ←0
+  │ context_engine             248L  1C   13m  CC=13     ←0
+  │ !! sensitive_filter           238L  1C   11m  CC=17     ←0
+  │ llm_provider               236L  1C    6m  CC=13     ←0
+  │ budget                     236L  3C   11m  CC=6      ←2
+  │ folder_compressor          224L  1C   10m  CC=11     ←0
+  │ validators                 213L  3C    8m  CC=14     ←0
+  │ schema_generator           211L  1C    9m  CC=11     ←0
+  │ preprocessor               190L  2C    6m  CC=13     ←0
+  │ prompt_registry            185L  5C   11m  CC=6      ←0
+  │ shell_collector            169L  1C    8m  CC=5      ←0
+  │ executor                   128L  2C    3m  CC=8      ←0
+  │ __init__                   118L  0C    0m  CC=0.0    ←0
+  │ logging_setup              106L  0C    3m  CC=5      ←1
+  │ model_catalog               78L  0C    2m  CC=8      ←1
+  │ __init__                    17L  0C    0m  CC=0.0    ←0
+  │ __init__                    11L  0C    0m  CC=0.0    ←0
+  │ __init__                     1L  0C    0m  CC=0.0    ←0
+  │ __init__                     0L  0C    0m  CC=0.0    ←0
+  │
+  scripts/                        CC̄=4.8    ←in:0  →out:0
+  │ !! config_wizard              640L  0C   19m  CC=30     ←0
+  │
+  ./                              CC̄=0.0    ←in:0  →out:0
+  │ project.sh                  21L  0C    0m  CC=0.0    ←0
+  │
+  ── zero ──
+     prellm/chains/__init__.py                 0L
+
+COUPLING:
+                        prellm  prellm.chains
+         prellm             ──             ←1
+  prellm.chains              1             ──
+  CYCLES: 1
+
+EXTERNAL:
+  validation: run `vallm batch .` → validation.toon
+  duplication: run `redup scan .` → duplication.toon

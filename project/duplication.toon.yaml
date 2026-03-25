@@ -6,7 +6,7 @@ SUMMARY:
   dup_groups:    4
   dup_fragments: 21
   saved_lines:   126
-  scan_ms:       5547
+  scan_ms:       4077
 
 DUPLICATES[4] (ranked by impact):
   [d80472b893ab7a2d] ! STRU  ollama_local  L=7 N=13 saved=84 sim=1.00
