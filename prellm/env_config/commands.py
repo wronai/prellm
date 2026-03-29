@@ -6,6 +6,8 @@ import os
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from prellm.env_config.storage import _get_env_store_class, write_env_file
+
 if TYPE_CHECKING:
     from prellm.env_config.models import EnvConfig
 
@@ -19,16 +21,11 @@ def _resolve_config_path(global_: bool = False) -> Path:
 
 def _read_env_file(path: Path) -> dict[str, str]:
     """Read .env file into ordered dict."""
-    try:
-        from getv import EnvStore
-        _HAS_GETV = True
-    except ImportError:
-        _HAS_GETV = False
-
-    if _HAS_GETV:
+    env_store = _get_env_store_class()
+    if env_store is not None:
         if not path.is_file():
             return {}
-        return EnvStore(path, auto_create=False).as_dict()
+        return env_store(path, auto_create=False).as_dict()
 
     entries: dict[str, str] = {}
     if not path.is_file():
@@ -48,44 +45,7 @@ def _read_env_file(path: Path) -> dict[str, str]:
 
 def _write_env_file(path: Path, entries: dict[str, str], comments: list[str] | None = None) -> None:
     """Write entries to .env file, preserving existing comments."""
-    try:
-        from getv import EnvStore
-        _HAS_GETV = True
-    except ImportError:
-        _HAS_GETV = False
-
-    if _HAS_GETV:
-        store = EnvStore(path)
-        store.update(entries)
-        store.save()
-        return
-
-    path.parent.mkdir(parents=True, exist_ok=True)
-    existing_lines: list[str] = []
-    existing_keys: set[str] = set()
-    if path.is_file():
-        with open(path) as f:
-            for line in f:
-                raw = line.rstrip("\n")
-                stripped = raw.strip()
-                if stripped and not stripped.startswith("#") and "=" in stripped:
-                    key, _, _ = stripped.partition("=")
-                    key = key.strip()
-                    if key in entries:
-                        existing_lines.append(f"{key}={entries[key]}")
-                        existing_keys.add(key)
-                        continue
-                existing_lines.append(raw)
-    for key, value in entries.items():
-        if key not in existing_keys:
-            existing_lines.append(f"{key}={value}")
-    with open(path, "w") as f:
-        if comments:
-            for c in comments:
-                f.write(f"# {c}\n")
-            if existing_lines and not existing_lines[0].startswith("#"):
-                f.write("\n")
-        f.write("\n".join(existing_lines) + "\n")
+    write_env_file(path, entries, comments=comments)
 
 
 def config_set(key: str, value: str, global_: bool = False) -> tuple[str, Path]:

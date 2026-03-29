@@ -1,16 +1,18 @@
-# code2llm/evolution | 293 func | 41f | 2026-03-29
+# code2llm/evolution | 293 func | 47f | 2026-03-29
 
-NEXT[0]:
-  All god modules split. Current targets: fan-out reduction, duplication cleanup.
+NEXT[1] (ranked by impact):
+  [1] !  SPLIT-FUNC      context_shell_cmd  fan=18
+      WHY: fan-out=18 exceeds limit 10
+      EFFORT: ~1h  IMPACT: 270
 
-RISKS[0]:
-  All high-risk refactoring completed.
+
+RISKS[0]: none
 
 METRICS-TARGET:
-  CC̄:          4.4 → ≤3.1 (current: 4.0 ✓)
-  max-CC:      14 → ≤7 (current: 6 ✓)
-  god-modules: 2 → 0 (current: 0 ✓)
-  high-CC(≥15): 0 → ≤0 (current: 0 ✓)
+  CC̄:          4.4 → ≤3.1
+  max-CC:      15 → ≤7
+  god-modules: 0 → 0
+  high-CC(≥15): 1 → ≤0
   hub-types:   0 → ≤0
 
 PATTERNS (language parser shared logic):
@@ -38,8 +40,5 @@ PATTERNS (language parser shared logic):
     - Standardized FunctionInfo/ClassInfo models
 
 HISTORY:
-  prev CC̄=4.5 → now CC̄=4.0
-  2026-03-29: prellm/core.py god module split → 7 submodules (CC 15→6)
-  2026-03-29: prellm/cli.py god module split → 9 submodules (CC 13→6)
-  2026-03-29: prellm/trace.py god module split → 4 submodules (CC 13→5)
-  2026-03-29: prellm/env_config.py god module split → 6 submodules (CC 14→6)
+  prev CC̄=4.4 → now CC̄=4.3
+  2026-03-29: _write_env_file fan-out reduced 18→1 via env_config/storage helpers

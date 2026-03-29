@@ -29,16 +29,24 @@ _UserMemory = None
 _CodebaseIndexer = None
 
 
+def _get_lazy_class(cache_attr: str, import_path: str):
+    """Generic lazy import helper - loads class on first call, caches result."""
+    cache = globals()[cache_attr]
+    if cache is not None:
+        return cache
+    from prellm.utils.lazy_imports import lazy_import_global
+    result = lazy_import_global(cache_attr, import_path, globals())
+    return result
+
+
 def _get_user_memory_class():
     """Lazy import UserMemory class."""
-    from prellm.utils.lazy_imports import lazy_import_global
-    return lazy_import_global('_UserMemory', 'prellm.context.user_memory.UserMemory', globals())
+    return _get_lazy_class('_UserMemory', 'prellm.context.user_memory.UserMemory')
 
 
 def _get_codebase_indexer_class():
     """Lazy import CodebaseIndexer class."""
-    from prellm.utils.lazy_imports import lazy_import_global
-    return lazy_import_global('_CodebaseIndexer', 'prellm.context.codebase_indexer.CodebaseIndexer', globals())
+    return _get_lazy_class('_CodebaseIndexer', 'prellm.context.codebase_indexer.CodebaseIndexer')
 
 
 class PreprocessResult(BaseModel):

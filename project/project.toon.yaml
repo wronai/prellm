@@ -1,68 +1,50 @@
-# prellm | 326 func | 42f | 15410L | python | 2026-03-29
+# prellm | 331 func | 53f | 15748L | python | 2026-03-29
 
 HEALTH:
-  CC̄=4.1  critical=0 (limit:10)  dup=0  cycles=0
+  CC̄=4.3  critical=21 (limit:10)  dup=0  cycles=0
 
-ALERTS[20]:
-  !!! high_fan_out     _execute_v3_pipeline = 23 (limit:10)
-  !!  high_fan_out     _write_env_file = 18 (limit:10)
+ALERTS[17]:
   !!  high_fan_out     context_shell_cmd = 18 (limit:10)
-  !!  high_fan_out     context_show_cmd = 17 (limit:10)
+  !!  high_fan_out     context_show_cmd = 18 (limit:10)
   !!  high_fan_out     chat_completions = 16 (limit:10)
-  !   high_fan_out     config_list = 14 (limit:10)
   !   high_fan_out     PromptPipeline.from_yaml = 14 (limit:10)
+  !   high_fan_out     config_list = 14 (limit:10)
   !   high_fan_out     _show_debug_info = 14 (limit:10)
   !   high_fan_out     CodebaseIndexer.get_compressed_context = 14 (limit:10)
   !   high_fan_out     QueryDecomposer.decompose = 13 (limit:10)
 
-MODULES[58] (top by size):
-  M[scripts/config_wizard.py] 708L C:0 F:33 CC↑9 D:0 (python)
+MODULES[65] (top by size):
   M[prellm/pipeline.py] 483L C:5 F:18 CC↑9 D:0 (python)
   M[prellm/server.py] 447L C:10 F:9 CC↑12 D:0 (python)
   M[prellm/models.py] 434L C:33 F:2 CC↑1 D:0 (python)
   M[prellm/context/codebase_indexer.py] 418L C:4 F:14 CC↑11 D:0 (python)
+  M[scripts/config_wizard/wizard.py] 364L C:0 F:9 CC↑8 D:0 (python)
   M[prellm/context/user_memory.py] 361L C:1 F:15 CC↑12 D:0 (python)
   M[prellm/query_decomposer.py] 330L C:1 F:10 CC↑9 D:0 (python)
   M[prellm/chains/process_chain.py] 275L C:1 F:10 CC↑7 D:0 (python)
+  M[prellm/core/execution.py] 275L C:2 F:10 CC↑3 D:0 (python)
+  M[prellm/trace/terminal.py] 273L C:0 F:8 CC↑10 D:0 (python)
   M[prellm/context/sensitive_filter.py] 262L C:1 F:14 CC↑7 D:0 (python)
-  ── prellm/env_config/ (split from 528L god module) ──
-  M[prellm/env_config/commands.py] 140L C:0 F:5 CC↑6 D:0 (python)
-  M[prellm/env_config/loader.py] 100L C:0 F:5 CC↑6 D:0 (python)
-  M[prellm/env_config/constants.py] 90L C:0 F:2 CC↑2 D:0 (python)
-  M[prellm/env_config/providers.py] 70L C:0 F:2 CC↑5 D:0 (python)
-  M[prellm/env_config/utils.py] 50L C:0 F:2 CC↑3 D:0 (python)
-  M[prellm/env_config/models.py] 30L C:1 F:0 CC↑1 D:0 (python)
-  ── prellm/trace/ (split from 649L god module) ──
-  M[prellm/trace/terminal.py] 180L C:0 F:7 CC↑5 D:0 (python)
-  M[prellm/trace/markdown.py] 130L C:0 F:5 CC↑4 D:0 (python)
-  M[prellm/trace/models.py] 110L C:2 F:4 CC↑5 D:0 (python)
-  M[prellm/trace/utils.py] 100L C:0 F:8 CC↑3 D:0 (python)
-  M[prellm/trace/__init__.py] 25L C:0 F:2 CC↑2 D:0 (python)
   M[prellm/analyzers/context_engine.py] 248L C:1 F:13 CC↑13 D:0 (python)
   M[prellm/llm_provider.py] 236L C:1 F:6 CC↑13 D:0 (python)
   M[prellm/core/legacy.py] 236L C:1 F:6 CC↑10 D:0 (python)
   M[prellm/budget.py] 236L C:3 F:11 CC↑6 D:3 (python)
-  LANGS: python:48/shell:1
+  M[prellm/context/folder_compressor.py] 224L C:1 F:10 CC↑11 D:0 (python)
+  LANGS: python:64/shell:1
 
-HOTSPOTS[10]:
-  ★ _execute_v3_pipeline fan=23  // Two-agent execution path — PreprocessorAgent + ExecutorAgent + PromptPipeline.
-
-
-  ★ _write_env_file fan=18  // Write entries to .env file, preserving existing comments.
-
-Delegates to getv.Env
+HOTSPOTS[4]:
   ★ context_shell_cmd fan=18  // Show collected environment context, schema, and blocked sensitive data.
   ★ context_show_cmd fan=17  // Show collected runtime context.
   ★ chat_completions fan=16  // OpenAI-compatible chat completions with preLLM preprocessing.
+  ★ PromptPipeline.from_yaml fan=14  // YAML loader for pipeline definitions.
 
-REFACTOR[2]:
-  [1] ✓ DONE Split god module prellm/core.py → 7 submodules
-  [2] ✓ DONE Split god module prellm/cli.py → 9 submodules  
-  [3] ✓ DONE Split god module prellm/trace.py → 4 submodules
-  [4] ✓ DONE Split god module prellm/env_config.py → 6 submodules
-  [5] H/H Split god module scripts/config_wizard.py (708L, 0 classes)
+REFACTOR[4]:
+  [1] ✓ DONE Split _write_env_file into env-store/plain-file helpers
+  [2] ✓ DONE Reduce _execute_v3_pipeline fan-out (23 → 4)
+  [3] ✓ DONE Reduce _write_env_file fan-out (18 → 1)
+  [4] M/M Reduce context_shell_cmd fan-out (currently 18)
 
 EVOLUTION:
-  2026-03-29 CC̄=4.3 crit=23 15410L // Automated analysis
-  2026-03-29 CC̄=4.1 crit=0 15410L // core+cli+trace god modules split, CC reduced 13→5
-  2026-03-29 CC̄=4.0 crit=0 15410L // +env_config god module split, CC reduced 14→6
+  2026-03-29 CC̄=4.4 crit=24 15531L // Automated analysis
+  2026-03-29 CC̄=4.3 crit=23 15705L // _execute_v3_pipeline fan-out reduced 23→4 via core/execution helpers
+  2026-03-29 CC̄=4.3 crit=21 15748L // _write_env_file split into storage helpers, fan-out reduced 18→1

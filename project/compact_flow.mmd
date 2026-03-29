@@ -32,12 +32,12 @@ flowchart TD
     prellm__core -->|2| prellm__trace
     prellm__cli -->|2| prellm__model_catalog
     prellm__cli -->|2| prellm__budget
-    prellm__agents -->|2| prellm__utils
     examples__utils -->|2| prellm__core
-    examples__providers -->|1| prellm__core
+    prellm__agents -->|2| prellm__utils
     examples__python_sdk -->|1| prellm__pipeline
-    prellm__llm_provider -->|1| prellm__budget
+    examples__providers -->|1| prellm__core
     prellm__server -->|1| prellm__env_config
+    prellm__llm_provider -->|1| prellm__budget
     prellm__core -->|1| prellm__pipeline
     prellm__cli -->|1| prellm__models
     prellm__cli -->|1| prellm__logging_setup

@@ -1,17 +1,14 @@
-# vallm batch | 149f | 108✓ 2⚠ 5✗ | 2026-03-29
+# vallm batch | 165f | 117✓ 1⚠ 12✗ | 2026-03-29
 
 SUMMARY:
-  scanned: 149  passed: 108 (72.5%)  warnings: 2  errors: 5  unsupported: 36
+  scanned: 165  passed: 117 (70.9%)  warnings: 1  errors: 12  unsupported: 36
 
-WARNINGS[2]{path,score}:
-  prellm/trace.py,0.98
-    issues[1]{rule,severity,message,line}:
-      complexity.maintainability,warning,Low maintainability index: 18.3 (threshold: 20),
+WARNINGS[1]{path,score}:
   tests/test_v2_architecture.py,0.98
     issues[1]{rule,severity,message,line}:
       complexity.maintainability,warning,Low maintainability index: 13.4 (threshold: 20),
 
-ERRORS[5]{path,score}:
+ERRORS[12]{path,score}:
   prellm/cli/main.py,0.00
     issues[1]{rule,severity,message,line}:
       syntax.parse,error,SyntaxError: f-string: single '}' is not allowed,195
@@ -19,12 +16,49 @@ ERRORS[5]{path,score}:
     issues[2]{rule,severity,message,line}:
       python.import.resolvable,error,Module 'lazy_imports' not found,3
       python.import.resolvable,error,Module 'lazy_loader' not found,4
-  prellm/env_config.py,0.84
+  scripts/config_wizard/__init__.py,0.57
+    issues[2]{rule,severity,message,line}:
+      python.import.resolvable,error,Module 'config_wizard.ui' not found,6
+      python.import.resolvable,error,Module 'config_wizard.wizard' not found,7
+  scripts/config_wizard/providers.py,0.69
+    issues[11]{rule,severity,message,line}:
+      python.import.resolvable,error,Module 'config_wizard.ui' not found,9
+      python.import.resolvable,error,Module 'config_wizard.ollama' not found,10
+      python.import.resolvable,error,Module 'config_wizard.ui' not found,22
+      python.import.resolvable,error,Module 'config_wizard.ui' not found,45
+      python.import.resolvable,error,Module 'config_wizard.ui' not found,63
+      python.import.resolvable,error,Module 'config_wizard.ui' not found,78
+      python.import.resolvable,error,Module 'config_wizard.ui' not found,98
+      python.import.resolvable,error,Module 'config_wizard.ui' not found,119
+      python.import.resolvable,error,Module 'config_wizard.ui' not found,142
+      python.import.resolvable,error,Module 'config_wizard.ollama' not found,143
+      python.import.resolvable,error,Module 'config_wizard.ui' not found,180
+  scripts/config_wizard.py,0.79
+    issues[1]{rule,severity,message,line}:
+      python.import.resolvable,error,Module 'config_wizard.wizard' not found,11
+  scripts/config_wizard/ollama.py,0.83
     issues[4]{rule,severity,message,line}:
+      python.import.resolvable,error,Module 'config_wizard.ui' not found,11
+      python.import.resolvable,error,Module 'config_wizard.ui' not found,41
+      python.import.resolvable,error,Module 'config_wizard.ui' not found,87
+      python.import.resolvable,error,Module 'config_wizard.ui' not found,104
+  scripts/config_wizard/wizard.py,0.84
+    issues[3]{rule,severity,message,line}:
+      python.import.resolvable,error,Module 'config_wizard.ui' not found,10
+      python.import.resolvable,error,Module 'config_wizard.ollama' not found,11
+      python.import.resolvable,error,Module 'config_wizard.providers' not found,12
+  prellm/env_config/utils.py,0.86
+    issues[1]{rule,severity,message,line}:
+      python.import.resolvable,error,Module 'getv.security' not found,6
+  prellm/env_config/loader.py,0.88
+    issues[3]{rule,severity,message,line}:
+      python.import.resolvable,error,Module 'getv' not found,16
       python.import.resolvable,error,Module 'getv' not found,27
-      python.import.resolvable,error,Module 'getv.security' not found,28
-      python.import.resolvable,error,Module 'getv' not found,103
-      python.import.resolvable,error,Module 'getv.integrations.pydantic_env' not found,104
+      python.import.resolvable,error,Module 'getv.integrations.pydantic_env' not found,28
+  prellm/env_config/commands.py,0.92
+    issues[2]{rule,severity,message,line}:
+      python.import.resolvable,error,Module 'getv' not found,23
+      python.import.resolvable,error,Module 'getv' not found,52
   prellm/context/user_memory.py,0.96
     issues[1]{rule,severity,message,line}:
       python.import.resolvable,error,Module 'chromadb' not found,83

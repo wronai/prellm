@@ -4,33 +4,19 @@
 
 - **Project**: /home/tom/github/wronai/prellm
 - **Primary Language**: python
-- **Languages**: python: 55, shell: 3
+- **Languages**: python: 69, shell: 3
 - **Analysis Mode**: static
 - **Total Functions**: 370
 - **Total Classes**: 81
-- **Modules**: 58
-- **Entry Points**: 260
+- **Modules**: 72
+- **Entry Points**: 246
 
 ## Architecture by Module
-
-### scripts.config_wizard
-- **Functions**: 33
-- **File**: `config_wizard.py`
-
-### prellm.trace
-- **Functions**: 29
-- **Classes**: 2
-- **File**: `trace.py`
 
 ### prellm.pipeline
 - **Functions**: 18
 - **Classes**: 5
 - **File**: `pipeline.py`
-
-### prellm.env_config
-- **Functions**: 17
-- **Classes**: 1
-- **File**: `env_config.py`
 
 ### examples.providers
 - **Functions**: 16
@@ -79,34 +65,45 @@
 - **Classes**: 1
 - **File**: `query_decomposer.py`
 
-### prellm.context.folder_compressor
-- **Functions**: 10
-- **Classes**: 1
-- **File**: `folder_compressor.py`
-
 ### prellm.chains.process_chain
 - **Functions**: 10
 - **Classes**: 1
 - **File**: `process_chain.py`
+
+### prellm.context.folder_compressor
+- **Functions**: 10
+- **Classes**: 1
+- **File**: `folder_compressor.py`
 
 ### prellm.server
 - **Functions**: 9
 - **Classes**: 10
 - **File**: `server.py`
 
+### scripts.config_wizard.providers
+- **Functions**: 9
+- **File**: `providers.py`
+
+### scripts.config_wizard.wizard
+- **Functions**: 9
+- **File**: `wizard.py`
+
 ### prellm.context.schema_generator
 - **Functions**: 9
 - **Classes**: 1
 - **File**: `schema_generator.py`
 
+### scripts.config_wizard.ollama
+- **Functions**: 8
+- **File**: `ollama.py`
+
 ### prellm.core.context
 - **Functions**: 8
 - **File**: `context.py`
 
-### prellm.context.shell_collector
+### prellm.trace.terminal
 - **Functions**: 8
-- **Classes**: 1
-- **File**: `shell_collector.py`
+- **File**: `terminal.py`
 
 ## Key Entry Points
 
@@ -126,7 +123,7 @@ Main execution flows into the system:
 
 ### prellm.cli.budget.budget_cmd
 > Show LLM API spend tracking and budget status.
-- **Calls**: typer.Option, typer.Option, prellm.cli.utils._init_logging, prellm.env_config.get_env_config, prellm.budget.get_budget_tracker, tracker.summary, typer.echo, typer.echo
+- **Calls**: typer.Option, typer.Option, prellm.cli.utils._init_logging, prellm.env_config.loader.get_env_config, prellm.budget.get_budget_tracker, tracker.summary, typer.echo, typer.echo
 
 ### prellm.core.legacy.PreLLM._load_config
 > Load preLLM v0.2 config from YAML file.
@@ -142,11 +139,7 @@ Main execution flows into the system:
 
 ### prellm.cli.config.config_show_cmd
 > Show effective configuration (resolved from all sources).
-- **Calls**: prellm.env_config.get_env_config, typer.echo, typer.echo, typer.echo, typer.echo, typer.echo, typer.echo, typer.echo
-
-### prellm.trace.TraceRecorder._generate_decision_tree
-> Generate decision tree visualization.
-- **Calls**: self._collect_trace_data, self.config.get, self.config.get, self.config.get, lines.extend, lines.extend, enumerate, lines.append
+- **Calls**: prellm.env_config.loader.get_env_config, typer.echo, typer.echo, typer.echo, typer.echo, typer.echo, typer.echo, typer.echo
 
 ### prellm.server.chat_completions
 > OpenAI-compatible chat completions with preLLM preprocessing.
@@ -173,7 +166,7 @@ Guarantees output fits within ma
 
 ### prellm.cli.doctor.doctor_cmd
 > Check configuration and provider connectivity.
-- **Calls**: typer.Option, typer.Option, prellm.cli.utils._init_logging, prellm.env_config.get_env_config, typer.echo, typer.echo, typer.echo, prellm.cli.doctor._doctor_check_config
+- **Calls**: typer.Option, typer.Option, prellm.cli.utils._init_logging, prellm.env_config.loader.get_env_config, typer.echo, typer.echo, typer.echo, prellm.cli.doctor._doctor_check_config
 
 ### prellm.query_decomposer.QueryDecomposer.decompose
 > Run the decomposition pipeline for the given strategy.
@@ -217,9 +210,9 @@ Args:
 > Load prompts from the YAML file.
 - **Calls**: raw.get, prompts_raw.items, logger.debug, self._path.exists, logger.warning, open, isinstance, yaml.safe_load
 
-### scripts.config_wizard.main
-> Main configuration wizard - refactored for lower complexity.
-- **Calls**: print, print, print, print, print, print, print, scripts.config_wizard._run_diagnostics
+### scripts.config_wizard.wizard.main
+> Main configuration wizard.
+- **Calls**: print, print, print, print, print, print, print, scripts.config_wizard.wizard._run_diagnostics
 
 ### prellm.cli.process.process_cmd
 > Execute a DevOps process chain.
@@ -228,10 +221,6 @@ Args:
 ### prellm.context.user_memory.UserMemory._get_all_interactions
 > Get all interactions for export.
 - **Calls**: self._conn.execute, self._chroma_collection.get, enumerate, json.loads, cursor.fetchall, results.get, doc.split, items.append
-
-### prellm.trace.TraceRecorder._generate_markdown_step_details
-> Generate markdown details for a single step.
-- **Calls**: prellm.trace._step_icon, lines.extend, lines.append, lines.extend, lines.extend, lines.append, lines.append, lines.extend
 
 ### prellm.pipeline.PromptPipeline.execute
 > Execute pipeline step by step, collecting intermediate results.
@@ -244,6 +233,17 @@ Args:
 ### prellm.cli.session.session_export_cmd
 > Export current session to JSON file.
 - **Calls**: Path, prellm.cli.utils._init_logging, UserMemory, asyncio.run, snapshot.to_file, typer.echo, typer.echo, typer.echo
+
+### prellm.context.folder_compressor.FolderCompressor.to_dependency_graph
+> Build module → list of imported internal modules.
+- **Calls**: set, set, Path, prellm.context.folder_compressor._relative_path, prellm.context.folder_compressor._path_to_module, prellm.context.folder_compressor._relative_path, prellm.context.folder_compressor._path_to_module, internal_modules.add
+
+### prellm.context.user_memory.UserMemory.get_recent_context
+> Get the most recent/relevant interactions.
+
+SQLite: returns last N interactions ordered by recency.
+ChromaDB: returns N most semantically similar inte
+- **Calls**: self._conn.execute, cursor.fetchall, results.append, self._chroma_collection.query, enumerate, doc.split, items.append, logger.warning
 
 ## Process Flows
 
@@ -306,24 +306,19 @@ config_show_cmd [prellm.cli.config]
           └─> _get_env_candidates
 ```
 
-### Flow 9: _generate_decision_tree
-```
-_generate_decision_tree [prellm.trace.TraceRecorder]
-```
-
-### Flow 10: chat_completions
+### Flow 9: chat_completions
 ```
 chat_completions [prellm.server]
   └─> _parse_model_pair
   └─> _build_prellm_meta
 ```
 
-## Key Classes
+### Flow 10: from_yaml
+```
+from_yaml [prellm.pipeline.PromptPipeline]
+```
 
-### prellm.trace.TraceRecorder
-> Records execution trace and generates markdown documentation.
-- **Methods**: 21
-- **Key Methods**: prellm.trace.TraceRecorder.start, prellm.trace.TraceRecorder.stop, prellm.trace.TraceRecorder.step, prellm.trace.TraceRecorder.set_result, prellm.trace.TraceRecorder.total_duration_ms, prellm.trace.TraceRecorder._generate_markdown_header, prellm.trace.TraceRecorder._generate_markdown_config, prellm.trace.TraceRecorder._generate_markdown_step_details, prellm.trace.TraceRecorder._generate_markdown_decision_path, prellm.trace.TraceRecorder._generate_markdown_result
+## Key Classes
 
 ### prellm.pipeline.PromptPipeline
 > Generic pipeline — executes a sequence of LLM + algorithmic steps.
@@ -431,6 +426,11 @@ Usage:
 - **Methods**: 6
 - **Key Methods**: prellm.core.legacy.PreLLM.__init__, prellm.core.legacy.PreLLM.__call__, prellm.core.legacy.PreLLM.decompose_only, prellm.core.legacy.PreLLM.get_audit_log, prellm.core.legacy.PreLLM._audit, prellm.core.legacy.PreLLM._load_config
 
+### prellm.trace.models.TraceRecorder
+> Records execution trace and generates markdown documentation.
+- **Methods**: 6
+- **Key Methods**: prellm.trace.models.TraceRecorder.start, prellm.trace.models.TraceRecorder.stop, prellm.trace.models.TraceRecorder.step, prellm.trace.models.TraceRecorder.set_result, prellm.trace.models.TraceRecorder.total_duration_ms, prellm.trace.models.TraceRecorder.save
+
 ### prellm.context.folder_compressor.FolderCompressor
 > Compresses a project folder into a lightweight representation for LLM context.
 - **Methods**: 6
@@ -467,23 +467,11 @@ Usage:
 
 Key functions that process and transform data:
 
-### prellm.env_config._parse_env_line
-> Parse a single .env line. Returns (key, value) or None if invalid.
-- **Output to**: line.strip, line.partition, key.strip, None.strip, line.startswith
-
 ### prellm._get_process_chain
-
-### prellm.trace._format_tree_value
-> Format a value for display in the decision tree — no truncation.
-- **Output to**: isinstance, str, isinstance, json.dumps, val.replace
 
 ### prellm.prompt_registry.PromptRegistry.validate
 > Validate that all prompts have non-empty templates. Returns list of error messages.
 - **Output to**: self._ensure_loaded, set, self._entries.items, self._entries.keys, errors.append
-
-### prellm.llm_provider.LLMProvider._parse_json
-> Best-effort JSON extraction from LLM output.
-- **Output to**: text.strip, logger.warning, json.loads, text.split, text.find
 
 ### prellm.server._parse_model_pair
 > Parse 'prellm:qwen→claude' or 'prellm:small→large' into (small, large) model strings.
@@ -494,6 +482,10 @@ Special cases
 ### prellm.server.batch_process
 > Process multiple queries in parallel.
 - **Output to**: app.post, HTTPException, asyncio.gather, list, prellm.core.preprocess_and_execute
+
+### prellm.llm_provider.LLMProvider._parse_json
+> Best-effort JSON extraction from LLM output.
+- **Output to**: text.strip, logger.warning, json.loads, text.split, text.find
 
 ### prellm.pipeline.PromptPipeline._algo_yaml_formatter
 > Format pipeline state into structured executor input.
@@ -514,6 +506,18 @@ Args:
   
 - **Output to**: self.validate, logger.info, retry_fn, self.validate
 
+### scripts.config_wizard.ollama.validate_ollama_model
+> Validate Ollama model is installed, offer to install if not.
+- **Output to**: scripts.config_wizard.ollama.strip_ollama_prefix, scripts.config_wizard.ui.warn, scripts.config_wizard.ui.info, scripts.config_wizard.ui.ask_yn, scripts.config_wizard.ui.ask_yn
+
+### scripts.config_wizard.providers.check_api_key_format
+> Validate API key format.
+- **Output to**: patterns.get, re.match, scripts.config_wizard.ui.ok, scripts.config_wizard.ui.warn
+
+### prellm.env_config.loader._parse_env_line
+> Parse a single .env line. Returns (key, value) or None if invalid.
+- **Output to**: line.strip, line.partition, key.strip, None.strip, line.startswith
+
 ### prellm.core.prompts._format_classification_context
 > Extract and format classification context from preprocessing result.
 - **Output to**: state.get, isinstance, state.get, classification.get, classification.get
@@ -532,38 +536,27 @@ Args:
 
 ### prellm.core.preprocess_and_execute
 > One function to preprocess and execute — like litellm.completion() but with small LLM decomposition.
-- **Output to**: prellm.core.main._resolve_pipeline_name, prellm.core.main._load_config_overrides, kwargs.update, prellm.core.main._record_config_trace, prellm.trace.get_current_trace
+- **Output to**: prellm.core.main._resolve_pipeline_name, prellm.core.main._load_config_overrides, kwargs.update, prellm.core.main._record_config_trace, prellm.trace.models.get_current_trace
 
 ### prellm.core.preprocess_and_execute_sync
 > Synchronous version of preprocess_and_execute().
 - **Output to**: asyncio.run, prellm.core.preprocess_and_execute
 
-### scripts.config_wizard.validate_ollama_model
-- **Output to**: scripts.config_wizard.strip_ollama_prefix, scripts.config_wizard.warn, scripts.config_wizard.info, scripts.config_wizard.ask_yn, scripts.config_wizard.ask_yn
-
-### scripts.config_wizard.check_api_key_format
-> Validate API key format.
-- **Output to**: patterns.get, re.match, scripts.config_wizard.ok, scripts.config_wizard.warn
-
 ### prellm.core.pipeline._run_preprocessing
 > Run the small-LLM preprocessing step. Returns (prep_result, duration_ms).
 - **Output to**: time.time, preprocessor.preprocess, time.time
-
-### prellm.cli.process.process_cmd
-> Execute a DevOps process chain.
-- **Output to**: Path, ProcessChain, asyncio.run, chain.execute, typer.echo
 
 ### prellm.cli.config._format_config_sections
 > Group config entries into categorized sections for display.
 - **Output to**: entries.items, None.append, None.append, var.startswith, None.append
 
+### prellm.cli.process.process_cmd
+> Execute a DevOps process chain.
+- **Output to**: Path, ProcessChain, asyncio.run, chain.execute, typer.echo
+
 ### prellm.cli.utils._execute_and_format_result
 > Execute the query and format output.
 - **Output to**: asyncio.run, prellm.core.preprocess_and_execute, recorder.stop, typer.echo, recorder.save
-
-### prellm.context.shell_collector.ShellContextCollector.collect_process_info
-> Collect current process information.
-- **Output to**: ProcessInfo, hasattr, os.ttyname, os.getpid, os.getcwd
 
 ### prellm.chains.process_chain.ProcessChain._load_process_config
 - **Output to**: raw.get, ProcessConfig, open, steps.append, yaml.safe_load
@@ -572,12 +565,20 @@ Args:
 > Get or create a tree-sitter parser for the given language.
 - **Output to**: __import__, tree_sitter.Language, tree_sitter.Parser, lang_module.language, logger.debug
 
+### prellm.trace.utils._format_tree_value
+> Format a value for display in the decision tree.
+- **Output to**: isinstance, str, isinstance, json.dumps, val.replace
+
+### prellm.context.shell_collector.ShellContextCollector.collect_process_info
+> Collect current process information.
+- **Output to**: ProcessInfo, hasattr, os.ttyname, os.getpid, os.getcwd
+
 ## Behavioral Patterns
 
 ### recursion__sanitize
 - **Type**: recursion
 - **Confidence**: 0.90
-- **Functions**: prellm.trace._sanitize
+- **Functions**: prellm.trace.utils._sanitize
 
 ## Public API Surface
 
@@ -585,7 +586,7 @@ Functions exposed as public API (no underscore prefix):
 
 - `prellm.cli.context.context_shell_cmd` - 49 calls
 - `prellm.cli.context.context_show_cmd` - 43 calls
-- `prellm.env_config.get_env_config` - 27 calls
+- `prellm.env_config.loader.get_env_config` - 27 calls
 - `prellm.cli.process.decompose_cmd` - 26 calls
 - `prellm.cli.budget.budget_cmd` - 26 calls
 - `prellm.cli.config.config_show_cmd` - 24 calls
@@ -593,8 +594,8 @@ Functions exposed as public API (no underscore prefix):
 - `prellm.pipeline.PromptPipeline.from_yaml` - 22 calls
 - `prellm.context.codebase_indexer.CodebaseIndexer.get_compressed_context` - 21 calls
 - `prellm.cli.doctor.doctor_cmd` - 18 calls
-- `prellm.env_config.config_list` - 17 calls
 - `prellm.query_decomposer.QueryDecomposer.decompose` - 17 calls
+- `prellm.env_config.commands.config_list` - 17 calls
 - `prellm.cli.session.session_list_cmd` - 17 calls
 - `prellm.cli.models.models_cmd` - 17 calls
 - `prellm.context.folder_compressor.FolderCompressor.to_toon` - 17 calls
@@ -602,7 +603,7 @@ Functions exposed as public API (no underscore prefix):
 - `examples.k8s_debug.main` - 16 calls
 - `examples.polish_leasing.main` - 15 calls
 - `examples.python_sdk.example_custom_pipeline` - 15 calls
-- `scripts.config_wizard.main` - 15 calls
+- `scripts.config_wizard.wizard.main` - 15 calls
 - `prellm.cli.process.process_cmd` - 15 calls
 - `prellm.pipeline.PromptPipeline.execute` - 14 calls
 - `prellm.cli.session.session_export_cmd` - 14 calls
@@ -610,9 +611,9 @@ Functions exposed as public API (no underscore prefix):
 - `prellm.context.user_memory.UserMemory.get_recent_context` - 14 calls
 - `prellm.context.codebase_indexer.CodebaseIndexer.index_directory` - 14 calls
 - `prellm.analyzers.context_engine.ContextEngine.gather_runtime` - 14 calls
-- `prellm.env_config.check_providers_live` - 13 calls
 - `prellm.validators.ResponseValidator.validate` - 13 calls
-- `scripts.config_wizard.ask_choice` - 13 calls
+- `scripts.config_wizard.ui.ask_choice` - 13 calls
+- `prellm.env_config.providers.check_providers_live` - 13 calls
 - `prellm.chains.process_chain.ProcessChain.execute` - 13 calls
 - `prellm.agents.preprocessor.PreprocessorAgent.preprocess` - 13 calls
 - `examples.python_sdk.example_one_function` - 12 calls
@@ -621,7 +622,7 @@ Functions exposed as public API (no underscore prefix):
 - `examples.quick_start.main` - 11 calls
 - `examples.python_sdk.example_user_memory` - 11 calls
 - `examples.python_sdk.main` - 11 calls
-- `scripts.config_wizard.validate_ollama_model` - 11 calls
+- `scripts.config_wizard.ollama.validate_ollama_model` - 11 calls
 - `prellm.cli.config.config_list_cmd` - 11 calls
 
 ## System Interactions
@@ -653,13 +654,13 @@ graph TD
     _extract_with_regex --> match
     config_show_cmd --> get_env_config
     config_show_cmd --> echo
-    _generate_decision_t --> _collect_trace_data
-    _generate_decision_t --> get
-    _generate_decision_t --> extend
     chat_completions --> post
     chat_completions --> reversed
     chat_completions --> _parse_model_pair
     chat_completions --> _build_prellm_meta
+    chat_completions --> ChatCompletionRespon
+    from_yaml --> get
+    from_yaml --> PipelineConfig
 ```
 
 ## Reverse Engineering Guidelines

@@ -1,5 +1,29 @@
 ## [Unreleased]
 
+## [0.4.25] - 2026-03-29
+
+### Docs
+- Update docs/README.md
+- Update project/README.md
+- Update project/context.md
+
+### Test
+- Update tests/test_env_config.py
+- Update tests/test_env_config_storage.py
+
+### Other
+- Update prellm/agents/preprocessor.py
+- Update prellm/core/execution.py
+- Update prellm/core/pipeline.py
+- Update prellm/env_config/commands.py
+- Update prellm/env_config/storage.py
+- Update project/analysis.toon.yaml
+- Update project/calls.mmd
+- Update project/calls.png
+- Update project/compact_flow.mmd
+- Update project/duplication.toon.yaml
+- ... and 14 more files
+
 ## [0.4.24] - 2026-03-29
 
 ### Other

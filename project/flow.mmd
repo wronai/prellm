@@ -4,9 +4,6 @@ flowchart TD
     classDef entry fill:#4dabf7,stroke:#1971c2,color:#fff
 
     subgraph CLI
-        prellm__cli__process__process_cmd["process_cmd"]
-        prellm__cli__process__decompose_cmd["decompose_cmd"]
-        prellm__cli__process__init_cmd["init_cmd"]
         prellm__cli__config__config_set_cmd["config_set_cmd"]
         prellm__cli__config__config_get_cmd["config_get_cmd"]
         prellm__cli__config___format_config_sections["_format_config_sections"]
@@ -17,32 +14,35 @@ flowchart TD
         prellm__cli__doctor___doctor_check_providers["_doctor_check_providers"]
         prellm__cli__doctor___doctor_check_files["_doctor_check_files"]
         prellm__cli__doctor__doctor_cmd["doctor_cmd"]
+        prellm__cli__process__process_cmd["process_cmd"]
+        prellm__cli__process__decompose_cmd["decompose_cmd"]
+        prellm__cli__process__init_cmd["init_cmd"]
         prellm__cli__session__session_list_cmd["session_list_cmd"]
         prellm__cli__session__session_export_cmd["session_export_cmd"]
         ...["+11 more"]
     end
 
     subgraph Core
-        prellm__env_config___parse_env_line["_parse_env_line"]
-        prellm__env_config___load_env_file_manually["_load_env_file_manually"]
-        prellm__env_config__load_dotenv_if_available["load_dotenv_if_available"]
-        prellm__env_config__get_env_config("get_env_config CC=9")
-        prellm__env_config__check_providers["check_providers"]
-        prellm__env_config__check_providers_live["check_providers_live"]
         prellm___get_process_chain["_get_process_chain"]
-        prellm__trace__TraceRecorder__start["start"]
-        prellm__trace__TraceRecorder__stop["stop"]
-        prellm__trace__TraceRecorder__step["step"]
-        prellm__trace__TraceRecorder__set_result["set_result"]
-        prellm__trace__TraceRecorder___generate_markdown_header["_generate_markdown_header"]
-        prellm__trace__TraceRecorder___generate_markdown_config["_generate_markdown_config"]
-        prellm__trace__TraceRecorder___generate_markdown_step_details["_generate_markdown_step_detail"]
-        prellm__trace__TraceRecorder___generate_markdown_decision_path["_generate_markdown_decision_pa"]
-        ...["+171 more"]
+        prellm__prompt_registry__PromptEntry____repr__["__repr__"]
+        prellm__prompt_registry__PromptRegistry___ensure_loaded["_ensure_loaded"]
+        prellm__prompt_registry__PromptRegistry___load["_load"]
+        prellm__prompt_registry__PromptRegistry__get["get"]
+        prellm__prompt_registry__PromptRegistry__get_entry["get_entry"]
+        prellm__prompt_registry__PromptRegistry__list_prompts["list_prompts"]
+        prellm__prompt_registry__PromptRegistry__validate["validate"]
+        prellm__prompt_registry__PromptRegistry__register["register"]
+        prellm__prompt_registry__PromptRegistry___render["_render"]
+        prellm__server__AuthMiddleware__dispatch["dispatch"]
+        prellm__server__health["health"]
+        prellm__server__list_models["list_models"]
+        prellm__server__chat_completions["chat_completions"]
+        prellm__server__batch_process["batch_process"]
+        ...["+158 more"]
     end
 
     subgraph Exporters
         prellm__context__user_memory__UserMemory__export_session["export_session"]
     end
 
-    class prellm___get_process_chain,prellm__trace__TraceRecorder__start,prellm__trace__TraceRecorder__stop,prellm__trace__TraceRecorder__step,prellm__trace__TraceRecorder__set_result,prellm__trace__TraceRecorder___generate_markdown_header,prellm__trace__TraceRecorder___generate_markdown_config,prellm__trace__TraceRecorder___generate_markdown_step_details,prellm__trace__TraceRecorder___generate_markdown_decision_path,prellm__trace__TraceRecorder___generate_markdown_result entry
+    class prellm___get_process_chain,prellm__prompt_registry__PromptEntry____repr__,prellm__prompt_registry__PromptRegistry___ensure_loaded,prellm__prompt_registry__PromptRegistry___load,prellm__prompt_registry__PromptRegistry__get,prellm__prompt_registry__PromptRegistry__get_entry,prellm__prompt_registry__PromptRegistry__list_prompts,prellm__prompt_registry__PromptRegistry__validate,prellm__prompt_registry__PromptRegistry__register,prellm__prompt_registry__PromptRegistry___render entry

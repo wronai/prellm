@@ -1,26 +1,26 @@
-# code2llm | 49f 9373L | python:48,shell:1 | 2026-03-29
-# CC̄=4.3 | critical:0/370 | dups:0 | cycles:0
+# code2llm | 63f 9519L | python:62,shell:1 | 2026-03-29
+# CC̄=4.3 | critical:1/370 | dups:0 | cycles:0
 
-HEALTH[0]: ok
+HEALTH[1]:
+  🟡 CC    _write_env_file CC=15 (limit:15)
 
-REFACTOR[0]: none needed
+REFACTOR[1]:
+  1. split 1 high-CC methods  (CC>15)
 
-PIPELINES[248]:
+PIPELINES[234]:
   [1] Src [main]: main → preprocess_and_execute → _resolve_pipeline_name
       PURITY: 100% pure
   [2] Src [main]: main → preprocess_and_execute → _resolve_pipeline_name
       PURITY: 100% pure
-  [3] Src [example_zero_config]: example_zero_config → preprocess_and_execute → _resolve_pipeline_name
+  [3] Src [main]: main → preprocess_and_execute → _resolve_pipeline_name
       PURITY: 100% pure
-  [4] Src [example_strategy]: example_strategy → preprocess_and_execute → _resolve_pipeline_name
+  [4] Src [example_zero_config]: example_zero_config → preprocess_and_execute → _resolve_pipeline_name
       PURITY: 100% pure
-  [5] Src [example_pipeline]: example_pipeline → run_quick_start_example → preprocess_and_execute → _resolve_pipeline_name
+  [5] Src [example_strategy]: example_strategy → preprocess_and_execute → _resolve_pipeline_name
       PURITY: 100% pure
 
 LAYERS:
-  prellm/                         CC̄=4.4    ←in:23  →out:4
-  │ !! trace                      649L  2C   29m  CC=13     ←2
-  │ !! env_config                 528L  1C   17m  CC=14     ←5
+  prellm/                         CC̄=4.4    ←in:9  →out:6
   │ pipeline                   483L  5C   18m  CC=9      ←2
   │ server                     447L  10C    9m  CC=12     ←0
   │ models                     434L  33C    2m  CC=1      ←1
@@ -28,6 +28,7 @@ LAYERS:
   │ user_memory                361L  1C   15m  CC=12     ←0
   │ query_decomposer           330L  1C   10m  CC=9      ←0
   │ process_chain              275L  1C   10m  CC=7      ←0
+  │ terminal                   273L  0C    8m  CC=10     ←0
   │ sensitive_filter           262L  1C   14m  CC=7      ←0
   │ context_engine             248L  1C   13m  CC=13     ←0
   │ llm_provider               236L  1C    6m  CC=13     ←0
@@ -41,23 +42,34 @@ LAYERS:
   │ config                     185L  0C    6m  CC=9      ←0
   │ pipeline                   183L  0C    3m  CC=10     ←1
   │ utils                      181L  0C    5m  CC=9      ←4
+  │ markdown                   180L  0C    7m  CC=8      ←1
   │ context                    177L  0C    8m  CC=5      ←1
   │ shell_collector            169L  1C    8m  CC=5      ←0
+  │ !! commands                   156L  0C    6m  CC=15     ←1
+  │ loader                     138L  0C    7m  CC=9      ←6
   │ context                    135L  0C    2m  CC=13     ←0
   │ executor                   128L  2C    3m  CC=8      ←0
   │ __init__                   127L  0C    2m  CC=5      ←10
   │ prompts                    123L  0C    5m  CC=7      ←1
+  │ models                     122L  2C    7m  CC=5      ←2
   │ __init__                   121L  0C    1m  CC=1      ←0
   │ process                    121L  0C    3m  CC=7      ←0
   │ results                    107L  0C    6m  CC=6      ←1
   │ logging_setup              106L  0C    3m  CC=5      ←1
+  │ utils                      102L  0C    7m  CC=13     ←2
   │ doctor                      98L  0C    4m  CC=6      ←0
   │ session                     98L  0C    4m  CC=3      ←0
   │ main                        83L  0C    3m  CC=7      ←1
   │ tracing                     79L  0C    2m  CC=12     ←1
+  │ constants                   79L  0C    0m  CC=0.0    ←0
   │ model_catalog               78L  0C    2m  CC=8      ←1
+  │ providers                   72L  0C    2m  CC=7      ←1
   │ budget                      57L  0C    1m  CC=7      ←0
   │ models                      39L  0C    1m  CC=5      ←0
+  │ models                      35L  1C    0m  CC=0.0    ←0
+  │ utils                       34L  0C    2m  CC=8      ←2
+  │ __init__                    30L  0C    0m  CC=0.0    ←0
+  │ __init__                    28L  0C    0m  CC=0.0    ←0
   │ lazy_imports                21L  0C    1m  CC=2      ←1
   │ lazy_loader                 20L  1C    3m  CC=2      ←0
   │ __init__                    17L  0C    0m  CC=0.0    ←0
@@ -68,7 +80,11 @@ LAYERS:
   │ __init__                     0L  0C    0m  CC=0.0    ←0
   │
   scripts/                        CC̄=3.2    ←in:0  →out:0
-  │ !! config_wizard              708L  0C   33m  CC=9      ←0
+  │ wizard                     364L  0C    9m  CC=8      ←0
+  │ providers                  188L  0C    9m  CC=7      ←1
+  │ ollama                     120L  0C    8m  CC=8      ←2
+  │ ui                          92L  0C    7m  CC=9      ←3
+  │ __init__                    18L  0C    0m  CC=0.0    ←0
   │
   ./                              CC̄=0.0    ←in:0  →out:0
   │ project.sh                  21L  0C    0m  CC=0.0    ←0
@@ -77,15 +93,18 @@ LAYERS:
      prellm/chains/__init__.py                 0L
 
 COUPLING:
-                        prellm     prellm.cli    prellm.core  prellm.agents   prellm.utils  prellm.chains
-         prellm             ──            ←20              4                                           ←1  hub
-     prellm.cli             20             ──                                                              !! fan-out
-    prellm.core              2                            ──                                             
-  prellm.agents                                                          ──              2               
-   prellm.utils                                                          ←2             ──               
-  prellm.chains              1                                                                         ──
+                            prellm.cli             prellm  prellm.env_config        prellm.core      prellm.agents       prellm.trace       prellm.utils      prellm.chains
+         prellm.cli                 ──                  7                 13                                                                                                 !! fan-out
+             prellm                 ←7                 ──                  1                  4                                     1                                    ←1  hub
+  prellm.env_config                ←13                 ←1                 ──                                                                                                 hub
+        prellm.core                                     1                                    ──                                     1                                      
+      prellm.agents                                                                                             ──                                     2                   
+       prellm.trace                                    ←1                                    ←1                                    ──                                      
+       prellm.utils                                                                                             ←2                                    ──                   
+      prellm.chains                                     1                                                                                                                ──
   CYCLES: none
-  HUB: prellm/ (fan-in=23)
+  HUB: prellm.env_config/ (fan-in=14)
+  HUB: prellm/ (fan-in=9)
   SMELL: prellm.cli/ fan-out=20 → split needed
 
 EXTERNAL:

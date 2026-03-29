@@ -160,7 +160,7 @@ class TestGetEnvConfig:
         """SMALL_MODEL env var (old name) still works."""
         with patch.dict(os.environ, {"SMALL_MODEL": "old-small"}, clear=False):
             os.environ.pop("PRELLM_SMALL_DEFAULT", None)
-            with patch("prellm.env_config.load_dotenv_if_available"):
+            with patch("prellm.env_config.loader.load_dotenv_if_available"):
                 cfg = get_env_config()
 
         assert cfg.small_model == "old-small"

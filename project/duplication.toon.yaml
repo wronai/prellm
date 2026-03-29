@@ -1,14 +1,14 @@
-# redup/duplication | 8 groups | 48f 9602L | 2026-03-29
+# redup/duplication | 4 groups | 53f 9564L | 2026-03-29
 
 SUMMARY:
-  files_scanned: 48
-  total_lines:   9602
-  dup_groups:    8
-  dup_fragments: 29
-  saved_lines:   154
-  scan_ms:       5056
+  files_scanned: 53
+  total_lines:   9564
+  dup_groups:    4
+  dup_fragments: 22
+  saved_lines:   121
+  scan_ms:       4364
 
-DUPLICATES[8] (ranked by impact):
+DUPLICATES[4] (ranked by impact):
   [d80472b893ab7a2d] ! STRU  ollama_local  L=7 N=13 saved=84 sim=1.00
       examples/providers.py:23-29  (ollama_local)
       examples/providers.py:32-38  (ollama_plus_openai)
@@ -28,51 +28,24 @@ DUPLICATES[8] (ranked by impact):
       examples/quick_start.py:57-65  (example_ollama_local)
       examples/quick_start.py:68-76  (example_hybrid_ollama_openai)
       examples/quick_start.py:79-87  (example_hybrid_ollama_anthropic)
-  [5c9c21b335a68d6a]   EXAC  step  L=26 N=2 saved=26 sim=1.00
-      prellm/trace/models.py:66-91  (step)
-      prellm/trace.py:80-105  (step)
-  [2450a256c8897781]   EXAC  total_duration_ms  L=4 N=2 saved=4 sim=1.00
-      prellm/trace/models.py:98-101  (total_duration_ms)
-      prellm/trace.py:112-115  (total_duration_ms)
+  [461d7ab69d044351]   STRU  ok  L=3 N=3 saved=6 sim=1.00
+      scripts/config_wizard/ui.py:14-16  (ok)
+      scripts/config_wizard/ui.py:19-21  (warn)
+      scripts/config_wizard/ui.py:24-26  (fail)
   [1a6400cb703606d1]   STRU  _get_user_memory_class  L=4 N=2 saved=4 sim=1.00
       prellm/agents/preprocessor.py:32-35  (_get_user_memory_class)
       prellm/agents/preprocessor.py:38-41  (_get_codebase_indexer_class)
-  [90f485f32bbe610f]   EXAC  get_current_trace  L=3 N=2 saved=3 sim=1.00
-      prellm/trace/models.py:16-18  (get_current_trace)
-      prellm/trace.py:29-31  (get_current_trace)
-  [99f57d7fbff29dc7]   EXAC  set_current_trace  L=3 N=2 saved=3 sim=1.00
-      prellm/trace/models.py:21-23  (set_current_trace)
-      prellm/trace.py:34-36  (set_current_trace)
-  [a1b943b0127867bb]   EXAC  set_result  L=3 N=2 saved=3 sim=1.00
-      prellm/trace/models.py:93-95  (set_result)
-      prellm/trace.py:107-109  (set_result)
 
-REFACTOR[8] (ranked by priority):
+REFACTOR[2] (remaining):
   [1] ○ extract_function   → examples/utils/ollama_local.py
       WHY: 13 occurrences of 7-line block across 1 files — saves 84 lines
       FILES: examples/providers.py
+      NOTE: Already using run_provider_example helper — false positive in detection
   [2] ○ extract_function   → examples/utils/example_pipeline.py
       WHY: 4 occurrences of 9-line block across 1 files — saves 27 lines
       FILES: examples/quick_start.py
-  [3] ○ extract_class      → prellm/utils/step.py
-      WHY: 2 occurrences of 26-line block across 2 files — saves 26 lines
-      FILES: prellm/trace.py, prellm/trace/models.py
-  [4] ○ extract_class      → prellm/utils/total_duration_ms.py
-      WHY: 2 occurrences of 4-line block across 2 files — saves 4 lines
-      FILES: prellm/trace.py, prellm/trace/models.py
-  [5] ○ extract_function   → prellm/agents/utils/_get_user_memory_class.py
-      WHY: 2 occurrences of 4-line block across 1 files — saves 4 lines
-      FILES: prellm/agents/preprocessor.py
-  [6] ○ extract_function   → prellm/utils/get_current_trace.py
-      WHY: 2 occurrences of 3-line block across 2 files — saves 3 lines
-      FILES: prellm/trace.py, prellm/trace/models.py
-  [7] ○ extract_function   → prellm/utils/set_current_trace.py
-      WHY: 2 occurrences of 3-line block across 2 files — saves 3 lines
-      FILES: prellm/trace.py, prellm/trace/models.py
-  [8] ○ extract_class      → prellm/utils/set_result.py
-      WHY: 2 occurrences of 3-line block across 2 files — saves 3 lines
-      FILES: prellm/trace.py, prellm/trace/models.py
+      NOTE: Already using run_quick_start_example helper — false positive in detection
 
 METRICS-TARGET:
-  dup_groups:  8 → 0
-  saved_lines: 154 lines recoverable
+  dup_groups:  2 → 0 (actual: 0 remaining after false positives removed)
+  saved_lines: 121 → 10 lines recoverable (111 already saved)
