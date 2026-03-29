@@ -11,7 +11,7 @@ Usage:
     print(result.content)
 """
 
-__version__ = "0.4.19"
+__version__ = "0.4.20"
 
 # 1-function API — the primary interface (always uses v0.3 pipeline internally)
 from prellm.core import preprocess_and_execute, preprocess_and_execute_sync

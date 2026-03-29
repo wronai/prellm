@@ -14,9 +14,8 @@ ALERTS[20]:
   !   high_fan_out     PromptPipeline.from_yaml = 14 (limit:10)
   !   high_fan_out     CodebaseIndexer.get_compressed_context = 14 (limit:10)
 
-MODULES[34] (top by size):
+MODULES[41] (top by size):
   M[prellm/cli.py] 1076L C:0 F:28 CC↑13 D:0 (python)
-  M[prellm/core.py] 1032L C:1 F:35 CC↑6 D:10 (python)
   M[scripts/config_wizard.py] 708L C:0 F:33 CC↑9 D:0 (python)
   M[prellm/trace.py] 649L C:2 F:29 CC↑13 D:1 (python)
   M[prellm/env_config.py] 528L C:1 F:17 CC↑14 D:2 (python)
@@ -30,7 +29,16 @@ MODULES[34] (top by size):
   M[prellm/context/sensitive_filter.py] 262L C:1 F:14 CC↑7 D:0 (python)
   M[prellm/analyzers/context_engine.py] 248L C:1 F:13 CC↑13 D:0 (python)
   M[prellm/llm_provider.py] 236L C:1 F:6 CC↑13 D:0 (python)
-  LANGS: python:33/shell:1
+  ── prellm/core/ (split from 1032L god module) ──
+  M[prellm/core/legacy.py] 200L C:1 F:10 CC↑12 D:0 (python)
+  M[prellm/core/context.py] 170L C:0 F:8 CC↑6 D:0 (python)
+  M[prellm/core/pipeline.py] 145L C:0 F:3 CC↑7 D:0 (python)
+  M[prellm/core/prompts.py] 100L C:0 F:4 CC↑4 D:0 (python)
+  M[prellm/core/results.py] 85L C:0 F:6 CC↑5 D:0 (python)
+  M[prellm/core/__init__.py] 85L C:0 F:2 CC↑6 D:10 (python)
+  M[prellm/core/tracing.py] 70L C:0 F:2 CC↑4 D:0 (python)
+  M[prellm/core/main.py] 45L C:0 F:3 CC↑4 D:0 (python)
+  LANGS: python:40/shell:1
 
 HOTSPOTS[10]:
   ★ _execute_v3_pipeline fan=23  // Two-agent execution path — PreprocessorAgent + ExecutorAgent + PromptPipeline.
@@ -43,10 +51,11 @@ HOTSPOTS[10]:
 Delegates to getv.Env
   ★ chat_completions fan=16  // OpenAI-compatible chat completions with preLLM preprocessing.
 
-REFACTOR[9]:
-  [1] ✓ DONE Split preprocess_and_execute CC=15→6 (prellm/core.py)
-  [2] H/H Split god module prellm/cli.py (1076L, 0 classes)
-  [3] H/H Split god module prellm/core.py (1032L, 1 classes) — partial: main func done
+REFACTOR[6]:
+  [1] ✓ DONE Split preprocess_and_execute CC=15→6 (prellm/core/__init__.py)
+  [2] ✓ DONE Split god module prellm/core.py → prellm/core/ package (7 submodules)
+      STRUCTURE: __init__.py (API), main.py, context.py, pipeline.py, prompts.py, tracing.py, results.py, legacy.py
+  [3] H/H Split god module prellm/cli.py (1076L, 0 classes)
   [4] H/H Split god module prellm/trace.py (649L, 2 classes)
   [5] H/H Split god module prellm/env_config.py (528L, 1 classes)
   [6] H/H Split god module scripts/config_wizard.py (708L, 0 classes)
@@ -54,3 +63,4 @@ REFACTOR[9]:
 EVOLUTION:
   2026-03-29 CC̄=4.3 crit=24 15132L // Automated analysis
   2026-03-29 CC̄=4.1 crit=0 15132L // preprocess_and_execute refactored (CC 15→6)
+  2026-03-29 CC̄=4.1 crit=0 15200L // prellm/core.py god module split into 7 submodules

@@ -1,5 +1,13 @@
 ## [Unreleased]
 
+## [0.4.20] - 2026-03-29
+
+### Other
+- Update prellm/core/__init__.py
+- Update project/analysis.toon.yaml
+- Update project/evolution.toon.yaml
+- Update project/project.toon.yaml
+
 ## [0.4.19] - 2026-03-29
 
 ### Other

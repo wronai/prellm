@@ -1,11 +1,27 @@
 # code2llm | 34f 9442L | python:33,shell:1 | 2026-03-29
-# CC̄=4.3 | critical:1/369 | dups:0 | cycles:0
+# CC̄=4.1 | critical:0/369 | dups:0 | cycles:0
 
 HEALTH[1]:
-  🟡 CC    preprocess_and_execute CC=15 (limit:15)
+  ✅ All CC below threshold
 
 REFACTOR[1]:
-  1. split 1 high-CC methods  (CC>15)
+  1. ✓ DONE split prellm/core.py into prellm/core/ package (7 submodules)
+
+LAYERS:
+  prellm/                         CC̄=4.1    ←in:1  →out:0
+  │ !! cli                       1076L  0C   28m  CC=13     ←0
+  │ core/                        ~150L  0C    4m  CC=6      ←10
+  │   __init__                    85L  0C    1m  CC=6      ←0
+  │   main                        45L  0C    3m  CC=4      ←0
+  │   context                    170L  0C    8m  CC=6      ←0
+  │   pipeline                   145L  0C    3m  CC=7      ←0
+  │   prompts                    100L  0C    4m  CC=4      ←0
+  │   tracing                     70L  0C    2m  CC=4      ←0
+  │   results                     85L  0C    6m  CC=5      ←0
+  │   legacy                     200L  1C   10m  CC=12     ←0
+  │ !! trace                      649L  2C   29m  CC=13     ←1
+  │ !! env_config                 528L  1C   17m  CC=14     ←2
+  ... (remaining modules unchanged)
 
 PIPELINES[245]:
   [1] Src [main]: main → preprocess_and_execute → get_current_trace
