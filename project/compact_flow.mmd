@@ -9,8 +9,8 @@ flowchart TD
     prellm__agents["prellm.agents<br/>9 funcs"]
     prellm__budget["prellm.budget<br/>11 funcs"]
     prellm__chains["prellm.chains<br/>10 funcs"]
-    prellm__cli["prellm.cli<br/>28 funcs"]
-    prellm__core["prellm.core<br/>32 funcs"]
+    prellm__cli["prellm.cli<br/>26 funcs"]
+    prellm__core["prellm.core<br/>35 funcs"]
     prellm__env_config["prellm.env_config<br/>17 funcs"]
     prellm__llm_provider["prellm.llm_provider<br/>6 funcs"]
     prellm__logging_setup["prellm.logging_setup<br/>3 funcs"]
@@ -20,8 +20,8 @@ flowchart TD
     prellm__server["prellm.server<br/>9 funcs"]
     prellm__trace["prellm.trace<br/>29 funcs"]
     prellm__utils["prellm.utils<br/>4 funcs"]
-    prellm__cli ==>|14| prellm__env_config
     examples__providers ==>|13| examples__utils
+    prellm__cli ==>|13| prellm__env_config
     examples__python_sdk ==>|8| prellm__core
     examples__quick_start ==>|6| prellm__core
     examples__quick_start ==>|4| examples__utils
@@ -29,18 +29,17 @@ flowchart TD
     examples__polish_leasing -->|3| prellm__core
     examples__k8s_debug -->|3| prellm__core
     prellm__server -->|3| prellm__core
-    prellm__cli -->|2| prellm__budget
-    prellm__cli -->|2| prellm__model_catalog
     prellm__core -->|2| prellm__trace
+    prellm__cli -->|2| prellm__model_catalog
+    prellm__cli -->|2| prellm__budget
     prellm__agents -->|2| prellm__utils
     examples__utils -->|2| prellm__core
     examples__providers -->|1| prellm__core
     examples__python_sdk -->|1| prellm__pipeline
-    prellm__cli -->|1| prellm__logging_setup
-    prellm__cli -->|1| prellm__core
-    prellm__cli -->|1| prellm__server
-    prellm__cli -->|1| prellm__models
+    prellm__llm_provider -->|1| prellm__budget
     prellm__server -->|1| prellm__env_config
     prellm__core -->|1| prellm__pipeline
-    prellm__llm_provider -->|1| prellm__budget
+    prellm__cli -->|1| prellm__models
+    prellm__cli -->|1| prellm__logging_setup
+    prellm__cli -->|1| prellm__core
     prellm__chains -->|1| prellm__core

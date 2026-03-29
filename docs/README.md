@@ -1,7 +1,7 @@
 <!-- code2docs:start --># prellm
 
-![version](https://img.shields.io/badge/version-0.1.0-blue) ![python](https://img.shields.io/badge/python-%3E%3D3.9-blue) ![coverage](https://img.shields.io/badge/coverage-unknown-lightgrey) ![functions](https://img.shields.io/badge/functions-369-green)
-> **369** functions | **81** classes | **43** files | CC̄ = 4.1
+![version](https://img.shields.io/badge/version-0.1.0-blue) ![python](https://img.shields.io/badge/python-%3E%3D3.9-blue) ![coverage](https://img.shields.io/badge/coverage-unknown-lightgrey) ![functions](https://img.shields.io/badge/functions-377-green)
+> **377** functions | **83** classes | **61** files | CC̄ = 4.0
 
 > Auto-generated project documentation from source code analysis.
 
@@ -141,7 +141,7 @@ Content outside the markers is preserved when regenerating. Enable this with `sy
 
 ```
 prellm/
-    ├── providers    ├── polish_leasing    ├── embedded_refactor    ├── k8s_debug    ├── python_sdk    ├── quick_start    ├── model_catalog    ├── cli    ├── env_config├── prellm/    ├── trace    ├── prompt_registry    ├── query_decomposer    ├── models    ├── core    ├── llm_provider    ├── pipeline    ├── validators    ├── config_wizard    ├── chains/    ├── server    ├── utils/        ├── lazy_imports        ├── lazy_loader        ├── process_chain        ├── folder_compressor        ├── shell_collector        ├── sensitive_filter    ├── context/        ├── user_memory        ├── codebase_indexer    ├── analyzers/        ├── schema_generator        ├── preprocessor    ├── agents/        ├── executor        ├── example_helpers├── project    ├── cli_examples    ├── curl_api    ├── budget        ├── context_engine    ├── logging_setup```
+    ├── quick_start    ├── polish_leasing    ├── python_sdk    ├── k8s_debug    ├── cli/    ├── embedded_refactor    ├── model_catalog    ├── providers    ├── env_config├── prellm/    ├── trace    ├── prompt_registry    ├── query_decomposer    ├── models    ├── llm_provider    ├── pipeline    ├── server    ├── config_wizard        ├── prompts        ├── legacy    ├── core/        ├── context        ├── results        ├── tracing        ├── main    ├── budget        ├── pipeline        ├── process    ├── validators        ├── doctor        ├── session        ├── config        ├── models        ├── context        ├── utils    ├── chains/        ├── budget    ├── utils/        ├── lazy_imports        ├── lazy_loader        ├── models        ├── folder_compressor        ├── shell_collector        ├── process_chain    ├── context/        ├── sensitive_filter        ├── schema_generator        ├── user_memory    ├── analyzers/        ├── preprocessor    ├── agents/        ├── executor        ├── example_helpers        ├── codebase_indexer├── project    ├── curl_api    ├── cli_examples        ├── context_engine    ├── logging_setup```
 
 ## API Overview
 
@@ -188,16 +188,12 @@ prellm/
 - **`StepResult`** — Result of a single process chain step.
 - **`ProcessResult`** — Result of a full process chain execution.
 - **`AuditEntry`** — Single audit log entry for traceability.
-- **`PreLLM`** — preLLM v0.2/v0.3 — small LLM decomposition before large LLM routing.
 - **`LLMProvider`** — Unified LLM caller with retry and fallback support.
 - **`PipelineStep`** — Configuration for a single pipeline step.
 - **`PipelineConfig`** — Configuration for a complete pipeline.
 - **`StepExecutionResult`** — Result of executing a single pipeline step.
 - **`PipelineResult`** — Result of executing a full pipeline.
 - **`PromptPipeline`** — Generic pipeline — executes a sequence of LLM + algorithmic steps.
-- **`ValidationResult`** — Result of validating data against a schema.
-- **`SchemaDefinition`** — Parsed schema definition from YAML.
-- **`ResponseValidator`** — Validates LLM responses against YAML-defined schemas.
 - **`ChatMessage`** — —
 - **`PreLLMExtras`** — preLLM-specific extensions in the request body.
 - **`ChatCompletionRequest`** — —
@@ -208,28 +204,62 @@ prellm/
 - **`BatchItem`** — —
 - **`HealthResponse`** — —
 - **`AuthMiddleware`** — Bearer token auth using LITELLM_MASTER_KEY. Skips auth if key is not set.
+- **`PreLLM`** — preLLM v0.2/v0.3 — small LLM decomposition before large LLM routing.
+- **`BudgetExceededError`** — Raised when the monthly budget limit has been reached.
+- **`UsageEntry`** — Single API call cost record.
+- **`BudgetTracker`** — Tracks LLM API spend against a monthly budget.
+- **`ValidationResult`** — Result of validating data against a schema.
+- **`SchemaDefinition`** — Parsed schema definition from YAML.
+- **`ResponseValidator`** — Validates LLM responses against YAML-defined schemas.
 - **`LazyLoader`** — Base class for components that need lazy loading of resources.
-- **`ProcessChain`** — Execute multi-step DevOps workflows with preLLM validation at each step.
+- **`TraceStep`** — A single recorded step in the execution trace.
+- **`TraceRecorder`** — Records execution trace and generates markdown documentation.
 - **`FolderCompressor`** — Compresses a project folder into a lightweight representation for LLM context.
 - **`ShellContextCollector`** — Collects full shell environment context for LLM prompt enrichment.
+- **`ProcessChain`** — Execute multi-step DevOps workflows with preLLM validation at each step.
 - **`SensitiveDataFilter`** — Classifies and filters sensitive data from context before LLM calls.
-- **`UserMemory`** — Stores user query history and learned preferences.
-- **`CodeSymbol`** — A code symbol extracted from source.
-- **`FileIndex`** — Index of a single source file.
-- **`CodebaseIndex`** — Full codebase index.
-- **`CodebaseIndexer`** — Index a codebase using tree-sitter for AST-based symbol extraction.
 - **`ContextSchemaGenerator`** — Generates a structured context schema from available context sources.
+- **`UserMemory`** — Stores user query history and learned preferences.
 - **`PreprocessResult`** — Output of the PreprocessorAgent — structured input for the ExecutorAgent.
 - **`PreprocessorAgent`** — Agent preprocessing — small LLM (≤24B) analyzes and structures queries.
 - **`ExecutorResult`** — Output of the ExecutorAgent.
 - **`ExecutorAgent`** — Agent execution — large LLM (>24B) executes structured tasks.
-- **`BudgetExceededError`** — Raised when the monthly budget limit has been reached.
-- **`UsageEntry`** — Single API call cost record.
-- **`BudgetTracker`** — Tracks LLM API spend against a monthly budget.
+- **`CodeSymbol`** — A code symbol extracted from source.
+- **`FileIndex`** — Index of a single source file.
+- **`CodebaseIndex`** — Full codebase index.
+- **`CodebaseIndexer`** — Index a codebase using tree-sitter for AST-based symbol extraction.
 - **`ContextEngine`** — Collects context from environment, git, and system for prompt enrichment.
 
 ### Functions
 
+- `example_zero_config()` — Simplest possible usage — one line, default models.
+- `example_strategy()` — Strategy-based preprocessing (classify, structure, split, enrich).
+- `example_pipeline()` — Named pipeline — 4-step preprocessing for maximum quality.
+- `example_ollama_local()` — Both models run locally via Ollama — $0.00 cost.
+- `example_hybrid_ollama_openai()` — Hybrid: local preprocessing + cloud execution.
+- `example_hybrid_ollama_anthropic()` — Hybrid: local preprocessing + Anthropic execution.
+- `example_domain_rules()` — Domain rules catch missing safety-critical fields.
+- `example_with_memory()` — UserMemory enriches queries with interaction history.
+- `example_with_codebase()` — CodebaseIndexer enriches queries with relevant source symbols.
+- `example_sync()` — Synchronous version — for scripts, notebooks, non-async code.
+- `example_openai_sdk_client()` — Use preLLM server from any OpenAI SDK client.
+- `main()` — Run all examples (requires LLM providers to be configured).
+- `main()` — —
+- `example_one_function()` — The simplest way to use preLLM — like litellm.completion().
+- `example_domain_rules()` — Inline domain rules for safety checks.
+- `example_sync()` — Synchronous wrapper — no async needed.
+- `example_pipeline()` — Use a named YAML-defined pipeline for maximum preprocessing quality.
+- `example_user_memory()` — Enrich queries with interaction history from UserMemory.
+- `example_codebase_context()` — Enrich queries with codebase symbols from CodebaseIndexer.
+- `example_class_based()` — More control with the PreLLM class.
+- `example_custom_pipeline()` — Build a pipeline from components for maximum flexibility.
+- `example_openai_sdk()` — Use preLLM as an OpenAI drop-in replacement.
+- `example_strategies()` — Demonstrate all 5 decomposition strategies.
+- `main()` — —
+- `main()` — —
+- `main()` — —
+- `list_model_pairs(provider, search)` — Filter model pairs by provider and/or search term. Pure function — no IO.
+- `list_openrouter_models(provider, search)` — Filter OpenRouter models by provider and/or search term. Pure function — no IO.
 - `ollama_local()` — Both models local via Ollama. Cost: $0.00
 - `ollama_plus_openai()` — Local preprocessing, OpenAI execution. Cost: ~$0.15
 - `ollama_plus_anthropic()` — Local preprocessing, Anthropic execution.
@@ -246,53 +276,6 @@ prellm/
 - `mixed_providers_pipeline()` — Pipeline with mixed providers.
 - `print_env_setup()` — Print required environment variables for each provider.
 - `main()` — —
-- `main()` — —
-- `main()` — —
-- `main()` — —
-- `example_one_function()` — The simplest way to use preLLM — like litellm.completion().
-- `example_domain_rules()` — Inline domain rules for safety checks.
-- `example_sync()` — Synchronous wrapper — no async needed.
-- `example_pipeline()` — Use a named YAML-defined pipeline for maximum preprocessing quality.
-- `example_user_memory()` — Enrich queries with interaction history from UserMemory.
-- `example_codebase_context()` — Enrich queries with codebase symbols from CodebaseIndexer.
-- `example_class_based()` — More control with the PreLLM class.
-- `example_custom_pipeline()` — Build a pipeline from components for maximum flexibility.
-- `example_openai_sdk()` — Use preLLM as an OpenAI drop-in replacement.
-- `example_strategies()` — Demonstrate all 5 decomposition strategies.
-- `main()` — —
-- `example_zero_config()` — Simplest possible usage — one line, default models.
-- `example_strategy()` — Strategy-based preprocessing (classify, structure, split, enrich).
-- `example_pipeline()` — Named pipeline — 4-step preprocessing for maximum quality.
-- `example_ollama_local()` — Both models run locally via Ollama — $0.00 cost.
-- `example_hybrid_ollama_openai()` — Hybrid: local preprocessing + cloud execution.
-- `example_hybrid_ollama_anthropic()` — Hybrid: local preprocessing + Anthropic execution.
-- `example_domain_rules()` — Domain rules catch missing safety-critical fields.
-- `example_with_memory()` — UserMemory enriches queries with interaction history.
-- `example_with_codebase()` — CodebaseIndexer enriches queries with relevant source symbols.
-- `example_sync()` — Synchronous version — for scripts, notebooks, non-async code.
-- `example_openai_sdk_client()` — Use preLLM server from any OpenAI SDK client.
-- `main()` — Run all examples (requires LLM providers to be configured).
-- `list_model_pairs(provider, search)` — Filter model pairs by provider and/or search term. Pure function — no IO.
-- `list_openrouter_models(provider, search)` — Filter OpenRouter models by provider and/or search term. Pure function — no IO.
-- `query(prompt, small, large, strategy)` — Preprocess a query with small LLM, then execute with large LLM.
-- `context(json_output, schema, blocked, folder)` — Show collected environment context, schema, and blocked sensitive data.
-- `process(config, guard_config, dry_run, json_output)` — Execute a DevOps process chain.
-- `decompose(query, config, strategy, json_output)` — [v0.2] Decompose a query using small LLM without calling the large model.
-- `init(output, devops)` — Generate a starter preLLM config file.
-- `serve(host, port, small, large)` — Start the OpenAI-compatible API server.
-- `doctor(env_file, live)` — Check configuration and provider connectivity.
-- `config_set_cmd(key, value, global_)` — Set a config value persistently.
-- `config_get_cmd(key, raw)` — Get a config value.
-- `config_list_cmd(raw)` — List all configured values.
-- `config_show_cmd()` — Show effective configuration (resolved from all sources).
-- `config_init_env(global_, force)` — Generate a starter .env file with all available settings.
-- `budget(reset, json_output)` — Show LLM API spend tracking and budget status.
-- `models(provider, search)` — List popular model pairs and provider examples.
-- `context_show_cmd(json_output, blocked, codebase)` — Show collected runtime context.
-- `session_list_cmd(memory)` — List recent interactions in the session.
-- `session_export_cmd(output, memory, session_id)` — Export current session to JSON file.
-- `session_import_cmd(input_file, memory)` — Import a session from JSON file.
-- `session_clear_cmd(memory, force)` — Clear all session data.
 - `load_dotenv_if_available(path)` — Load .env file if it exists. No dependency on python-dotenv — just basic parsing.
 - `get_env_config(dotenv_path)` — Read all config from environment variables (LiteLLM-compatible).
 - `check_providers(env)` — Check which providers are configured and reachable.
@@ -304,8 +287,11 @@ prellm/
 - `check_providers_live(env)` — Check providers with live connectivity tests.
 - `get_current_trace()` — Get the active trace recorder for the current execution context.
 - `set_current_trace(trace)` — Set the active trace recorder for the current execution context.
-- `preprocess_and_execute(query, small_llm, large_llm, strategy)` — One function to preprocess and execute — like litellm.completion() but with small LLM decomposition.
-- `preprocess_and_execute_sync(query, small_llm, large_llm, strategy)` — Synchronous version of preprocess_and_execute() — runs the async function in an event loop.
+- `health()` — —
+- `list_models()` — List available model pairs.
+- `chat_completions(req)` — OpenAI-compatible chat completions with preLLM preprocessing.
+- `batch_process(items)` — Process multiple queries in parallel.
+- `create_app(small_model, large_model, strategy, config_path)` — Factory function to create a configured preLLM API server.
 - `ok(msg)` — —
 - `warn(msg)` — —
 - `fail(msg)` — —
@@ -325,16 +311,32 @@ prellm/
 - `check_port_available(host, port)` — Check if port is available for the server.
 - `mask_key(key)` — Mask API key for display.
 - `main()` — Main configuration wizard - refactored for lower complexity.
-- `health()` — —
-- `list_models()` — List available model pairs.
-- `chat_completions(req)` — OpenAI-compatible chat completions with preLLM preprocessing.
-- `batch_process(items)` — Process multiple queries in parallel.
-- `create_app(small_model, large_model, strategy, config_path)` — Factory function to create a configured preLLM API server.
-- `lazy_import_global(name, import_path, globals_dict)` — Lazy import a global object.
-- `run_provider_example(name, small_llm, large_llm)` — Run a single provider example with standardized output format.
-- `run_quick_start_example(query, small_llm, large_llm, example_name)` — Run a quick start example with standardized output format.
+- `preprocess_and_execute(query, small_llm, large_llm, strategy)` — One function to preprocess and execute — like litellm.completion() but with small LLM decomposition.
+- `preprocess_and_execute_sync(query, small_llm, large_llm, strategy)` — Synchronous version of preprocess_and_execute().
 - `get_budget_tracker(monthly_limit, persist_path)` — Get or create the global budget tracker singleton.
 - `reset_budget_tracker()` — Reset the global tracker (for testing).
+- `process_cmd(config, guard_config, dry_run, json_output)` — Execute a DevOps process chain.
+- `decompose_cmd(query, config, strategy, json_output)` — Decompose a query using small LLM without calling the large model.
+- `init_cmd(output, devops)` — Generate a starter preLLM config file.
+- `doctor_cmd(env_file, live)` — Check configuration and provider connectivity.
+- `session_list_cmd(memory)` — List recent interactions in the session.
+- `session_export_cmd(output, memory, session_id)` — Export current session to JSON file.
+- `session_import_cmd(input_file, memory)` — Import a session from JSON file.
+- `session_clear_cmd(memory, force)` — Clear all session data.
+- `config_set_cmd(key, value, global_)` — Set a config value persistently.
+- `config_get_cmd(key, raw)` — Get a config value.
+- `config_list_cmd(raw)` — List all configured values.
+- `config_show_cmd()` — Show effective configuration (resolved from all sources).
+- `config_init_env(global_, force)` — Generate a starter .env file with all available settings.
+- `models_cmd(provider, search)` — List popular model pairs and provider examples.
+- `context_show_cmd(json_output, blocked, codebase)` — Show collected runtime context.
+- `context_shell_cmd(json_output, schema, blocked, folder)` — Show collected environment context, schema, and blocked sensitive data.
+- `budget_cmd(reset, json_output)` — Show LLM API spend tracking and budget status.
+- `lazy_import_global(name, import_path, globals_dict)` — Lazy import a global object.
+- `get_current_trace()` — Get the active trace recorder for the current execution context.
+- `set_current_trace(trace)` — Set the active trace recorder for the current execution context.
+- `run_provider_example(name, small_llm, large_llm)` — Run a single provider example with standardized output format.
+- `run_quick_start_example(query, small_llm, large_llm, example_name)` — Run a quick start example with standardized output format.
 - `setup_logging(level, markdown_file, terminal_format)` — Initialize nfo logging for the entire preLLM project.
 - `get_logger(name)` — Get or create the nfo logger.
 
@@ -359,7 +361,15 @@ prellm/
 📄 `prellm.budget` (11 functions, 3 classes)
 📦 `prellm.chains`
 📄 `prellm.chains.process_chain` (10 functions, 1 classes)
-📄 `prellm.cli` (28 functions)
+📦 `prellm.cli`
+📄 `prellm.cli.budget` (1 functions)
+📄 `prellm.cli.config` (6 functions)
+📄 `prellm.cli.context` (2 functions)
+📄 `prellm.cli.doctor` (4 functions)
+📄 `prellm.cli.models` (1 functions)
+📄 `prellm.cli.process` (3 functions)
+📄 `prellm.cli.session` (4 functions)
+📄 `prellm.cli.utils` (5 functions)
 📦 `prellm.context`
 📄 `prellm.context.codebase_indexer` (14 functions, 4 classes)
 📄 `prellm.context.folder_compressor` (10 functions, 1 classes)
@@ -367,7 +377,14 @@ prellm/
 📄 `prellm.context.sensitive_filter` (14 functions, 1 classes)
 📄 `prellm.context.shell_collector` (8 functions, 1 classes)
 📄 `prellm.context.user_memory` (15 functions, 1 classes)
-📄 `prellm.core` (32 functions, 1 classes)
+📦 `prellm.core` (2 functions)
+📄 `prellm.core.context` (8 functions)
+📄 `prellm.core.legacy` (6 functions, 1 classes)
+📄 `prellm.core.main` (3 functions)
+📄 `prellm.core.pipeline` (3 functions)
+📄 `prellm.core.prompts` (5 functions)
+📄 `prellm.core.results` (6 functions)
+📄 `prellm.core.tracing` (2 functions)
 📄 `prellm.env_config` (17 functions, 1 classes)
 📄 `prellm.llm_provider` (6 functions, 1 classes)
 📄 `prellm.logging_setup` (3 functions)
@@ -378,6 +395,7 @@ prellm/
 📄 `prellm.query_decomposer` (10 functions, 1 classes)
 📄 `prellm.server` (9 functions, 10 classes)
 📄 `prellm.trace` (29 functions, 2 classes)
+📄 `prellm.trace.models` (7 functions, 2 classes)
 📦 `prellm.utils`
 📄 `prellm.utils.lazy_imports` (1 functions)
 📄 `prellm.utils.lazy_loader` (3 functions, 1 classes)

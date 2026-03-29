@@ -1,60 +1,28 @@
-# code2llm | 48f 10800L | python:47,shell:1 | 2026-03-29
-# CC̄=4.1 | critical:0/369 | dups:0 | cycles:0
+# code2llm | 49f 9373L | python:48,shell:1 | 2026-03-29
+# CC̄=4.3 | critical:0/370 | dups:0 | cycles:0
 
-HEALTH[1]:
-  ✅ All CC below threshold
+HEALTH[0]: ok
 
-REFACTOR[2]:
-  1. ✓ DONE split prellm/core.py into prellm/core/ package (7 submodules)
-  2. ✓ DONE split prellm/cli.py into prellm/cli/ package (9 submodules)
+REFACTOR[0]: none needed
 
-LAYERS:
-  prellm/                         CC̄=4.1    ←in:1  →out:0
-  │ cli/                         ~200L  0C   28m  CC=6      ←0
-  │   main                       180L  0C    1m  CC=6      ←0
-  │   utils                      120L  0C    4m  CC=6      ←0
-  │   doctor                     100L  0C    3m  CC=5      ←0
-  │   config                     160L  0C    5m  CC=8      ←0
-  │   budget                      60L  0C    2m  CC=4      ←0
-  │   models                      50L  0C    2m  CC=3      ←0
-  │   context                    120L  0C    4m  CC=6      ←0
-  │   session                     90L  0C    4m  CC=5      ←0
-  │   process                    100L  0C    4m  CC=5      ←0
-  │ !! trace                      649L  2C   29m  CC=13     ←1
-  │ !! env_config                 528L  1C   17m  CC=14     ←2
-  ... (remaining modules unchanged)
-  │   __init__                    85L  0C    1m  CC=6      ←0
-  │   main                        45L  0C    3m  CC=4      ←0
-  │   context                    170L  0C    8m  CC=6      ←0
-  │   pipeline                   145L  0C    3m  CC=7      ←0
-  │   prompts                    100L  0C    4m  CC=4      ←0
-  │   tracing                     70L  0C    2m  CC=4      ←0
-  │   results                     85L  0C    6m  CC=5      ←0
-  │   legacy                     200L  1C   10m  CC=12     ←0
-  │ !! trace                      649L  2C   29m  CC=13     ←1
-  │ !! env_config                 528L  1C   17m  CC=14     ←2
-  ... (remaining modules unchanged)
-
-PIPELINES[245]:
-  [1] Src [main]: main → preprocess_and_execute → get_current_trace
+PIPELINES[248]:
+  [1] Src [main]: main → preprocess_and_execute → _resolve_pipeline_name
       PURITY: 100% pure
-  [2] Src [main]: main → preprocess_and_execute → get_current_trace
+  [2] Src [main]: main → preprocess_and_execute → _resolve_pipeline_name
       PURITY: 100% pure
-  [3] Src [ollama_local]: ollama_local → run_provider_example → preprocess_and_execute → get_current_trace
+  [3] Src [example_zero_config]: example_zero_config → preprocess_and_execute → _resolve_pipeline_name
       PURITY: 100% pure
-  [4] Src [ollama_plus_openai]: ollama_plus_openai → run_provider_example → preprocess_and_execute → get_current_trace
+  [4] Src [example_strategy]: example_strategy → preprocess_and_execute → _resolve_pipeline_name
       PURITY: 100% pure
-  [5] Src [ollama_plus_anthropic]: ollama_plus_anthropic → run_provider_example → preprocess_and_execute → get_current_trace
+  [5] Src [example_pipeline]: example_pipeline → run_quick_start_example → preprocess_and_execute → _resolve_pipeline_name
       PURITY: 100% pure
 
 LAYERS:
-  prellm/                         CC̄=4.5    ←in:1  →out:0
-  │ !! cli                       1076L  0C   28m  CC=13     ←0
-  │ !! core                      1032L  1C   32m  CC=15     ←10
-  │ !! trace                      649L  2C   29m  CC=13     ←1
-  │ !! env_config                 528L  1C   17m  CC=14     ←2
+  prellm/                         CC̄=4.4    ←in:23  →out:4
+  │ !! trace                      649L  2C   29m  CC=13     ←2
+  │ !! env_config                 528L  1C   17m  CC=14     ←5
   │ pipeline                   483L  5C   18m  CC=9      ←2
-  │ server                     447L  10C    9m  CC=12     ←1
+  │ server                     447L  10C    9m  CC=12     ←0
   │ models                     434L  33C    2m  CC=1      ←1
   │ codebase_indexer           418L  4C   14m  CC=11     ←0
   │ user_memory                361L  1C   15m  CC=12     ←0
@@ -63,21 +31,38 @@ LAYERS:
   │ sensitive_filter           262L  1C   14m  CC=7      ←0
   │ context_engine             248L  1C   13m  CC=13     ←0
   │ llm_provider               236L  1C    6m  CC=13     ←0
-  │ budget                     236L  3C   11m  CC=6      ←2
+  │ legacy                     236L  1C    6m  CC=10     ←1
+  │ budget                     236L  3C   11m  CC=6      ←3
   │ folder_compressor          224L  1C   10m  CC=11     ←0
   │ validators                 212L  3C    7m  CC=14     ←0
   │ schema_generator           211L  1C    9m  CC=11     ←0
   │ preprocessor               188L  2C    6m  CC=13     ←0
   │ prompt_registry            185L  5C   11m  CC=6      ←0
+  │ config                     185L  0C    6m  CC=9      ←0
+  │ pipeline                   183L  0C    3m  CC=10     ←1
+  │ utils                      181L  0C    5m  CC=9      ←4
+  │ context                    177L  0C    8m  CC=5      ←1
   │ shell_collector            169L  1C    8m  CC=5      ←0
+  │ context                    135L  0C    2m  CC=13     ←0
   │ executor                   128L  2C    3m  CC=8      ←0
+  │ __init__                   127L  0C    2m  CC=5      ←10
+  │ prompts                    123L  0C    5m  CC=7      ←1
   │ __init__                   121L  0C    1m  CC=1      ←0
+  │ process                    121L  0C    3m  CC=7      ←0
+  │ results                    107L  0C    6m  CC=6      ←1
   │ logging_setup              106L  0C    3m  CC=5      ←1
+  │ doctor                      98L  0C    4m  CC=6      ←0
+  │ session                     98L  0C    4m  CC=3      ←0
+  │ main                        83L  0C    3m  CC=7      ←1
+  │ tracing                     79L  0C    2m  CC=12     ←1
   │ model_catalog               78L  0C    2m  CC=8      ←1
+  │ budget                      57L  0C    1m  CC=7      ←0
+  │ models                      39L  0C    1m  CC=5      ←0
   │ lazy_imports                21L  0C    1m  CC=2      ←1
   │ lazy_loader                 20L  1C    3m  CC=2      ←0
   │ __init__                    17L  0C    0m  CC=0.0    ←0
   │ __init__                    11L  0C    0m  CC=0.0    ←0
+  │ __init__                    10L  0C    0m  CC=0.0    ←0
   │ __init__                     6L  0C    0m  CC=0.0    ←0
   │ __init__                     1L  0C    0m  CC=0.0    ←0
   │ __init__                     0L  0C    0m  CC=0.0    ←0
@@ -92,12 +77,16 @@ LAYERS:
      prellm/chains/__init__.py                 0L
 
 COUPLING:
-                 prellm.agents   prellm.utils         prellm  prellm.chains
-  prellm.agents             ──              2                              
-   prellm.utils             ←2             ──                              
-         prellm                                           ──             ←1
-  prellm.chains                                            1             ──
+                        prellm     prellm.cli    prellm.core  prellm.agents   prellm.utils  prellm.chains
+         prellm             ──            ←20              4                                           ←1  hub
+     prellm.cli             20             ──                                                              !! fan-out
+    prellm.core              2                            ──                                             
+  prellm.agents                                                          ──              2               
+   prellm.utils                                                          ←2             ──               
+  prellm.chains              1                                                                         ──
   CYCLES: none
+  HUB: prellm/ (fan-in=23)
+  SMELL: prellm.cli/ fan-out=20 → split needed
 
 EXTERNAL:
   validation: run `vallm batch .` → validation.toon

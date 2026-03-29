@@ -1,35 +1,19 @@
-# code2llm/evolution | 292 func | 27f | 2026-03-29
+# code2llm/evolution | 293 func | 41f | 2026-03-29
 
-NEXT[2] (ranked by impact):
-  [1] !! SPLIT           prellm/trace.py
-      WHY: 649L, 2 classes, max CC=13
-      EFFORT: ~4h  IMPACT: 8437
-
-  [2] !! SPLIT           prellm/env_config.py
+NEXT[1] (ranked by impact):
+  [1] !! SPLIT           prellm/env_config.py
       WHY: 528L, 1 classes, max CC=14
       EFFORT: ~4h  IMPACT: 7392
 
-DONE (2026-03-29):
-  ✓ SPLIT prellm/core.py → prellm/core/ package (7 submodules)
-    IMPACT: 15480 | CC reduced: 15→6 | Lines: 1032→~815 (distributed)
-    FILES: core/__init__.py, main.py, context.py, pipeline.py, prompts.py, tracing.py, results.py, legacy.py
 
-  ✓ SPLIT prellm/cli.py → prellm/cli/ package (9 submodules)
-    IMPACT: 13988 | CC reduced: 13→6 | Lines: 1076→~880 (distributed)
-    FILES: cli/__init__.py, main.py, utils.py, doctor.py, config.py, budget.py, models.py, context.py, session.py, process.py
-
-  ✓ SPLIT-FUNC preprocess_and_execute CC=15→6
-    IMPACT: 165 | Extracted 3 helpers: _resolve_pipeline_name, _load_config_overrides, _record_config_trace
-
-RISKS[2]:
-  ⚠ Splitting prellm/trace.py may break 29 import paths
+RISKS[1]:
   ⚠ Splitting prellm/env_config.py may break 17 import paths
 
 METRICS-TARGET:
-  CC̄:          4.5 → ≤3.1 (current: 4.1)
-  max-CC:      15 → ≤7 (current: 6 ✓)
-  god-modules: 4 → 0 (current: 2 remaining)
-  high-CC(≥15): 1 → ≤0 (current: 0 ✓)
+  CC̄:          4.4 → ≤3.1 (current: 4.1 ✓)
+  max-CC:      14 → ≤7 (current: 5 ✓)
+  god-modules: 2 → 0 (current: 1 remaining)
+  high-CC(≥15): 0 → ≤0 (current: 0 ✓)
   hub-types:   0 → ≤0
 
 PATTERNS (language parser shared logic):
@@ -57,4 +41,7 @@ PATTERNS (language parser shared logic):
     - Standardized FunctionInfo/ClassInfo models
 
 HISTORY:
-  prev CC̄=4.5 → now CC̄=4.5
+  prev CC̄=4.5 → now CC̄=4.4
+  2026-03-29: prellm/core.py god module split → 7 submodules (CC 15→6)
+  2026-03-29: prellm/cli.py god module split → 9 submodules (CC 13→6)
+  2026-03-29: prellm/trace.py god module split → 4 submodules (CC 13→5)

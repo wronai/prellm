@@ -1,5 +1,25 @@
 ## [Unreleased]
 
+## [0.4.23] - 2026-03-29
+
+### Docs
+- Update docs/README.md
+- Update project/README.md
+- Update project/context.md
+
+### Other
+- Update prellm/env_config/__init__.py
+- Update prellm/env_config/commands.py
+- Update prellm/env_config/constants.py
+- Update prellm/env_config/loader.py
+- Update prellm/env_config/models.py
+- Update prellm/env_config/providers.py
+- Update prellm/env_config/utils.py
+- Update prellm/trace.py
+- Update prellm/trace/__init__.py
+- Update prellm/trace/markdown.py
+- ... and 17 more files
+
 ## [0.4.22] - 2026-03-29
 
 ### Other

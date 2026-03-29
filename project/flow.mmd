@@ -4,22 +4,22 @@ flowchart TD
     classDef entry fill:#4dabf7,stroke:#1971c2,color:#fff
 
     subgraph CLI
-        prellm__cli___init_logging["_init_logging"]
-        prellm__cli___handle_query_options["_handle_query_options"]
-        prellm__cli___show_debug_info["_show_debug_info"]
-        prellm__cli___initialize_execution["_initialize_execution"]
-        prellm__cli___execute_and_format_result["_execute_and_format_result"]
-        prellm__cli__query["query"]
-        prellm__cli__context["context"]
-        prellm__cli__process["process"]
-        prellm__cli__decompose["decompose"]
-        prellm__cli__init["init"]
-        prellm__cli__serve["serve"]
-        prellm__cli___doctor_check_config["_doctor_check_config"]
-        prellm__cli___doctor_check_providers["_doctor_check_providers"]
-        prellm__cli___doctor_check_files["_doctor_check_files"]
-        prellm__cli__doctor["doctor"]
-        ...["+13 more"]
+        prellm__cli__process__process_cmd["process_cmd"]
+        prellm__cli__process__decompose_cmd["decompose_cmd"]
+        prellm__cli__process__init_cmd["init_cmd"]
+        prellm__cli__config__config_set_cmd["config_set_cmd"]
+        prellm__cli__config__config_get_cmd["config_get_cmd"]
+        prellm__cli__config___format_config_sections["_format_config_sections"]
+        prellm__cli__config__config_list_cmd["config_list_cmd"]
+        prellm__cli__config__config_show_cmd["config_show_cmd"]
+        prellm__cli__config__config_init_env["config_init_env"]
+        prellm__cli__doctor___doctor_check_config["_doctor_check_config"]
+        prellm__cli__doctor___doctor_check_providers["_doctor_check_providers"]
+        prellm__cli__doctor___doctor_check_files["_doctor_check_files"]
+        prellm__cli__doctor__doctor_cmd["doctor_cmd"]
+        prellm__cli__session__session_list_cmd["session_list_cmd"]
+        prellm__cli__session__session_export_cmd["session_export_cmd"]
+        ...["+11 more"]
     end
 
     subgraph Core
@@ -45,4 +45,4 @@ flowchart TD
         prellm__context__user_memory__UserMemory__export_session["export_session"]
     end
 
-    class prellm__cli___init_logging,prellm__cli___handle_query_options,prellm__cli___show_debug_info,prellm__cli___initialize_execution,prellm__cli___execute_and_format_result,prellm__cli__query,prellm__cli__context,prellm__cli__process,prellm__cli__decompose,prellm__cli__init entry
+    class prellm___get_process_chain,prellm__trace__TraceRecorder__start,prellm__trace__TraceRecorder__stop,prellm__trace__TraceRecorder__step,prellm__trace__TraceRecorder__set_result,prellm__trace__TraceRecorder___generate_markdown_header,prellm__trace__TraceRecorder___generate_markdown_config,prellm__trace__TraceRecorder___generate_markdown_step_details,prellm__trace__TraceRecorder___generate_markdown_decision_path,prellm__trace__TraceRecorder___generate_markdown_result entry

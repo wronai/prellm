@@ -1,15 +1,9 @@
-# vallm batch | 131f | 91✓ 4⚠ 4✗ | 2026-03-29
+# vallm batch | 149f | 108✓ 2⚠ 5✗ | 2026-03-29
 
 SUMMARY:
-  scanned: 131  passed: 91 (69.5%)  warnings: 4  errors: 4  unsupported: 36
+  scanned: 149  passed: 108 (72.5%)  warnings: 2  errors: 5  unsupported: 36
 
-WARNINGS[4]{path,score}:
-  prellm/cli.py,0.98
-    issues[1]{rule,severity,message,line}:
-      complexity.maintainability,warning,Low maintainability index: 10.4 (threshold: 20),
-  prellm/core.py,0.98
-    issues[1]{rule,severity,message,line}:
-      complexity.maintainability,warning,Low maintainability index: 18.6 (threshold: 20),
+WARNINGS[2]{path,score}:
   prellm/trace.py,0.98
     issues[1]{rule,severity,message,line}:
       complexity.maintainability,warning,Low maintainability index: 18.3 (threshold: 20),
@@ -17,7 +11,10 @@ WARNINGS[4]{path,score}:
     issues[1]{rule,severity,message,line}:
       complexity.maintainability,warning,Low maintainability index: 13.4 (threshold: 20),
 
-ERRORS[4]{path,score}:
+ERRORS[5]{path,score}:
+  prellm/cli/main.py,0.00
+    issues[1]{rule,severity,message,line}:
+      syntax.parse,error,SyntaxError: f-string: single '}' is not allowed,195
   prellm/utils/__init__.py,0.57
     issues[2]{rule,severity,message,line}:
       python.import.resolvable,error,Module 'lazy_imports' not found,3
