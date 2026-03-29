@@ -1,5 +1,19 @@
 ## [Unreleased]
 
+## [0.4.19] - 2026-03-29
+
+### Other
+- Update prellm/core.py
+- Update prellm/core/__init__.py
+- Update prellm/core/context.py
+- Update prellm/core/legacy.py
+- Update prellm/core/main.py
+- Update prellm/core/pipeline.py
+- Update prellm/core/prompts.py
+- Update prellm/core/results.py
+- Update prellm/core/tracing.py
+- Update project/project.toon.yaml
+
 ## [0.4.18] - 2026-03-29
 
 ### Docs

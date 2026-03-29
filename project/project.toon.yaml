@@ -53,3 +53,4 @@ REFACTOR[9]:
 
 EVOLUTION:
   2026-03-29 CC̄=4.3 crit=24 15132L // Automated analysis
+  2026-03-29 CC̄=4.1 crit=0 15132L // preprocess_and_execute refactored (CC 15→6)
