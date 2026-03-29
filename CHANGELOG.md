@@ -1,5 +1,13 @@
 ## [Unreleased]
 
+## [0.4.24] - 2026-03-29
+
+### Other
+- Update prellm/env_config.py
+- Update prellm/env_config/__init__.py
+- Update project/evolution.toon.yaml
+- Update project/project.toon.yaml
+
 ## [0.4.23] - 2026-03-29
 
 ### Docs

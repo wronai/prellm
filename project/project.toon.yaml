@@ -15,9 +15,8 @@ ALERTS[20]:
   !   high_fan_out     CodebaseIndexer.get_compressed_context = 14 (limit:10)
   !   high_fan_out     QueryDecomposer.decompose = 13 (limit:10)
 
-MODULES[52] (top by size):
+MODULES[58] (top by size):
   M[scripts/config_wizard.py] 708L C:0 F:33 CC↑9 D:0 (python)
-  M[prellm/env_config.py] 528L C:1 F:17 CC↑14 D:5 (python)
   M[prellm/pipeline.py] 483L C:5 F:18 CC↑9 D:0 (python)
   M[prellm/server.py] 447L C:10 F:9 CC↑12 D:0 (python)
   M[prellm/models.py] 434L C:33 F:2 CC↑1 D:0 (python)
@@ -26,6 +25,13 @@ MODULES[52] (top by size):
   M[prellm/query_decomposer.py] 330L C:1 F:10 CC↑9 D:0 (python)
   M[prellm/chains/process_chain.py] 275L C:1 F:10 CC↑7 D:0 (python)
   M[prellm/context/sensitive_filter.py] 262L C:1 F:14 CC↑7 D:0 (python)
+  ── prellm/env_config/ (split from 528L god module) ──
+  M[prellm/env_config/commands.py] 140L C:0 F:5 CC↑6 D:0 (python)
+  M[prellm/env_config/loader.py] 100L C:0 F:5 CC↑6 D:0 (python)
+  M[prellm/env_config/constants.py] 90L C:0 F:2 CC↑2 D:0 (python)
+  M[prellm/env_config/providers.py] 70L C:0 F:2 CC↑5 D:0 (python)
+  M[prellm/env_config/utils.py] 50L C:0 F:2 CC↑3 D:0 (python)
+  M[prellm/env_config/models.py] 30L C:1 F:0 CC↑1 D:0 (python)
   ── prellm/trace/ (split from 649L god module) ──
   M[prellm/trace/terminal.py] 180L C:0 F:7 CC↑5 D:0 (python)
   M[prellm/trace/markdown.py] 130L C:0 F:5 CC↑4 D:0 (python)
@@ -49,13 +55,14 @@ Delegates to getv.Env
   ★ context_show_cmd fan=17  // Show collected runtime context.
   ★ chat_completions fan=16  // OpenAI-compatible chat completions with preLLM preprocessing.
 
-REFACTOR[3]:
+REFACTOR[2]:
   [1] ✓ DONE Split god module prellm/core.py → 7 submodules
   [2] ✓ DONE Split god module prellm/cli.py → 9 submodules  
   [3] ✓ DONE Split god module prellm/trace.py → 4 submodules
-  [4] H/H Split god module prellm/env_config.py (528L, 1 classes)
+  [4] ✓ DONE Split god module prellm/env_config.py → 6 submodules
   [5] H/H Split god module scripts/config_wizard.py (708L, 0 classes)
 
 EVOLUTION:
   2026-03-29 CC̄=4.3 crit=23 15410L // Automated analysis
   2026-03-29 CC̄=4.1 crit=0 15410L // core+cli+trace god modules split, CC reduced 13→5
+  2026-03-29 CC̄=4.0 crit=0 15410L // +env_config god module split, CC reduced 14→6
